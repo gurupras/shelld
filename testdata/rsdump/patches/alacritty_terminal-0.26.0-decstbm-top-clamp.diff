@@ -1,0 +1,16 @@
+--- a/src/term/mod.rs
++++ b/src/term/mod.rs
+@@ -2196,7 +2196,12 @@
+         trace!("Setting scrolling region: ({start};{end})");
+ 
+         let screen_lines = Line(self.screen_lines() as i32);
+-        self.scroll_region.start = cmp::min(start, screen_lines);
++        // The top clamps to the last line rather than past it. Clamping it to
++        // screen_lines yields the empty region [screen_lines, screen_lines), and
++        // scroll_up_relative's min(lines, end - start) is then 0, so every later
++        // linefeed scrolls nothing and the screen never scrolls again.
++        let last_line = Line(self.screen_lines() as i32 - 1);
++        self.scroll_region.start = cmp::min(start, last_line);
+         self.scroll_region.end = cmp::min(end, screen_lines);
+         self.goto(0, 0);
+     }

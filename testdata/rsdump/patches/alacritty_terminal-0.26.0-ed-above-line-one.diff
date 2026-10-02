@@ -1,0 +1,16 @@
+--- a/src/term/mod.rs
++++ b/src/term/mod.rs
+@@ -1782,8 +1782,11 @@
+             ansi::ClearMode::Above => {
+                 let cursor = self.grid.cursor.point;
+ 
+-                // If clearing more than one line.
+-                if cursor.line > 1 {
++                // Clear every line above the cursor. On line 1 the single
++                // line above it is line 0 and has to go too; reset_region(..0) is
++                // already a no-op, so the guard only has to exclude line 0, which
++                // has nothing above it.
++                if cursor.line > 0 {
+                     // Fully clear all lines before the current line.
+                     self.grid.reset_region(..cursor.line);
+                 }

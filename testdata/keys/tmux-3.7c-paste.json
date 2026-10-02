@@ -1,0 +1,394 @@
+[
+{
+"pane": "no2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "",
+"out": "5e405e415e425e435e445e455e460708090d5e4b5e4c0d5e4e5e4f5e505e515e525e535e545e555e565e575e585e595e5a5e5b5e5c5e5d5e5e5e5f7c"
+},
+{
+"pane": "no2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "-p",
+"out": "5e405e415e425e435e445e455e460708090d5e4b5e4c0d5e4e5e4f5e505e515e525e535e545e555e565e575e585e595e5a5e5b5e5c5e5d5e5e5e5f7c"
+},
+{
+"pane": "no2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "-S",
+"out": "000102030405060708090d0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c"
+},
+{
+"pane": "no2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "-p -S",
+"out": "000102030405060708090d0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c"
+},
+{
+"pane": "no2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "",
+"out": "615e3f62"
+},
+{
+"pane": "no2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "-p",
+"out": "615e3f62"
+},
+{
+"pane": "no2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "-S",
+"out": "617f62"
+},
+{
+"pane": "no2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "-p -S",
+"out": "617f62"
+},
+{
+"pane": "no2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "",
+"out": "615e5b5b3230317e620d"
+},
+{
+"pane": "no2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "-p",
+"out": "615e5b5b3230317e620d"
+},
+{
+"pane": "no2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "-S",
+"out": "611b5b3230317e620d"
+},
+{
+"pane": "no2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "-p -S",
+"out": "611b5b3230317e620d"
+},
+{
+"pane": "no2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "",
+"out": "61c285c29b62"
+},
+{
+"pane": "no2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "-p",
+"out": "61c285c29b62"
+},
+{
+"pane": "no2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "-S",
+"out": "61c285c29b62"
+},
+{
+"pane": "no2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "-p -S",
+"out": "61c285c29b62"
+},
+{
+"pane": "no2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "",
+"out": "614d5e40624d2d41634d5e3f645c323430654d2d624d5e4266"
+},
+{
+"pane": "no2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "-p",
+"out": "614d5e40624d2d41634d5e3f645c323430654d2d624d5e4266"
+},
+{
+"pane": "no2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "-S",
+"out": "618062c163ff64a065e28266"
+},
+{
+"pane": "no2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "-p -S",
+"out": "618062c163ff64a065e28266"
+},
+{
+"pane": "no2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "",
+"out": "78205c20c3a920e697a520f09f98800979"
+},
+{
+"pane": "no2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "-p",
+"out": "78205c20c3a920e697a520f09f98800979"
+},
+{
+"pane": "no2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "-S",
+"out": "78205c20c3a920e697a520f09f98800979"
+},
+{
+"pane": "no2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "-p -S",
+"out": "78205c20c3a920e697a520f09f98800979"
+},
+{
+"pane": "no2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "",
+"out": "6f6e650d74776f0d0d74687265650d"
+},
+{
+"pane": "no2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "-p",
+"out": "6f6e650d74776f0d0d74687265650d"
+},
+{
+"pane": "no2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "-S",
+"out": "6f6e650d74776f0d0d74687265650d"
+},
+{
+"pane": "no2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "-p -S",
+"out": "6f6e650d74776f0d0d74687265650d"
+},
+{
+"pane": "2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "",
+"out": "5e405e415e425e435e445e455e460708090d5e4b5e4c0d5e4e5e4f5e505e515e525e535e545e555e565e575e585e595e5a5e5b5e5c5e5d5e5e5e5f7c"
+},
+{
+"pane": "2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "-p",
+"out": "1b5b3230307e5e405e415e425e435e445e455e460708090d5e4b5e4c0d5e4e5e4f5e505e515e525e535e545e555e565e575e585e595e5a5e5b5e5c5e5d5e5e5e5f7c1b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "-S",
+"out": "000102030405060708090d0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c"
+},
+{
+"pane": "2004",
+"buffer": "c0",
+"in": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c",
+"flags": "-p -S",
+"out": "1b5b3230307e000102030405060708090d0b0c0d0e0f101112131415161718191a1b1c1d1e1f7c1b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "",
+"out": "615e3f62"
+},
+{
+"pane": "2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "-p",
+"out": "1b5b3230307e615e3f621b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "-S",
+"out": "617f62"
+},
+{
+"pane": "2004",
+"buffer": "del",
+"in": "617f62",
+"flags": "-p -S",
+"out": "1b5b3230307e617f621b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "",
+"out": "615e5b5b3230317e620d"
+},
+{
+"pane": "2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "-p",
+"out": "1b5b3230307e615e5b5b3230317e620d1b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "-S",
+"out": "611b5b3230317e620d"
+},
+{
+"pane": "2004",
+"buffer": "bracket-end",
+"in": "611b5b3230317e620d",
+"flags": "-p -S",
+"out": "1b5b3230307e611b5b3230317e620d1b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "",
+"out": "61c285c29b62"
+},
+{
+"pane": "2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "-p",
+"out": "1b5b3230307e61c285c29b621b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "-S",
+"out": "61c285c29b62"
+},
+{
+"pane": "2004",
+"buffer": "c1-utf8",
+"in": "61c285c29b62",
+"flags": "-p -S",
+"out": "1b5b3230307e61c285c29b621b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "",
+"out": "614d5e40624d2d41634d5e3f645c323430654d2d624d5e4266"
+},
+{
+"pane": "2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "-p",
+"out": "1b5b3230307e614d5e40624d2d41634d5e3f645c323430654d2d624d5e42661b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "-S",
+"out": "618062c163ff64a065e28266"
+},
+{
+"pane": "2004",
+"buffer": "invalid-utf8",
+"in": "618062c163ff64a065e28266",
+"flags": "-p -S",
+"out": "1b5b3230307e618062c163ff64a065e282661b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "",
+"out": "78205c20c3a920e697a520f09f98800979"
+},
+{
+"pane": "2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "-p",
+"out": "1b5b3230307e78205c20c3a920e697a520f09f988009791b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "-S",
+"out": "78205c20c3a920e697a520f09f98800979"
+},
+{
+"pane": "2004",
+"buffer": "text",
+"in": "78205c20c3a920e697a520f09f98800979",
+"flags": "-p -S",
+"out": "1b5b3230307e78205c20c3a920e697a520f09f988009791b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "",
+"out": "6f6e650d74776f0d0d74687265650d"
+},
+{
+"pane": "2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "-p",
+"out": "1b5b3230307e6f6e650d74776f0d0d74687265650d1b5b3230317e"
+},
+{
+"pane": "2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "-S",
+"out": "6f6e650d74776f0d0d74687265650d"
+},
+{
+"pane": "2004",
+"buffer": "lines",
+"in": "6f6e650a74776f0d0a74687265650a",
+"flags": "-p -S",
+"out": "1b5b3230307e6f6e650d74776f0d0d74687265650d1b5b3230317e"
+}
+]

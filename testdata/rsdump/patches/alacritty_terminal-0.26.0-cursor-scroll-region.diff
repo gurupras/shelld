@@ -1,0 +1,95 @@
+--- a/src/term/mod.rs
++++ b/src/term/mod.rs
+@@ -1025,6 +1025,32 @@
+         self.damage.damage_point(point);
+     }
+ 
++    /// Relative vertical cursor movement, shared by CUU, CUD, CPL and CNL.
++    ///
++    /// The scrolling region bounds where a relative move may leave the cursor, and
++    /// it does so whether or not ORIGIN is set: a cursor inside the region stays
++    /// inside it, and one outside is bounded by the screen and may move into it.
++    /// ORIGIN changes what an absolute row number counts from, which is a different
++    /// question from where the cursor may go.
++    ///
++    /// These do not go through goto(), whose ORIGIN offset translates the coordinate
++    /// system absolute addressing counts in. Applied to a distance it displaces
++    /// every relative move by the region's top row.
++    #[inline]
++    fn move_vertically(&mut self, lines: i32) {
++        let cur = self.grid.cursor.point.line.0;
++        let lo = if cur >= self.scroll_region.start.0 { self.scroll_region.start.0 } else { 0 };
++        let hi = if cur < self.scroll_region.end.0 {
++            self.scroll_region.end.0 - 1
++        } else {
++            self.bottommost_line().0
++        };
++        self.damage_cursor();
++        self.grid.cursor.point.line = Line(cmp::max(cmp::min(cur + lines, hi), lo));
++        self.damage_cursor();
++        self.grid.cursor.input_needs_wrap = false;
++    }
++
+     #[inline]
+     fn set_keyboard_mode(&mut self, mode: TermMode, apply: KeyboardModesApplyBehavior) {
+         let active_mode = self.mode & TermMode::KITTY_KEYBOARD_PROTOCOL;
+@@ -1180,7 +1206,14 @@
+     #[inline]
+     fn goto_col(&mut self, col: usize) {
+         trace!("Going to column: {col}");
+-        self.goto(self.grid.cursor.point.line.0, col)
++        // CHA addresses a column and leaves the row alone. Handing the current row
++        // back to goto() would not: under ORIGIN that row already counts from the
++        // scrolling region's top, and goto() would add the region's top to it a
++        // second time and move a cursor CHA must not move.
++        self.damage_cursor();
++        self.grid.cursor.point.column = cmp::min(Column(col), self.last_column());
++        self.damage_cursor();
++        self.grid.cursor.input_needs_wrap = false;
+     }
+ 
+     #[inline]
+@@ -1214,19 +1247,13 @@
+     #[inline]
+     fn move_up(&mut self, lines: usize) {
+         trace!("Moving up: {lines}");
+-
+-        let line = self.grid.cursor.point.line - lines;
+-        let column = self.grid.cursor.point.column;
+-        self.goto(line.0, column.0)
++        self.move_vertically(-(lines as i32))
+     }
+ 
+     #[inline]
+     fn move_down(&mut self, lines: usize) {
+         trace!("Moving down: {lines}");
+-
+-        let line = self.grid.cursor.point.line + lines;
+-        let column = self.grid.cursor.point.column;
+-        self.goto(line.0, column.0)
++        self.move_vertically(lines as i32)
+     }
+ 
+     #[inline]
+@@ -1348,17 +1375,15 @@
+     #[inline]
+     fn move_down_and_cr(&mut self, lines: usize) {
+         trace!("Moving down and cr: {lines}");
+-
+-        let line = self.grid.cursor.point.line + lines;
+-        self.goto(line.0, 0)
++        self.move_vertically(lines as i32);
++        self.goto_col(0)
+     }
+ 
+     #[inline]
+     fn move_up_and_cr(&mut self, lines: usize) {
+         trace!("Moving up and cr: {lines}");
+-
+-        let line = self.grid.cursor.point.line - lines;
+-        self.goto(line.0, 0)
++        self.move_vertically(-(lines as i32));
++        self.goto_col(0)
+     }
+ 
+     /// Insert tab at cursor position.

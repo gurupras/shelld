@@ -1,0 +1,22 @@
+# Reference dumper for the Go/Rust differential test (vtdiff_test.go). It
+# drives shelld-rs's real VtGrid (alacritty_terminal 0.26) with an op stream
+# and prints grid state and render output in the format the Go side prints.
+# vtdiff_test.go writes Cargo.toml from this template, with @SHELLD_RS_DIR@
+# replaced by the shelld-rs checkout named in $SHELLD_RS_DIR and
+# @REFERENCE_PATCHES@ replaced by a [patch.crates-io] section pointing at the
+# published crates with testdata/rsdump/patches/ applied — two defects in the
+# oracle itself, see referencePatch in vtdiff_test.go. With
+# SHELLD_VTDIFF_STOCK=1 the marker is dropped and the crates are used as
+# published, which is what a fresh checkout of this file describes.
+[package]
+name = "rsdump"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+shelld-core = { path = "@SHELLD_RS_DIR@/crates/shelld-core" }
+alacritty_terminal = "=0.26.0"
+
+@REFERENCE_PATCHES@
+[workspace]

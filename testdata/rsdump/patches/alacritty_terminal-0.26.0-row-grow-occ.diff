@@ -1,0 +1,27 @@
+--- a/src/grid/row.rs
++++ b/src/grid/row.rs
+@@ -57,11 +57,23 @@
+ 
+     /// Increase the number of columns in the row.
+     #[inline]
+-    pub fn grow(&mut self, columns: usize) {
++    pub fn grow(&mut self, columns: usize)
++    where
++        T: GridCell,
++    {
+         if self.inner.len() >= columns {
+             return;
+         }
+ 
++        // occ promises that every cell at or past it equals the row's last cell.
++        // The cells appended below are default ones, so a row whose own tail is
++        // painted (back-colour erase) has to come inside occ first, or reset()
++        // reads the new last cell as default and clears nothing.
++        let n = self.inner.len();
++        if self.occ < n && !self.inner[n - 1].is_empty() {
++            self.occ = n;
++        }
++
+         self.inner.resize_with(columns, T::default);
+     }
+ 

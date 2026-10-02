@@ -1,0 +1,7871 @@
+{
+"tmux": "tmux 3.7c",
+"commit": "tag 3.7c; rows identical to the first recording on 3.7 (81f88f85)",
+"options": "-f /dev/null; extended-keys off",
+"modes": {
+"none": "",
+"app": "\\033[?1h\\033="
+},
+"rows": [
+{
+"name": "Up",
+"mode": "none",
+"hex": "1b5b41"
+},
+{
+"name": "S-Up",
+"mode": "none",
+"hex": "1b5b313b3241"
+},
+{
+"name": "C-Up",
+"mode": "none",
+"hex": "1b5b313b3541"
+},
+{
+"name": "M-Up",
+"mode": "none",
+"hex": "1b5b313b3341"
+},
+{
+"name": "C-S-Up",
+"mode": "none",
+"hex": "1b5b313b3641"
+},
+{
+"name": "M-S-Up",
+"mode": "none",
+"hex": "1b5b313b3441"
+},
+{
+"name": "C-M-Up",
+"mode": "none",
+"hex": "1b5b313b3741"
+},
+{
+"name": "C-M-S-Up",
+"mode": "none",
+"hex": "1b5b313b3841"
+},
+{
+"name": "Down",
+"mode": "none",
+"hex": "1b5b42"
+},
+{
+"name": "S-Down",
+"mode": "none",
+"hex": "1b5b313b3242"
+},
+{
+"name": "C-Down",
+"mode": "none",
+"hex": "1b5b313b3542"
+},
+{
+"name": "M-Down",
+"mode": "none",
+"hex": "1b5b313b3342"
+},
+{
+"name": "C-S-Down",
+"mode": "none",
+"hex": "1b5b313b3642"
+},
+{
+"name": "M-S-Down",
+"mode": "none",
+"hex": "1b5b313b3442"
+},
+{
+"name": "C-M-Down",
+"mode": "none",
+"hex": "1b5b313b3742"
+},
+{
+"name": "C-M-S-Down",
+"mode": "none",
+"hex": "1b5b313b3842"
+},
+{
+"name": "Left",
+"mode": "none",
+"hex": "1b5b44"
+},
+{
+"name": "S-Left",
+"mode": "none",
+"hex": "1b5b313b3244"
+},
+{
+"name": "C-Left",
+"mode": "none",
+"hex": "1b5b313b3544"
+},
+{
+"name": "M-Left",
+"mode": "none",
+"hex": "1b5b313b3344"
+},
+{
+"name": "C-S-Left",
+"mode": "none",
+"hex": "1b5b313b3644"
+},
+{
+"name": "M-S-Left",
+"mode": "none",
+"hex": "1b5b313b3444"
+},
+{
+"name": "C-M-Left",
+"mode": "none",
+"hex": "1b5b313b3744"
+},
+{
+"name": "C-M-S-Left",
+"mode": "none",
+"hex": "1b5b313b3844"
+},
+{
+"name": "Right",
+"mode": "none",
+"hex": "1b5b43"
+},
+{
+"name": "S-Right",
+"mode": "none",
+"hex": "1b5b313b3243"
+},
+{
+"name": "C-Right",
+"mode": "none",
+"hex": "1b5b313b3543"
+},
+{
+"name": "M-Right",
+"mode": "none",
+"hex": "1b5b313b3343"
+},
+{
+"name": "C-S-Right",
+"mode": "none",
+"hex": "1b5b313b3643"
+},
+{
+"name": "M-S-Right",
+"mode": "none",
+"hex": "1b5b313b3443"
+},
+{
+"name": "C-M-Right",
+"mode": "none",
+"hex": "1b5b313b3743"
+},
+{
+"name": "C-M-S-Right",
+"mode": "none",
+"hex": "1b5b313b3843"
+},
+{
+"name": "Home",
+"mode": "none",
+"hex": "1b5b317e"
+},
+{
+"name": "S-Home",
+"mode": "none",
+"hex": "1b5b313b3248"
+},
+{
+"name": "C-Home",
+"mode": "none",
+"hex": "1b5b313b3548"
+},
+{
+"name": "M-Home",
+"mode": "none",
+"hex": "1b5b313b3348"
+},
+{
+"name": "C-S-Home",
+"mode": "none",
+"hex": "1b5b313b3648"
+},
+{
+"name": "M-S-Home",
+"mode": "none",
+"hex": "1b5b313b3448"
+},
+{
+"name": "C-M-Home",
+"mode": "none",
+"hex": "1b5b313b3748"
+},
+{
+"name": "C-M-S-Home",
+"mode": "none",
+"hex": "1b5b313b3848"
+},
+{
+"name": "End",
+"mode": "none",
+"hex": "1b5b347e"
+},
+{
+"name": "S-End",
+"mode": "none",
+"hex": "1b5b313b3246"
+},
+{
+"name": "C-End",
+"mode": "none",
+"hex": "1b5b313b3546"
+},
+{
+"name": "M-End",
+"mode": "none",
+"hex": "1b5b313b3346"
+},
+{
+"name": "C-S-End",
+"mode": "none",
+"hex": "1b5b313b3646"
+},
+{
+"name": "M-S-End",
+"mode": "none",
+"hex": "1b5b313b3446"
+},
+{
+"name": "C-M-End",
+"mode": "none",
+"hex": "1b5b313b3746"
+},
+{
+"name": "C-M-S-End",
+"mode": "none",
+"hex": "1b5b313b3846"
+},
+{
+"name": "IC",
+"mode": "none",
+"hex": "1b5b327e"
+},
+{
+"name": "S-IC",
+"mode": "none",
+"hex": "1b5b323b327e"
+},
+{
+"name": "C-IC",
+"mode": "none",
+"hex": "1b5b323b357e"
+},
+{
+"name": "M-IC",
+"mode": "none",
+"hex": "1b5b323b337e"
+},
+{
+"name": "C-S-IC",
+"mode": "none",
+"hex": "1b5b323b367e"
+},
+{
+"name": "M-S-IC",
+"mode": "none",
+"hex": "1b5b323b347e"
+},
+{
+"name": "C-M-IC",
+"mode": "none",
+"hex": "1b5b323b377e"
+},
+{
+"name": "C-M-S-IC",
+"mode": "none",
+"hex": "1b5b323b387e"
+},
+{
+"name": "DC",
+"mode": "none",
+"hex": "1b5b337e"
+},
+{
+"name": "S-DC",
+"mode": "none",
+"hex": "1b5b333b327e"
+},
+{
+"name": "C-DC",
+"mode": "none",
+"hex": "1b5b333b357e"
+},
+{
+"name": "M-DC",
+"mode": "none",
+"hex": "1b5b333b337e"
+},
+{
+"name": "C-S-DC",
+"mode": "none",
+"hex": "1b5b333b367e"
+},
+{
+"name": "M-S-DC",
+"mode": "none",
+"hex": "1b5b333b347e"
+},
+{
+"name": "C-M-DC",
+"mode": "none",
+"hex": "1b5b333b377e"
+},
+{
+"name": "C-M-S-DC",
+"mode": "none",
+"hex": "1b5b333b387e"
+},
+{
+"name": "PPage",
+"mode": "none",
+"hex": "1b5b357e"
+},
+{
+"name": "S-PPage",
+"mode": "none",
+"hex": "1b5b353b327e"
+},
+{
+"name": "C-PPage",
+"mode": "none",
+"hex": "1b5b353b357e"
+},
+{
+"name": "M-PPage",
+"mode": "none",
+"hex": "1b5b353b337e"
+},
+{
+"name": "C-S-PPage",
+"mode": "none",
+"hex": "1b5b353b367e"
+},
+{
+"name": "M-S-PPage",
+"mode": "none",
+"hex": "1b5b353b347e"
+},
+{
+"name": "C-M-PPage",
+"mode": "none",
+"hex": "1b5b353b377e"
+},
+{
+"name": "C-M-S-PPage",
+"mode": "none",
+"hex": "1b5b353b387e"
+},
+{
+"name": "NPage",
+"mode": "none",
+"hex": "1b5b367e"
+},
+{
+"name": "S-NPage",
+"mode": "none",
+"hex": "1b5b363b327e"
+},
+{
+"name": "C-NPage",
+"mode": "none",
+"hex": "1b5b363b357e"
+},
+{
+"name": "M-NPage",
+"mode": "none",
+"hex": "1b5b363b337e"
+},
+{
+"name": "C-S-NPage",
+"mode": "none",
+"hex": "1b5b363b367e"
+},
+{
+"name": "M-S-NPage",
+"mode": "none",
+"hex": "1b5b363b347e"
+},
+{
+"name": "C-M-NPage",
+"mode": "none",
+"hex": "1b5b363b377e"
+},
+{
+"name": "C-M-S-NPage",
+"mode": "none",
+"hex": "1b5b363b387e"
+},
+{
+"name": "F1",
+"mode": "none",
+"hex": "1b4f50"
+},
+{
+"name": "S-F1",
+"mode": "none",
+"hex": "1b5b313b3250"
+},
+{
+"name": "C-F1",
+"mode": "none",
+"hex": "1b5b313b3550"
+},
+{
+"name": "M-F1",
+"mode": "none",
+"hex": "1b5b313b3350"
+},
+{
+"name": "C-S-F1",
+"mode": "none",
+"hex": "1b5b313b3650"
+},
+{
+"name": "M-S-F1",
+"mode": "none",
+"hex": "1b5b313b3450"
+},
+{
+"name": "C-M-F1",
+"mode": "none",
+"hex": "1b5b313b3750"
+},
+{
+"name": "C-M-S-F1",
+"mode": "none",
+"hex": "1b5b313b3850"
+},
+{
+"name": "F2",
+"mode": "none",
+"hex": "1b4f51"
+},
+{
+"name": "S-F2",
+"mode": "none",
+"hex": "1b5b313b3251"
+},
+{
+"name": "C-F2",
+"mode": "none",
+"hex": "1b5b313b3551"
+},
+{
+"name": "M-F2",
+"mode": "none",
+"hex": "1b5b313b3351"
+},
+{
+"name": "C-S-F2",
+"mode": "none",
+"hex": "1b5b313b3651"
+},
+{
+"name": "M-S-F2",
+"mode": "none",
+"hex": "1b5b313b3451"
+},
+{
+"name": "C-M-F2",
+"mode": "none",
+"hex": "1b5b313b3751"
+},
+{
+"name": "C-M-S-F2",
+"mode": "none",
+"hex": "1b5b313b3851"
+},
+{
+"name": "F4",
+"mode": "none",
+"hex": "1b4f53"
+},
+{
+"name": "S-F4",
+"mode": "none",
+"hex": "1b5b313b3253"
+},
+{
+"name": "C-F4",
+"mode": "none",
+"hex": "1b5b313b3553"
+},
+{
+"name": "M-F4",
+"mode": "none",
+"hex": "1b5b313b3353"
+},
+{
+"name": "C-S-F4",
+"mode": "none",
+"hex": "1b5b313b3653"
+},
+{
+"name": "M-S-F4",
+"mode": "none",
+"hex": "1b5b313b3453"
+},
+{
+"name": "C-M-F4",
+"mode": "none",
+"hex": "1b5b313b3753"
+},
+{
+"name": "C-M-S-F4",
+"mode": "none",
+"hex": "1b5b313b3853"
+},
+{
+"name": "F5",
+"mode": "none",
+"hex": "1b5b31357e"
+},
+{
+"name": "S-F5",
+"mode": "none",
+"hex": "1b5b31353b327e"
+},
+{
+"name": "C-F5",
+"mode": "none",
+"hex": "1b5b31353b357e"
+},
+{
+"name": "M-F5",
+"mode": "none",
+"hex": "1b5b31353b337e"
+},
+{
+"name": "C-S-F5",
+"mode": "none",
+"hex": "1b5b31353b367e"
+},
+{
+"name": "M-S-F5",
+"mode": "none",
+"hex": "1b5b31353b347e"
+},
+{
+"name": "C-M-F5",
+"mode": "none",
+"hex": "1b5b31353b377e"
+},
+{
+"name": "C-M-S-F5",
+"mode": "none",
+"hex": "1b5b31353b387e"
+},
+{
+"name": "F9",
+"mode": "none",
+"hex": "1b5b32307e"
+},
+{
+"name": "S-F9",
+"mode": "none",
+"hex": "1b5b32303b327e"
+},
+{
+"name": "C-F9",
+"mode": "none",
+"hex": "1b5b32303b357e"
+},
+{
+"name": "M-F9",
+"mode": "none",
+"hex": "1b5b32303b337e"
+},
+{
+"name": "C-S-F9",
+"mode": "none",
+"hex": "1b5b32303b367e"
+},
+{
+"name": "M-S-F9",
+"mode": "none",
+"hex": "1b5b32303b347e"
+},
+{
+"name": "C-M-F9",
+"mode": "none",
+"hex": "1b5b32303b377e"
+},
+{
+"name": "C-M-S-F9",
+"mode": "none",
+"hex": "1b5b32303b387e"
+},
+{
+"name": "F12",
+"mode": "none",
+"hex": "1b5b32347e"
+},
+{
+"name": "S-F12",
+"mode": "none",
+"hex": "1b5b32343b327e"
+},
+{
+"name": "C-F12",
+"mode": "none",
+"hex": "1b5b32343b357e"
+},
+{
+"name": "M-F12",
+"mode": "none",
+"hex": "1b5b32343b337e"
+},
+{
+"name": "C-S-F12",
+"mode": "none",
+"hex": "1b5b32343b367e"
+},
+{
+"name": "M-S-F12",
+"mode": "none",
+"hex": "1b5b32343b347e"
+},
+{
+"name": "C-M-F12",
+"mode": "none",
+"hex": "1b5b32343b377e"
+},
+{
+"name": "C-M-S-F12",
+"mode": "none",
+"hex": "1b5b32343b387e"
+},
+{
+"name": "BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "S-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "C-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "M-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "C-S-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "M-S-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "C-M-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "C-M-S-BTab",
+"mode": "none",
+"hex": "1b5b5a"
+},
+{
+"name": "Tab",
+"mode": "none",
+"hex": "09"
+},
+{
+"name": "S-Tab",
+"mode": "none",
+"hex": "09"
+},
+{
+"name": "C-Tab",
+"mode": "none",
+"hex": "09"
+},
+{
+"name": "M-Tab",
+"mode": "none",
+"hex": "1b09"
+},
+{
+"name": "C-S-Tab",
+"mode": "none",
+"hex": "09"
+},
+{
+"name": "M-S-Tab",
+"mode": "none",
+"hex": "1b09"
+},
+{
+"name": "C-M-Tab",
+"mode": "none",
+"hex": "1b09"
+},
+{
+"name": "C-M-S-Tab",
+"mode": "none",
+"hex": "1b09"
+},
+{
+"name": "Enter",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "S-Enter",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "C-Enter",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "M-Enter",
+"mode": "none",
+"hex": "1b0d"
+},
+{
+"name": "C-S-Enter",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "M-S-Enter",
+"mode": "none",
+"hex": "1b0d"
+},
+{
+"name": "C-M-Enter",
+"mode": "none",
+"hex": "1b0d"
+},
+{
+"name": "C-M-S-Enter",
+"mode": "none",
+"hex": "1b0d"
+},
+{
+"name": "Escape",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "S-Escape",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "C-Escape",
+"mode": "none",
+"hex": "432d457363617065"
+},
+{
+"name": "M-Escape",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "C-S-Escape",
+"mode": "none",
+"hex": "432d532d457363617065"
+},
+{
+"name": "M-S-Escape",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "C-M-Escape",
+"mode": "none",
+"hex": "1b432d4d2d457363617065"
+},
+{
+"name": "C-M-S-Escape",
+"mode": "none",
+"hex": "1b432d4d2d532d457363617065"
+},
+{
+"name": "BSpace",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "S-BSpace",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "C-BSpace",
+"mode": "none",
+"hex": "432d425370616365"
+},
+{
+"name": "M-BSpace",
+"mode": "none",
+"hex": "1b7f"
+},
+{
+"name": "C-S-BSpace",
+"mode": "none",
+"hex": "432d532d425370616365"
+},
+{
+"name": "M-S-BSpace",
+"mode": "none",
+"hex": "1b7f"
+},
+{
+"name": "C-M-BSpace",
+"mode": "none",
+"hex": "1b432d4d2d425370616365"
+},
+{
+"name": "C-M-S-BSpace",
+"mode": "none",
+"hex": "1b432d4d2d532d425370616365"
+},
+{
+"name": "Space",
+"mode": "none",
+"hex": "20"
+},
+{
+"name": "S-Space",
+"mode": "none",
+"hex": "20"
+},
+{
+"name": "C-Space",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-Space",
+"mode": "none",
+"hex": "1b20"
+},
+{
+"name": "C-S-Space",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-S-Space",
+"mode": "none",
+"hex": "1b20"
+},
+{
+"name": "C-M-Space",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "C-M-S-Space",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "KP0",
+"mode": "none",
+"hex": "30"
+},
+{
+"name": "S-KP0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP0",
+"mode": "none",
+"hex": "1b30"
+},
+{
+"name": "C-S-KP0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KP5",
+"mode": "none",
+"hex": "35"
+},
+{
+"name": "S-KP5",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP5",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP5",
+"mode": "none",
+"hex": "1b35"
+},
+{
+"name": "C-S-KP5",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP5",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP5",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP5",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KP/",
+"mode": "none",
+"hex": "2f"
+},
+{
+"name": "S-KP/",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP/",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP/",
+"mode": "none",
+"hex": "1b2f"
+},
+{
+"name": "C-S-KP/",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP/",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP/",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP/",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KP*",
+"mode": "none",
+"hex": "2a"
+},
+{
+"name": "S-KP*",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP*",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP*",
+"mode": "none",
+"hex": "1b2a"
+},
+{
+"name": "C-S-KP*",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP*",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP*",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP*",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KP-",
+"mode": "none",
+"hex": "2d"
+},
+{
+"name": "S-KP-",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP-",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP-",
+"mode": "none",
+"hex": "1b2d"
+},
+{
+"name": "C-S-KP-",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP-",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP-",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP-",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KP+",
+"mode": "none",
+"hex": "2b"
+},
+{
+"name": "S-KP+",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP+",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP+",
+"mode": "none",
+"hex": "1b2b"
+},
+{
+"name": "C-S-KP+",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP+",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP+",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP+",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KP.",
+"mode": "none",
+"hex": "2e"
+},
+{
+"name": "S-KP.",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KP.",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KP.",
+"mode": "none",
+"hex": "1b2e"
+},
+{
+"name": "C-S-KP.",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KP.",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KP.",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KP.",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "KPEnter",
+"mode": "none",
+"hex": "0a"
+},
+{
+"name": "S-KPEnter",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-KPEnter",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-KPEnter",
+"mode": "none",
+"hex": "1b0a"
+},
+{
+"name": "C-S-KPEnter",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "M-S-KPEnter",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-KPEnter",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "C-M-S-KPEnter",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "a",
+"mode": "none",
+"hex": "61"
+},
+{
+"name": "S-a",
+"mode": "none",
+"hex": "61"
+},
+{
+"name": "C-a",
+"mode": "none",
+"hex": "01"
+},
+{
+"name": "M-a",
+"mode": "none",
+"hex": "1b61"
+},
+{
+"name": "C-S-a",
+"mode": "none",
+"hex": "01"
+},
+{
+"name": "M-S-a",
+"mode": "none",
+"hex": "1b61"
+},
+{
+"name": "C-M-a",
+"mode": "none",
+"hex": "1b01"
+},
+{
+"name": "C-M-S-a",
+"mode": "none",
+"hex": "1b01"
+},
+{
+"name": "A",
+"mode": "none",
+"hex": "41"
+},
+{
+"name": "S-A",
+"mode": "none",
+"hex": "41"
+},
+{
+"name": "C-A",
+"mode": "none",
+"hex": "01"
+},
+{
+"name": "M-A",
+"mode": "none",
+"hex": "1b41"
+},
+{
+"name": "C-S-A",
+"mode": "none",
+"hex": "01"
+},
+{
+"name": "M-S-A",
+"mode": "none",
+"hex": "1b41"
+},
+{
+"name": "C-M-A",
+"mode": "none",
+"hex": "1b01"
+},
+{
+"name": "C-M-S-A",
+"mode": "none",
+"hex": "1b01"
+},
+{
+"name": "z",
+"mode": "none",
+"hex": "7a"
+},
+{
+"name": "S-z",
+"mode": "none",
+"hex": "7a"
+},
+{
+"name": "C-z",
+"mode": "none",
+"hex": "1a"
+},
+{
+"name": "M-z",
+"mode": "none",
+"hex": "1b7a"
+},
+{
+"name": "C-S-z",
+"mode": "none",
+"hex": "1a"
+},
+{
+"name": "M-S-z",
+"mode": "none",
+"hex": "1b7a"
+},
+{
+"name": "C-M-z",
+"mode": "none",
+"hex": "1b1a"
+},
+{
+"name": "C-M-S-z",
+"mode": "none",
+"hex": "1b1a"
+},
+{
+"name": "é",
+"mode": "none",
+"hex": "c3a9"
+},
+{
+"name": "S-é",
+"mode": "none",
+"hex": "c3a9"
+},
+{
+"name": "C-é",
+"mode": "none",
+"hex": "c3a9"
+},
+{
+"name": "M-é",
+"mode": "none",
+"hex": "1bc3a9"
+},
+{
+"name": "C-S-é",
+"mode": "none",
+"hex": "c3a9"
+},
+{
+"name": "M-S-é",
+"mode": "none",
+"hex": "1bc3a9"
+},
+{
+"name": "C-M-é",
+"mode": "none",
+"hex": "1bc3a9"
+},
+{
+"name": "C-M-S-é",
+"mode": "none",
+"hex": "1bc3a9"
+},
+{
+"name": "1",
+"mode": "none",
+"hex": "31"
+},
+{
+"name": "S-1",
+"mode": "none",
+"hex": "31"
+},
+{
+"name": "C-1",
+"mode": "none",
+"hex": "31"
+},
+{
+"name": "M-1",
+"mode": "none",
+"hex": "1b31"
+},
+{
+"name": "C-S-1",
+"mode": "none",
+"hex": "31"
+},
+{
+"name": "M-S-1",
+"mode": "none",
+"hex": "1b31"
+},
+{
+"name": "C-M-1",
+"mode": "none",
+"hex": "1b31"
+},
+{
+"name": "C-M-S-1",
+"mode": "none",
+"hex": "1b31"
+},
+{
+"name": "3",
+"mode": "none",
+"hex": "33"
+},
+{
+"name": "S-3",
+"mode": "none",
+"hex": "33"
+},
+{
+"name": "C-3",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "M-3",
+"mode": "none",
+"hex": "1b33"
+},
+{
+"name": "C-S-3",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "M-S-3",
+"mode": "none",
+"hex": "1b33"
+},
+{
+"name": "C-M-3",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "C-M-S-3",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "8",
+"mode": "none",
+"hex": "38"
+},
+{
+"name": "S-8",
+"mode": "none",
+"hex": "38"
+},
+{
+"name": "C-8",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "M-8",
+"mode": "none",
+"hex": "1b38"
+},
+{
+"name": "C-S-8",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "M-S-8",
+"mode": "none",
+"hex": "1b38"
+},
+{
+"name": "C-M-8",
+"mode": "none",
+"hex": "1b7f"
+},
+{
+"name": "C-M-S-8",
+"mode": "none",
+"hex": "1b7f"
+},
+{
+"name": "/",
+"mode": "none",
+"hex": "2f"
+},
+{
+"name": "S-/",
+"mode": "none",
+"hex": "2f"
+},
+{
+"name": "C-/",
+"mode": "none",
+"hex": "1f"
+},
+{
+"name": "M-/",
+"mode": "none",
+"hex": "1b2f"
+},
+{
+"name": "C-S-/",
+"mode": "none",
+"hex": "1f"
+},
+{
+"name": "M-S-/",
+"mode": "none",
+"hex": "1b2f"
+},
+{
+"name": "C-M-/",
+"mode": "none",
+"hex": "1b1f"
+},
+{
+"name": "C-M-S-/",
+"mode": "none",
+"hex": "1b1f"
+},
+{
+"name": "?",
+"mode": "none",
+"hex": "3f"
+},
+{
+"name": "S-?",
+"mode": "none",
+"hex": "3f"
+},
+{
+"name": "C-?",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "M-?",
+"mode": "none",
+"hex": "1b3f"
+},
+{
+"name": "C-S-?",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "M-S-?",
+"mode": "none",
+"hex": "1b3f"
+},
+{
+"name": "C-M-?",
+"mode": "none",
+"hex": "1b7f"
+},
+{
+"name": "C-M-S-?",
+"mode": "none",
+"hex": "1b7f"
+},
+{
+"name": "[",
+"mode": "none",
+"hex": "5b"
+},
+{
+"name": "S-[",
+"mode": "none",
+"hex": "5b"
+},
+{
+"name": "C-[",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "M-[",
+"mode": "none",
+"hex": "1b5b"
+},
+{
+"name": "C-S-[",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "M-S-[",
+"mode": "none",
+"hex": "1b5b"
+},
+{
+"name": "C-M-[",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "C-M-S-[",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "~",
+"mode": "none",
+"hex": "7e"
+},
+{
+"name": "S-~",
+"mode": "none",
+"hex": "7e"
+},
+{
+"name": "C-~",
+"mode": "none",
+"hex": "1e"
+},
+{
+"name": "M-~",
+"mode": "none",
+"hex": "1b7e"
+},
+{
+"name": "C-S-~",
+"mode": "none",
+"hex": "1e"
+},
+{
+"name": "M-S-~",
+"mode": "none",
+"hex": "1b7e"
+},
+{
+"name": "C-M-~",
+"mode": "none",
+"hex": "1b1e"
+},
+{
+"name": "C-M-S-~",
+"mode": "none",
+"hex": "1b1e"
+},
+{
+"name": "`",
+"mode": "none",
+"hex": "60"
+},
+{
+"name": "S-`",
+"mode": "none",
+"hex": "60"
+},
+{
+"name": "C-`",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-`",
+"mode": "none",
+"hex": "1b60"
+},
+{
+"name": "C-S-`",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-S-`",
+"mode": "none",
+"hex": "1b60"
+},
+{
+"name": "C-M-`",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "C-M-S-`",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "@",
+"mode": "none",
+"hex": "40"
+},
+{
+"name": "S-@",
+"mode": "none",
+"hex": "40"
+},
+{
+"name": "C-@",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-@",
+"mode": "none",
+"hex": "1b40"
+},
+{
+"name": "C-S-@",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-S-@",
+"mode": "none",
+"hex": "1b40"
+},
+{
+"name": "C-M-@",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "C-M-S-@",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "C-!",
+"mode": "none",
+"hex": "31"
+},
+{
+"name": "C-\"",
+"mode": "none",
+"hex": "27"
+},
+{
+"name": "C-#",
+"mode": "none",
+"hex": "432d23"
+},
+{
+"name": "C-$",
+"mode": "none",
+"hex": "432d24"
+},
+{
+"name": "C-%",
+"mode": "none",
+"hex": "432d25"
+},
+{
+"name": "C-&",
+"mode": "none",
+"hex": "432d26"
+},
+{
+"name": "C-'",
+"mode": "none",
+"hex": "27"
+},
+{
+"name": "C-(",
+"mode": "none",
+"hex": "39"
+},
+{
+"name": "C-)",
+"mode": "none",
+"hex": "30"
+},
+{
+"name": "C-*",
+"mode": "none",
+"hex": "432d2a"
+},
+{
+"name": "C-+",
+"mode": "none",
+"hex": "2b"
+},
+{
+"name": "C-,",
+"mode": "none",
+"hex": "2c"
+},
+{
+"name": "C--",
+"mode": "none",
+"hex": "1f"
+},
+{
+"name": "C-.",
+"mode": "none",
+"hex": "2e"
+},
+{
+"name": "C-0",
+"mode": "none",
+"hex": "30"
+},
+{
+"name": "C-2",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "C-4",
+"mode": "none",
+"hex": "1c"
+},
+{
+"name": "C-5",
+"mode": "none",
+"hex": "1d"
+},
+{
+"name": "C-6",
+"mode": "none",
+"hex": "1e"
+},
+{
+"name": "C-7",
+"mode": "none",
+"hex": "1f"
+},
+{
+"name": "C-9",
+"mode": "none",
+"hex": "39"
+},
+{
+"name": "C-:",
+"mode": "none",
+"hex": "3b"
+},
+{
+"name": "C-;",
+"mode": "none",
+"hex": "3b"
+},
+{
+"name": "C-<",
+"mode": "none",
+"hex": "2c"
+},
+{
+"name": "C-=",
+"mode": "none",
+"hex": "3d"
+},
+{
+"name": "C->",
+"mode": "none",
+"hex": "2e"
+},
+{
+"name": "C-B",
+"mode": "none",
+"hex": "02"
+},
+{
+"name": "C-C",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "C-D",
+"mode": "none",
+"hex": "04"
+},
+{
+"name": "C-E",
+"mode": "none",
+"hex": "05"
+},
+{
+"name": "C-F",
+"mode": "none",
+"hex": "06"
+},
+{
+"name": "C-G",
+"mode": "none",
+"hex": "07"
+},
+{
+"name": "C-H",
+"mode": "none",
+"hex": "08"
+},
+{
+"name": "C-I",
+"mode": "none",
+"hex": "09"
+},
+{
+"name": "C-J",
+"mode": "none",
+"hex": "0a"
+},
+{
+"name": "C-K",
+"mode": "none",
+"hex": "0b"
+},
+{
+"name": "C-L",
+"mode": "none",
+"hex": "0c"
+},
+{
+"name": "C-M",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "C-N",
+"mode": "none",
+"hex": "0e"
+},
+{
+"name": "C-O",
+"mode": "none",
+"hex": "0f"
+},
+{
+"name": "C-P",
+"mode": "none",
+"hex": "10"
+},
+{
+"name": "C-Q",
+"mode": "none",
+"hex": "11"
+},
+{
+"name": "C-R",
+"mode": "none",
+"hex": "12"
+},
+{
+"name": "C-S",
+"mode": "none",
+"hex": "13"
+},
+{
+"name": "C-T",
+"mode": "none",
+"hex": "14"
+},
+{
+"name": "C-U",
+"mode": "none",
+"hex": "15"
+},
+{
+"name": "C-V",
+"mode": "none",
+"hex": "16"
+},
+{
+"name": "C-W",
+"mode": "none",
+"hex": "17"
+},
+{
+"name": "C-X",
+"mode": "none",
+"hex": "18"
+},
+{
+"name": "C-Y",
+"mode": "none",
+"hex": "19"
+},
+{
+"name": "C-Z",
+"mode": "none",
+"hex": "1a"
+},
+{
+"name": "C-\\",
+"mode": "none",
+"hex": "1c"
+},
+{
+"name": "C-]",
+"mode": "none",
+"hex": "1d"
+},
+{
+"name": "C-^",
+"mode": "none",
+"hex": "1e"
+},
+{
+"name": "C-_",
+"mode": "none",
+"hex": "1f"
+},
+{
+"name": "C-b",
+"mode": "none",
+"hex": "02"
+},
+{
+"name": "C-c",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "C-d",
+"mode": "none",
+"hex": "04"
+},
+{
+"name": "C-e",
+"mode": "none",
+"hex": "05"
+},
+{
+"name": "C-f",
+"mode": "none",
+"hex": "06"
+},
+{
+"name": "C-g",
+"mode": "none",
+"hex": "07"
+},
+{
+"name": "C-h",
+"mode": "none",
+"hex": "08"
+},
+{
+"name": "C-i",
+"mode": "none",
+"hex": "09"
+},
+{
+"name": "C-j",
+"mode": "none",
+"hex": "0a"
+},
+{
+"name": "C-k",
+"mode": "none",
+"hex": "0b"
+},
+{
+"name": "C-l",
+"mode": "none",
+"hex": "0c"
+},
+{
+"name": "C-m",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "C-n",
+"mode": "none",
+"hex": "0e"
+},
+{
+"name": "C-o",
+"mode": "none",
+"hex": "0f"
+},
+{
+"name": "C-p",
+"mode": "none",
+"hex": "10"
+},
+{
+"name": "C-q",
+"mode": "none",
+"hex": "11"
+},
+{
+"name": "C-r",
+"mode": "none",
+"hex": "12"
+},
+{
+"name": "C-s",
+"mode": "none",
+"hex": "13"
+},
+{
+"name": "C-t",
+"mode": "none",
+"hex": "14"
+},
+{
+"name": "C-u",
+"mode": "none",
+"hex": "15"
+},
+{
+"name": "C-v",
+"mode": "none",
+"hex": "16"
+},
+{
+"name": "C-w",
+"mode": "none",
+"hex": "17"
+},
+{
+"name": "C-x",
+"mode": "none",
+"hex": "18"
+},
+{
+"name": "C-y",
+"mode": "none",
+"hex": "19"
+},
+{
+"name": "C-{",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "C-|",
+"mode": "none",
+"hex": "1c"
+},
+{
+"name": "C-}",
+"mode": "none",
+"hex": "1d"
+},
+{
+"name": "M-!",
+"mode": "none",
+"hex": "1b21"
+},
+{
+"name": "M-\"",
+"mode": "none",
+"hex": "1b22"
+},
+{
+"name": "M-#",
+"mode": "none",
+"hex": "1b23"
+},
+{
+"name": "M-$",
+"mode": "none",
+"hex": "1b24"
+},
+{
+"name": "M-%",
+"mode": "none",
+"hex": "1b25"
+},
+{
+"name": "M-&",
+"mode": "none",
+"hex": "1b26"
+},
+{
+"name": "M-'",
+"mode": "none",
+"hex": "1b27"
+},
+{
+"name": "M-(",
+"mode": "none",
+"hex": "1b28"
+},
+{
+"name": "M-)",
+"mode": "none",
+"hex": "1b29"
+},
+{
+"name": "M-*",
+"mode": "none",
+"hex": "1b2a"
+},
+{
+"name": "M-+",
+"mode": "none",
+"hex": "1b2b"
+},
+{
+"name": "M-,",
+"mode": "none",
+"hex": "1b2c"
+},
+{
+"name": "M--",
+"mode": "none",
+"hex": "1b2d"
+},
+{
+"name": "M-.",
+"mode": "none",
+"hex": "1b2e"
+},
+{
+"name": "M-0",
+"mode": "none",
+"hex": "1b30"
+},
+{
+"name": "M-2",
+"mode": "none",
+"hex": "1b32"
+},
+{
+"name": "M-4",
+"mode": "none",
+"hex": "1b34"
+},
+{
+"name": "M-5",
+"mode": "none",
+"hex": "1b35"
+},
+{
+"name": "M-6",
+"mode": "none",
+"hex": "1b36"
+},
+{
+"name": "M-7",
+"mode": "none",
+"hex": "1b37"
+},
+{
+"name": "M-9",
+"mode": "none",
+"hex": "1b39"
+},
+{
+"name": "M-:",
+"mode": "none",
+"hex": "1b3a"
+},
+{
+"name": "M-;",
+"mode": "none",
+"hex": "1b3b"
+},
+{
+"name": "M-<",
+"mode": "none",
+"hex": "1b3c"
+},
+{
+"name": "M-=",
+"mode": "none",
+"hex": "1b3d"
+},
+{
+"name": "M->",
+"mode": "none",
+"hex": "1b3e"
+},
+{
+"name": "M-B",
+"mode": "none",
+"hex": "1b42"
+},
+{
+"name": "M-C",
+"mode": "none",
+"hex": "1b43"
+},
+{
+"name": "M-D",
+"mode": "none",
+"hex": "1b44"
+},
+{
+"name": "M-E",
+"mode": "none",
+"hex": "1b45"
+},
+{
+"name": "M-F",
+"mode": "none",
+"hex": "1b46"
+},
+{
+"name": "M-G",
+"mode": "none",
+"hex": "1b47"
+},
+{
+"name": "M-H",
+"mode": "none",
+"hex": "1b48"
+},
+{
+"name": "M-I",
+"mode": "none",
+"hex": "1b49"
+},
+{
+"name": "M-J",
+"mode": "none",
+"hex": "1b4a"
+},
+{
+"name": "M-K",
+"mode": "none",
+"hex": "1b4b"
+},
+{
+"name": "M-L",
+"mode": "none",
+"hex": "1b4c"
+},
+{
+"name": "M-M",
+"mode": "none",
+"hex": "1b4d"
+},
+{
+"name": "M-N",
+"mode": "none",
+"hex": "1b4e"
+},
+{
+"name": "M-O",
+"mode": "none",
+"hex": "1b4f"
+},
+{
+"name": "M-P",
+"mode": "none",
+"hex": "1b50"
+},
+{
+"name": "M-Q",
+"mode": "none",
+"hex": "1b51"
+},
+{
+"name": "M-R",
+"mode": "none",
+"hex": "1b52"
+},
+{
+"name": "M-S",
+"mode": "none",
+"hex": "1b53"
+},
+{
+"name": "M-T",
+"mode": "none",
+"hex": "1b54"
+},
+{
+"name": "M-U",
+"mode": "none",
+"hex": "1b55"
+},
+{
+"name": "M-V",
+"mode": "none",
+"hex": "1b56"
+},
+{
+"name": "M-W",
+"mode": "none",
+"hex": "1b57"
+},
+{
+"name": "M-X",
+"mode": "none",
+"hex": "1b58"
+},
+{
+"name": "M-Y",
+"mode": "none",
+"hex": "1b59"
+},
+{
+"name": "M-Z",
+"mode": "none",
+"hex": "1b5a"
+},
+{
+"name": "M-\\",
+"mode": "none",
+"hex": "1b5c"
+},
+{
+"name": "M-]",
+"mode": "none",
+"hex": "1b5d"
+},
+{
+"name": "M-^",
+"mode": "none",
+"hex": "1b5e"
+},
+{
+"name": "M-_",
+"mode": "none",
+"hex": "1b5f"
+},
+{
+"name": "M-b",
+"mode": "none",
+"hex": "1b62"
+},
+{
+"name": "M-c",
+"mode": "none",
+"hex": "1b63"
+},
+{
+"name": "M-d",
+"mode": "none",
+"hex": "1b64"
+},
+{
+"name": "M-e",
+"mode": "none",
+"hex": "1b65"
+},
+{
+"name": "M-f",
+"mode": "none",
+"hex": "1b66"
+},
+{
+"name": "M-g",
+"mode": "none",
+"hex": "1b67"
+},
+{
+"name": "M-h",
+"mode": "none",
+"hex": "1b68"
+},
+{
+"name": "M-i",
+"mode": "none",
+"hex": "1b69"
+},
+{
+"name": "M-j",
+"mode": "none",
+"hex": "1b6a"
+},
+{
+"name": "M-k",
+"mode": "none",
+"hex": "1b6b"
+},
+{
+"name": "M-l",
+"mode": "none",
+"hex": "1b6c"
+},
+{
+"name": "M-m",
+"mode": "none",
+"hex": "1b6d"
+},
+{
+"name": "M-n",
+"mode": "none",
+"hex": "1b6e"
+},
+{
+"name": "M-o",
+"mode": "none",
+"hex": "1b6f"
+},
+{
+"name": "M-p",
+"mode": "none",
+"hex": "1b70"
+},
+{
+"name": "M-q",
+"mode": "none",
+"hex": "1b71"
+},
+{
+"name": "M-r",
+"mode": "none",
+"hex": "1b72"
+},
+{
+"name": "M-s",
+"mode": "none",
+"hex": "1b73"
+},
+{
+"name": "M-t",
+"mode": "none",
+"hex": "1b74"
+},
+{
+"name": "M-u",
+"mode": "none",
+"hex": "1b75"
+},
+{
+"name": "M-v",
+"mode": "none",
+"hex": "1b76"
+},
+{
+"name": "M-w",
+"mode": "none",
+"hex": "1b77"
+},
+{
+"name": "M-x",
+"mode": "none",
+"hex": "1b78"
+},
+{
+"name": "M-y",
+"mode": "none",
+"hex": "1b79"
+},
+{
+"name": "M-{",
+"mode": "none",
+"hex": "1b7b"
+},
+{
+"name": "M-|",
+"mode": "none",
+"hex": "1b7c"
+},
+{
+"name": "M-}",
+"mode": "none",
+"hex": "1b7d"
+},
+{
+"name": "C-M-!",
+"mode": "none",
+"hex": "1b31"
+},
+{
+"name": "C-M-\"",
+"mode": "none",
+"hex": "1b27"
+},
+{
+"name": "C-M-#",
+"mode": "none",
+"hex": "1b432d4d2d23"
+},
+{
+"name": "C-M-$",
+"mode": "none",
+"hex": "1b432d4d2d24"
+},
+{
+"name": "C-M-%",
+"mode": "none",
+"hex": "1b432d4d2d25"
+},
+{
+"name": "C-M-&",
+"mode": "none",
+"hex": "1b432d4d2d26"
+},
+{
+"name": "C-M-'",
+"mode": "none",
+"hex": "1b27"
+},
+{
+"name": "C-M-(",
+"mode": "none",
+"hex": "1b39"
+},
+{
+"name": "C-M-)",
+"mode": "none",
+"hex": "1b30"
+},
+{
+"name": "C-M-*",
+"mode": "none",
+"hex": "1b432d4d2d2a"
+},
+{
+"name": "C-M-+",
+"mode": "none",
+"hex": "1b2b"
+},
+{
+"name": "C-M-,",
+"mode": "none",
+"hex": "1b2c"
+},
+{
+"name": "C-M--",
+"mode": "none",
+"hex": "1b1f"
+},
+{
+"name": "C-M-.",
+"mode": "none",
+"hex": "1b2e"
+},
+{
+"name": "C-M-0",
+"mode": "none",
+"hex": "1b30"
+},
+{
+"name": "C-M-2",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "C-M-4",
+"mode": "none",
+"hex": "1b1c"
+},
+{
+"name": "C-M-5",
+"mode": "none",
+"hex": "1b1d"
+},
+{
+"name": "C-M-6",
+"mode": "none",
+"hex": "1b1e"
+},
+{
+"name": "C-M-7",
+"mode": "none",
+"hex": "1b1f"
+},
+{
+"name": "C-M-9",
+"mode": "none",
+"hex": "1b39"
+},
+{
+"name": "C-M-:",
+"mode": "none",
+"hex": "1b3b"
+},
+{
+"name": "C-M-;",
+"mode": "none",
+"hex": "1b3b"
+},
+{
+"name": "C-M-<",
+"mode": "none",
+"hex": "1b2c"
+},
+{
+"name": "C-M-=",
+"mode": "none",
+"hex": "1b3d"
+},
+{
+"name": "C-M->",
+"mode": "none",
+"hex": "1b2e"
+},
+{
+"name": "C-M-B",
+"mode": "none",
+"hex": "1b02"
+},
+{
+"name": "C-M-C",
+"mode": "none",
+"hex": "1b03"
+},
+{
+"name": "C-M-D",
+"mode": "none",
+"hex": "1b04"
+},
+{
+"name": "C-M-E",
+"mode": "none",
+"hex": "1b05"
+},
+{
+"name": "C-M-F",
+"mode": "none",
+"hex": "1b06"
+},
+{
+"name": "C-M-G",
+"mode": "none",
+"hex": "1b07"
+},
+{
+"name": "C-M-H",
+"mode": "none",
+"hex": "1b08"
+},
+{
+"name": "C-M-I",
+"mode": "none",
+"hex": "1b09"
+},
+{
+"name": "C-M-J",
+"mode": "none",
+"hex": "1b0a"
+},
+{
+"name": "C-M-K",
+"mode": "none",
+"hex": "1b0b"
+},
+{
+"name": "C-M-L",
+"mode": "none",
+"hex": "1b0c"
+},
+{
+"name": "C-M-M",
+"mode": "none",
+"hex": "1b0d"
+},
+{
+"name": "C-M-N",
+"mode": "none",
+"hex": "1b0e"
+},
+{
+"name": "C-M-O",
+"mode": "none",
+"hex": "1b0f"
+},
+{
+"name": "C-M-P",
+"mode": "none",
+"hex": "1b10"
+},
+{
+"name": "C-M-Q",
+"mode": "none",
+"hex": "1b11"
+},
+{
+"name": "C-M-R",
+"mode": "none",
+"hex": "1b12"
+},
+{
+"name": "C-M-S",
+"mode": "none",
+"hex": "1b13"
+},
+{
+"name": "C-M-T",
+"mode": "none",
+"hex": "1b14"
+},
+{
+"name": "C-M-U",
+"mode": "none",
+"hex": "1b15"
+},
+{
+"name": "C-M-V",
+"mode": "none",
+"hex": "1b16"
+},
+{
+"name": "C-M-W",
+"mode": "none",
+"hex": "1b17"
+},
+{
+"name": "C-M-X",
+"mode": "none",
+"hex": "1b18"
+},
+{
+"name": "C-M-Y",
+"mode": "none",
+"hex": "1b19"
+},
+{
+"name": "C-M-Z",
+"mode": "none",
+"hex": "1b1a"
+},
+{
+"name": "C-M-\\",
+"mode": "none",
+"hex": "1b1c"
+},
+{
+"name": "C-M-]",
+"mode": "none",
+"hex": "1b1d"
+},
+{
+"name": "C-M-^",
+"mode": "none",
+"hex": "1b1e"
+},
+{
+"name": "C-M-_",
+"mode": "none",
+"hex": "1b1f"
+},
+{
+"name": "C-M-b",
+"mode": "none",
+"hex": "1b02"
+},
+{
+"name": "C-M-c",
+"mode": "none",
+"hex": "1b03"
+},
+{
+"name": "C-M-d",
+"mode": "none",
+"hex": "1b04"
+},
+{
+"name": "C-M-e",
+"mode": "none",
+"hex": "1b05"
+},
+{
+"name": "C-M-f",
+"mode": "none",
+"hex": "1b06"
+},
+{
+"name": "C-M-g",
+"mode": "none",
+"hex": "1b07"
+},
+{
+"name": "C-M-h",
+"mode": "none",
+"hex": "1b08"
+},
+{
+"name": "C-M-i",
+"mode": "none",
+"hex": "1b09"
+},
+{
+"name": "C-M-j",
+"mode": "none",
+"hex": "1b0a"
+},
+{
+"name": "C-M-k",
+"mode": "none",
+"hex": "1b0b"
+},
+{
+"name": "C-M-l",
+"mode": "none",
+"hex": "1b0c"
+},
+{
+"name": "C-M-m",
+"mode": "none",
+"hex": "1b0d"
+},
+{
+"name": "C-M-n",
+"mode": "none",
+"hex": "1b0e"
+},
+{
+"name": "C-M-o",
+"mode": "none",
+"hex": "1b0f"
+},
+{
+"name": "C-M-p",
+"mode": "none",
+"hex": "1b10"
+},
+{
+"name": "C-M-q",
+"mode": "none",
+"hex": "1b11"
+},
+{
+"name": "C-M-r",
+"mode": "none",
+"hex": "1b12"
+},
+{
+"name": "C-M-s",
+"mode": "none",
+"hex": "1b13"
+},
+{
+"name": "C-M-t",
+"mode": "none",
+"hex": "1b14"
+},
+{
+"name": "C-M-u",
+"mode": "none",
+"hex": "1b15"
+},
+{
+"name": "C-M-v",
+"mode": "none",
+"hex": "1b16"
+},
+{
+"name": "C-M-w",
+"mode": "none",
+"hex": "1b17"
+},
+{
+"name": "C-M-x",
+"mode": "none",
+"hex": "1b18"
+},
+{
+"name": "C-M-y",
+"mode": "none",
+"hex": "1b19"
+},
+{
+"name": "C-M-{",
+"mode": "none",
+"hex": "1b1b"
+},
+{
+"name": "C-M-|",
+"mode": "none",
+"hex": "1b1c"
+},
+{
+"name": "C-M-}",
+"mode": "none",
+"hex": "1b1d"
+},
+{
+"name": "!",
+"mode": "none",
+"hex": "21"
+},
+{
+"name": "\"",
+"mode": "none",
+"hex": "22"
+},
+{
+"name": "#",
+"mode": "none",
+"hex": "23"
+},
+{
+"name": "$",
+"mode": "none",
+"hex": "24"
+},
+{
+"name": "%",
+"mode": "none",
+"hex": "25"
+},
+{
+"name": "&",
+"mode": "none",
+"hex": "26"
+},
+{
+"name": "'",
+"mode": "none",
+"hex": "27"
+},
+{
+"name": "(",
+"mode": "none",
+"hex": "28"
+},
+{
+"name": ")",
+"mode": "none",
+"hex": "29"
+},
+{
+"name": "*",
+"mode": "none",
+"hex": "2a"
+},
+{
+"name": "+",
+"mode": "none",
+"hex": "2b"
+},
+{
+"name": ",",
+"mode": "none",
+"hex": "2c"
+},
+{
+"name": "-",
+"mode": "none",
+"hex": "2d"
+},
+{
+"name": ".",
+"mode": "none",
+"hex": "2e"
+},
+{
+"name": "0",
+"mode": "none",
+"hex": "30"
+},
+{
+"name": "2",
+"mode": "none",
+"hex": "32"
+},
+{
+"name": "4",
+"mode": "none",
+"hex": "34"
+},
+{
+"name": "5",
+"mode": "none",
+"hex": "35"
+},
+{
+"name": "6",
+"mode": "none",
+"hex": "36"
+},
+{
+"name": "7",
+"mode": "none",
+"hex": "37"
+},
+{
+"name": "9",
+"mode": "none",
+"hex": "39"
+},
+{
+"name": ":",
+"mode": "none",
+"hex": "3a"
+},
+{
+"name": ";",
+"mode": "none",
+"hex": "3b"
+},
+{
+"name": "<",
+"mode": "none",
+"hex": "3c"
+},
+{
+"name": "=",
+"mode": "none",
+"hex": "3d"
+},
+{
+"name": ">",
+"mode": "none",
+"hex": "3e"
+},
+{
+"name": "B",
+"mode": "none",
+"hex": "42"
+},
+{
+"name": "C",
+"mode": "none",
+"hex": "43"
+},
+{
+"name": "D",
+"mode": "none",
+"hex": "44"
+},
+{
+"name": "E",
+"mode": "none",
+"hex": "45"
+},
+{
+"name": "F",
+"mode": "none",
+"hex": "46"
+},
+{
+"name": "G",
+"mode": "none",
+"hex": "47"
+},
+{
+"name": "H",
+"mode": "none",
+"hex": "48"
+},
+{
+"name": "I",
+"mode": "none",
+"hex": "49"
+},
+{
+"name": "J",
+"mode": "none",
+"hex": "4a"
+},
+{
+"name": "K",
+"mode": "none",
+"hex": "4b"
+},
+{
+"name": "L",
+"mode": "none",
+"hex": "4c"
+},
+{
+"name": "M",
+"mode": "none",
+"hex": "4d"
+},
+{
+"name": "N",
+"mode": "none",
+"hex": "4e"
+},
+{
+"name": "O",
+"mode": "none",
+"hex": "4f"
+},
+{
+"name": "P",
+"mode": "none",
+"hex": "50"
+},
+{
+"name": "Q",
+"mode": "none",
+"hex": "51"
+},
+{
+"name": "R",
+"mode": "none",
+"hex": "52"
+},
+{
+"name": "S",
+"mode": "none",
+"hex": "53"
+},
+{
+"name": "T",
+"mode": "none",
+"hex": "54"
+},
+{
+"name": "U",
+"mode": "none",
+"hex": "55"
+},
+{
+"name": "V",
+"mode": "none",
+"hex": "56"
+},
+{
+"name": "W",
+"mode": "none",
+"hex": "57"
+},
+{
+"name": "X",
+"mode": "none",
+"hex": "58"
+},
+{
+"name": "Y",
+"mode": "none",
+"hex": "59"
+},
+{
+"name": "Z",
+"mode": "none",
+"hex": "5a"
+},
+{
+"name": "\\",
+"mode": "none",
+"hex": "5c"
+},
+{
+"name": "]",
+"mode": "none",
+"hex": "5d"
+},
+{
+"name": "^",
+"mode": "none",
+"hex": "5e"
+},
+{
+"name": "_",
+"mode": "none",
+"hex": "5f"
+},
+{
+"name": "b",
+"mode": "none",
+"hex": "62"
+},
+{
+"name": "c",
+"mode": "none",
+"hex": "63"
+},
+{
+"name": "d",
+"mode": "none",
+"hex": "64"
+},
+{
+"name": "e",
+"mode": "none",
+"hex": "65"
+},
+{
+"name": "f",
+"mode": "none",
+"hex": "66"
+},
+{
+"name": "g",
+"mode": "none",
+"hex": "67"
+},
+{
+"name": "h",
+"mode": "none",
+"hex": "68"
+},
+{
+"name": "i",
+"mode": "none",
+"hex": "69"
+},
+{
+"name": "j",
+"mode": "none",
+"hex": "6a"
+},
+{
+"name": "k",
+"mode": "none",
+"hex": "6b"
+},
+{
+"name": "l",
+"mode": "none",
+"hex": "6c"
+},
+{
+"name": "m",
+"mode": "none",
+"hex": "6d"
+},
+{
+"name": "n",
+"mode": "none",
+"hex": "6e"
+},
+{
+"name": "o",
+"mode": "none",
+"hex": "6f"
+},
+{
+"name": "p",
+"mode": "none",
+"hex": "70"
+},
+{
+"name": "q",
+"mode": "none",
+"hex": "71"
+},
+{
+"name": "r",
+"mode": "none",
+"hex": "72"
+},
+{
+"name": "s",
+"mode": "none",
+"hex": "73"
+},
+{
+"name": "t",
+"mode": "none",
+"hex": "74"
+},
+{
+"name": "u",
+"mode": "none",
+"hex": "75"
+},
+{
+"name": "v",
+"mode": "none",
+"hex": "76"
+},
+{
+"name": "w",
+"mode": "none",
+"hex": "77"
+},
+{
+"name": "x",
+"mode": "none",
+"hex": "78"
+},
+{
+"name": "y",
+"mode": "none",
+"hex": "79"
+},
+{
+"name": "{",
+"mode": "none",
+"hex": "7b"
+},
+{
+"name": "|",
+"mode": "none",
+"hex": "7c"
+},
+{
+"name": "}",
+"mode": "none",
+"hex": "7d"
+},
+{
+"name": "Insert",
+"mode": "none",
+"hex": "1b5b327e"
+},
+{
+"name": "Delete",
+"mode": "none",
+"hex": "1b5b337e"
+},
+{
+"name": "PageUp",
+"mode": "none",
+"hex": "1b5b357e"
+},
+{
+"name": "PageDown",
+"mode": "none",
+"hex": "1b5b367e"
+},
+{
+"name": "PgUp",
+"mode": "none",
+"hex": "1b5b357e"
+},
+{
+"name": "PgDn",
+"mode": "none",
+"hex": "1b5b367e"
+},
+{
+"name": "F3",
+"mode": "none",
+"hex": "1b4f52"
+},
+{
+"name": "F6",
+"mode": "none",
+"hex": "1b5b31377e"
+},
+{
+"name": "F7",
+"mode": "none",
+"hex": "1b5b31387e"
+},
+{
+"name": "F8",
+"mode": "none",
+"hex": "1b5b31397e"
+},
+{
+"name": "F10",
+"mode": "none",
+"hex": "1b5b32317e"
+},
+{
+"name": "F11",
+"mode": "none",
+"hex": "1b5b32337e"
+},
+{
+"name": "KP1",
+"mode": "none",
+"hex": "31"
+},
+{
+"name": "KP2",
+"mode": "none",
+"hex": "32"
+},
+{
+"name": "KP3",
+"mode": "none",
+"hex": "33"
+},
+{
+"name": "KP4",
+"mode": "none",
+"hex": "34"
+},
+{
+"name": "KP6",
+"mode": "none",
+"hex": "36"
+},
+{
+"name": "KP7",
+"mode": "none",
+"hex": "37"
+},
+{
+"name": "KP8",
+"mode": "none",
+"hex": "38"
+},
+{
+"name": "KP9",
+"mode": "none",
+"hex": "39"
+},
+{
+"name": "[NUL]",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "[SOH]",
+"mode": "none",
+"hex": "01"
+},
+{
+"name": "[STX]",
+"mode": "none",
+"hex": "02"
+},
+{
+"name": "[ETX]",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "[EOT]",
+"mode": "none",
+"hex": "04"
+},
+{
+"name": "[ENQ]",
+"mode": "none",
+"hex": "05"
+},
+{
+"name": "[ASC]",
+"mode": "none",
+"hex": "06"
+},
+{
+"name": "[BEL]",
+"mode": "none",
+"hex": "07"
+},
+{
+"name": "[BS]",
+"mode": "none",
+"hex": "08"
+},
+{
+"name": "[HT]",
+"mode": "none",
+"hex": "5b48545d"
+},
+{
+"name": "[LF]",
+"mode": "none",
+"hex": "0a"
+},
+{
+"name": "[VT]",
+"mode": "none",
+"hex": "0b"
+},
+{
+"name": "[FF]",
+"mode": "none",
+"hex": "0c"
+},
+{
+"name": "[CR]",
+"mode": "none",
+"hex": "5b43525d"
+},
+{
+"name": "[SO]",
+"mode": "none",
+"hex": "0e"
+},
+{
+"name": "[SI]",
+"mode": "none",
+"hex": "0f"
+},
+{
+"name": "[DLE]",
+"mode": "none",
+"hex": "10"
+},
+{
+"name": "[DC1]",
+"mode": "none",
+"hex": "11"
+},
+{
+"name": "[DC2]",
+"mode": "none",
+"hex": "12"
+},
+{
+"name": "[DC3]",
+"mode": "none",
+"hex": "13"
+},
+{
+"name": "[DC4]",
+"mode": "none",
+"hex": "14"
+},
+{
+"name": "[NAK]",
+"mode": "none",
+"hex": "15"
+},
+{
+"name": "[SYN]",
+"mode": "none",
+"hex": "16"
+},
+{
+"name": "[ETB]",
+"mode": "none",
+"hex": "17"
+},
+{
+"name": "[CAN]",
+"mode": "none",
+"hex": "18"
+},
+{
+"name": "[EM]",
+"mode": "none",
+"hex": "19"
+},
+{
+"name": "[SUB]",
+"mode": "none",
+"hex": "1a"
+},
+{
+"name": "[ESC]",
+"mode": "none",
+"hex": "5b4553435d"
+},
+{
+"name": "[FS]",
+"mode": "none",
+"hex": "1c"
+},
+{
+"name": "[GS]",
+"mode": "none",
+"hex": "1d"
+},
+{
+"name": "[RS]",
+"mode": "none",
+"hex": "1e"
+},
+{
+"name": "[US]",
+"mode": "none",
+"hex": "1f"
+},
+{
+"name": "[DEL]",
+"mode": "none",
+"hex": "5b44454c5d"
+},
+{
+"name": "[ACK]",
+"mode": "none",
+"hex": "5b41434b5d"
+},
+{
+"name": "[nul]",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "M-[NUL]",
+"mode": "none",
+"hex": "1b00"
+},
+{
+"name": "C-[LF]",
+"mode": "none",
+"hex": "0a"
+},
+{
+"name": "^C",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "^c",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "^[",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "^?",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "^@",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "^ ",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "^^",
+"mode": "none",
+"hex": "1e"
+},
+{
+"name": "^C-a",
+"mode": "none",
+"hex": "01"
+},
+{
+"name": "C-^c",
+"mode": "none",
+"hex": "432d5e63"
+},
+{
+"name": "enter",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "ENTER",
+"mode": "none",
+"hex": "0d"
+},
+{
+"name": "up",
+"mode": "none",
+"hex": "1b5b41"
+},
+{
+"name": "f1",
+"mode": "none",
+"hex": "1b4f50"
+},
+{
+"name": "kp5",
+"mode": "none",
+"hex": "35"
+},
+{
+"name": "kpenter",
+"mode": "none",
+"hex": "0a"
+},
+{
+"name": "bspace",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "c-c",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "m-x",
+"mode": "none",
+"hex": "1b78"
+},
+{
+"name": "s-up",
+"mode": "none",
+"hex": "1b5b313b3241"
+},
+{
+"name": "M-C-x",
+"mode": "none",
+"hex": "1b18"
+},
+{
+"name": "c-M-s-up",
+"mode": "none",
+"hex": "1b5b313b3841"
+},
+{
+"name": "0x1b",
+"mode": "none",
+"hex": "1b"
+},
+{
+"name": "0x03",
+"mode": "none",
+"hex": "03"
+},
+{
+"name": "0x7f",
+"mode": "none",
+"hex": "7f"
+},
+{
+"name": "0x41",
+"mode": "none",
+"hex": "41"
+},
+{
+"name": "0xe9",
+"mode": "none",
+"hex": "c3a9"
+},
+{
+"name": "0x0",
+"mode": "none",
+"hex": "00"
+},
+{
+"name": "0x",
+"mode": "none",
+"hex": "3078"
+},
+{
+"name": "0x1F600",
+"mode": "none",
+"hex": "f09f9880"
+},
+{
+"name": "0xzz",
+"mode": "none",
+"hex": "30787a7a"
+},
+{
+"name": "0x80",
+"mode": "none",
+"hex": "c280"
+},
+{
+"name": "0x9b",
+"mode": "none",
+"hex": "c29b"
+},
+{
+"name": "None",
+"mode": "none",
+"hex": "4e6f6e65"
+},
+{
+"name": "Any",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "User0",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "User9",
+"mode": "none",
+"hex": ""
+},
+{
+"name": "MouseDown1",
+"mode": "none",
+"hex": "4d6f757365446f776e31"
+},
+{
+"name": "WheelUp",
+"mode": "none",
+"hex": "576865656c5570"
+},
+{
+"name": "F13",
+"mode": "none",
+"hex": "463133"
+},
+{
+"name": "F0",
+"mode": "none",
+"hex": "4630"
+},
+{
+"name": "C-F13",
+"mode": "none",
+"hex": "432d463133"
+},
+{
+"name": "KP",
+"mode": "none",
+"hex": "4b50"
+},
+{
+"name": "Up2",
+"mode": "none",
+"hex": "557032"
+},
+{
+"name": "Enter2",
+"mode": "none",
+"hex": "456e74657232"
+},
+{
+"name": "hello",
+"mode": "none",
+"hex": "68656c6c6f"
+},
+{
+"name": "C-",
+"mode": "none",
+"hex": "432d"
+},
+{
+"name": "M-",
+"mode": "none",
+"hex": "4d2d"
+},
+{
+"name": "S-",
+"mode": "none",
+"hex": "532d"
+},
+{
+"name": "X-a",
+"mode": "none",
+"hex": "582d61"
+},
+{
+"name": "C-X-a",
+"mode": "none",
+"hex": "432d582d61"
+},
+{
+"name": "日",
+"mode": "none",
+"hex": "e697a5"
+},
+{
+"name": "😀",
+"mode": "none",
+"hex": "f09f9880"
+},
+{
+"name": "C-😀",
+"mode": "none",
+"hex": "f09f9880"
+},
+{
+"name": "M-😀",
+"mode": "none",
+"hex": "1bf09f9880"
+},
+{
+"name": "é",
+"mode": "none",
+"hex": "65cc81"
+},
+{
+"name": " ",
+"mode": "none",
+"hex": "20"
+},
+{
+"name": "  ",
+"mode": "none",
+"hex": "2020"
+},
+{
+"name": "Up",
+"mode": "app",
+"hex": "1b4f41"
+},
+{
+"name": "S-Up",
+"mode": "app",
+"hex": "1b5b313b3241"
+},
+{
+"name": "C-Up",
+"mode": "app",
+"hex": "1b5b313b3541"
+},
+{
+"name": "M-Up",
+"mode": "app",
+"hex": "1b5b313b3341"
+},
+{
+"name": "C-S-Up",
+"mode": "app",
+"hex": "1b5b313b3641"
+},
+{
+"name": "M-S-Up",
+"mode": "app",
+"hex": "1b5b313b3441"
+},
+{
+"name": "C-M-Up",
+"mode": "app",
+"hex": "1b5b313b3741"
+},
+{
+"name": "C-M-S-Up",
+"mode": "app",
+"hex": "1b5b313b3841"
+},
+{
+"name": "Down",
+"mode": "app",
+"hex": "1b4f42"
+},
+{
+"name": "S-Down",
+"mode": "app",
+"hex": "1b5b313b3242"
+},
+{
+"name": "C-Down",
+"mode": "app",
+"hex": "1b5b313b3542"
+},
+{
+"name": "M-Down",
+"mode": "app",
+"hex": "1b5b313b3342"
+},
+{
+"name": "C-S-Down",
+"mode": "app",
+"hex": "1b5b313b3642"
+},
+{
+"name": "M-S-Down",
+"mode": "app",
+"hex": "1b5b313b3442"
+},
+{
+"name": "C-M-Down",
+"mode": "app",
+"hex": "1b5b313b3742"
+},
+{
+"name": "C-M-S-Down",
+"mode": "app",
+"hex": "1b5b313b3842"
+},
+{
+"name": "Left",
+"mode": "app",
+"hex": "1b4f44"
+},
+{
+"name": "S-Left",
+"mode": "app",
+"hex": "1b5b313b3244"
+},
+{
+"name": "C-Left",
+"mode": "app",
+"hex": "1b5b313b3544"
+},
+{
+"name": "M-Left",
+"mode": "app",
+"hex": "1b5b313b3344"
+},
+{
+"name": "C-S-Left",
+"mode": "app",
+"hex": "1b5b313b3644"
+},
+{
+"name": "M-S-Left",
+"mode": "app",
+"hex": "1b5b313b3444"
+},
+{
+"name": "C-M-Left",
+"mode": "app",
+"hex": "1b5b313b3744"
+},
+{
+"name": "C-M-S-Left",
+"mode": "app",
+"hex": "1b5b313b3844"
+},
+{
+"name": "Right",
+"mode": "app",
+"hex": "1b4f43"
+},
+{
+"name": "S-Right",
+"mode": "app",
+"hex": "1b5b313b3243"
+},
+{
+"name": "C-Right",
+"mode": "app",
+"hex": "1b5b313b3543"
+},
+{
+"name": "M-Right",
+"mode": "app",
+"hex": "1b5b313b3343"
+},
+{
+"name": "C-S-Right",
+"mode": "app",
+"hex": "1b5b313b3643"
+},
+{
+"name": "M-S-Right",
+"mode": "app",
+"hex": "1b5b313b3443"
+},
+{
+"name": "C-M-Right",
+"mode": "app",
+"hex": "1b5b313b3743"
+},
+{
+"name": "C-M-S-Right",
+"mode": "app",
+"hex": "1b5b313b3843"
+},
+{
+"name": "Home",
+"mode": "app",
+"hex": "1b5b317e"
+},
+{
+"name": "S-Home",
+"mode": "app",
+"hex": "1b5b313b3248"
+},
+{
+"name": "C-Home",
+"mode": "app",
+"hex": "1b5b313b3548"
+},
+{
+"name": "M-Home",
+"mode": "app",
+"hex": "1b5b313b3348"
+},
+{
+"name": "C-S-Home",
+"mode": "app",
+"hex": "1b5b313b3648"
+},
+{
+"name": "M-S-Home",
+"mode": "app",
+"hex": "1b5b313b3448"
+},
+{
+"name": "C-M-Home",
+"mode": "app",
+"hex": "1b5b313b3748"
+},
+{
+"name": "C-M-S-Home",
+"mode": "app",
+"hex": "1b5b313b3848"
+},
+{
+"name": "End",
+"mode": "app",
+"hex": "1b5b347e"
+},
+{
+"name": "S-End",
+"mode": "app",
+"hex": "1b5b313b3246"
+},
+{
+"name": "C-End",
+"mode": "app",
+"hex": "1b5b313b3546"
+},
+{
+"name": "M-End",
+"mode": "app",
+"hex": "1b5b313b3346"
+},
+{
+"name": "C-S-End",
+"mode": "app",
+"hex": "1b5b313b3646"
+},
+{
+"name": "M-S-End",
+"mode": "app",
+"hex": "1b5b313b3446"
+},
+{
+"name": "C-M-End",
+"mode": "app",
+"hex": "1b5b313b3746"
+},
+{
+"name": "C-M-S-End",
+"mode": "app",
+"hex": "1b5b313b3846"
+},
+{
+"name": "IC",
+"mode": "app",
+"hex": "1b5b327e"
+},
+{
+"name": "S-IC",
+"mode": "app",
+"hex": "1b5b323b327e"
+},
+{
+"name": "C-IC",
+"mode": "app",
+"hex": "1b5b323b357e"
+},
+{
+"name": "M-IC",
+"mode": "app",
+"hex": "1b5b323b337e"
+},
+{
+"name": "C-S-IC",
+"mode": "app",
+"hex": "1b5b323b367e"
+},
+{
+"name": "M-S-IC",
+"mode": "app",
+"hex": "1b5b323b347e"
+},
+{
+"name": "C-M-IC",
+"mode": "app",
+"hex": "1b5b323b377e"
+},
+{
+"name": "C-M-S-IC",
+"mode": "app",
+"hex": "1b5b323b387e"
+},
+{
+"name": "DC",
+"mode": "app",
+"hex": "1b5b337e"
+},
+{
+"name": "S-DC",
+"mode": "app",
+"hex": "1b5b333b327e"
+},
+{
+"name": "C-DC",
+"mode": "app",
+"hex": "1b5b333b357e"
+},
+{
+"name": "M-DC",
+"mode": "app",
+"hex": "1b5b333b337e"
+},
+{
+"name": "C-S-DC",
+"mode": "app",
+"hex": "1b5b333b367e"
+},
+{
+"name": "M-S-DC",
+"mode": "app",
+"hex": "1b5b333b347e"
+},
+{
+"name": "C-M-DC",
+"mode": "app",
+"hex": "1b5b333b377e"
+},
+{
+"name": "C-M-S-DC",
+"mode": "app",
+"hex": "1b5b333b387e"
+},
+{
+"name": "PPage",
+"mode": "app",
+"hex": "1b5b357e"
+},
+{
+"name": "S-PPage",
+"mode": "app",
+"hex": "1b5b353b327e"
+},
+{
+"name": "C-PPage",
+"mode": "app",
+"hex": "1b5b353b357e"
+},
+{
+"name": "M-PPage",
+"mode": "app",
+"hex": "1b5b353b337e"
+},
+{
+"name": "C-S-PPage",
+"mode": "app",
+"hex": "1b5b353b367e"
+},
+{
+"name": "M-S-PPage",
+"mode": "app",
+"hex": "1b5b353b347e"
+},
+{
+"name": "C-M-PPage",
+"mode": "app",
+"hex": "1b5b353b377e"
+},
+{
+"name": "C-M-S-PPage",
+"mode": "app",
+"hex": "1b5b353b387e"
+},
+{
+"name": "NPage",
+"mode": "app",
+"hex": "1b5b367e"
+},
+{
+"name": "S-NPage",
+"mode": "app",
+"hex": "1b5b363b327e"
+},
+{
+"name": "C-NPage",
+"mode": "app",
+"hex": "1b5b363b357e"
+},
+{
+"name": "M-NPage",
+"mode": "app",
+"hex": "1b5b363b337e"
+},
+{
+"name": "C-S-NPage",
+"mode": "app",
+"hex": "1b5b363b367e"
+},
+{
+"name": "M-S-NPage",
+"mode": "app",
+"hex": "1b5b363b347e"
+},
+{
+"name": "C-M-NPage",
+"mode": "app",
+"hex": "1b5b363b377e"
+},
+{
+"name": "C-M-S-NPage",
+"mode": "app",
+"hex": "1b5b363b387e"
+},
+{
+"name": "F1",
+"mode": "app",
+"hex": "1b4f50"
+},
+{
+"name": "S-F1",
+"mode": "app",
+"hex": "1b5b313b3250"
+},
+{
+"name": "C-F1",
+"mode": "app",
+"hex": "1b5b313b3550"
+},
+{
+"name": "M-F1",
+"mode": "app",
+"hex": "1b5b313b3350"
+},
+{
+"name": "C-S-F1",
+"mode": "app",
+"hex": "1b5b313b3650"
+},
+{
+"name": "M-S-F1",
+"mode": "app",
+"hex": "1b5b313b3450"
+},
+{
+"name": "C-M-F1",
+"mode": "app",
+"hex": "1b5b313b3750"
+},
+{
+"name": "C-M-S-F1",
+"mode": "app",
+"hex": "1b5b313b3850"
+},
+{
+"name": "F2",
+"mode": "app",
+"hex": "1b4f51"
+},
+{
+"name": "S-F2",
+"mode": "app",
+"hex": "1b5b313b3251"
+},
+{
+"name": "C-F2",
+"mode": "app",
+"hex": "1b5b313b3551"
+},
+{
+"name": "M-F2",
+"mode": "app",
+"hex": "1b5b313b3351"
+},
+{
+"name": "C-S-F2",
+"mode": "app",
+"hex": "1b5b313b3651"
+},
+{
+"name": "M-S-F2",
+"mode": "app",
+"hex": "1b5b313b3451"
+},
+{
+"name": "C-M-F2",
+"mode": "app",
+"hex": "1b5b313b3751"
+},
+{
+"name": "C-M-S-F2",
+"mode": "app",
+"hex": "1b5b313b3851"
+},
+{
+"name": "F4",
+"mode": "app",
+"hex": "1b4f53"
+},
+{
+"name": "S-F4",
+"mode": "app",
+"hex": "1b5b313b3253"
+},
+{
+"name": "C-F4",
+"mode": "app",
+"hex": "1b5b313b3553"
+},
+{
+"name": "M-F4",
+"mode": "app",
+"hex": "1b5b313b3353"
+},
+{
+"name": "C-S-F4",
+"mode": "app",
+"hex": "1b5b313b3653"
+},
+{
+"name": "M-S-F4",
+"mode": "app",
+"hex": "1b5b313b3453"
+},
+{
+"name": "C-M-F4",
+"mode": "app",
+"hex": "1b5b313b3753"
+},
+{
+"name": "C-M-S-F4",
+"mode": "app",
+"hex": "1b5b313b3853"
+},
+{
+"name": "F5",
+"mode": "app",
+"hex": "1b5b31357e"
+},
+{
+"name": "S-F5",
+"mode": "app",
+"hex": "1b5b31353b327e"
+},
+{
+"name": "C-F5",
+"mode": "app",
+"hex": "1b5b31353b357e"
+},
+{
+"name": "M-F5",
+"mode": "app",
+"hex": "1b5b31353b337e"
+},
+{
+"name": "C-S-F5",
+"mode": "app",
+"hex": "1b5b31353b367e"
+},
+{
+"name": "M-S-F5",
+"mode": "app",
+"hex": "1b5b31353b347e"
+},
+{
+"name": "C-M-F5",
+"mode": "app",
+"hex": "1b5b31353b377e"
+},
+{
+"name": "C-M-S-F5",
+"mode": "app",
+"hex": "1b5b31353b387e"
+},
+{
+"name": "F9",
+"mode": "app",
+"hex": "1b5b32307e"
+},
+{
+"name": "S-F9",
+"mode": "app",
+"hex": "1b5b32303b327e"
+},
+{
+"name": "C-F9",
+"mode": "app",
+"hex": "1b5b32303b357e"
+},
+{
+"name": "M-F9",
+"mode": "app",
+"hex": "1b5b32303b337e"
+},
+{
+"name": "C-S-F9",
+"mode": "app",
+"hex": "1b5b32303b367e"
+},
+{
+"name": "M-S-F9",
+"mode": "app",
+"hex": "1b5b32303b347e"
+},
+{
+"name": "C-M-F9",
+"mode": "app",
+"hex": "1b5b32303b377e"
+},
+{
+"name": "C-M-S-F9",
+"mode": "app",
+"hex": "1b5b32303b387e"
+},
+{
+"name": "F12",
+"mode": "app",
+"hex": "1b5b32347e"
+},
+{
+"name": "S-F12",
+"mode": "app",
+"hex": "1b5b32343b327e"
+},
+{
+"name": "C-F12",
+"mode": "app",
+"hex": "1b5b32343b357e"
+},
+{
+"name": "M-F12",
+"mode": "app",
+"hex": "1b5b32343b337e"
+},
+{
+"name": "C-S-F12",
+"mode": "app",
+"hex": "1b5b32343b367e"
+},
+{
+"name": "M-S-F12",
+"mode": "app",
+"hex": "1b5b32343b347e"
+},
+{
+"name": "C-M-F12",
+"mode": "app",
+"hex": "1b5b32343b377e"
+},
+{
+"name": "C-M-S-F12",
+"mode": "app",
+"hex": "1b5b32343b387e"
+},
+{
+"name": "BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "S-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "C-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "M-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "C-S-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "M-S-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "C-M-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "C-M-S-BTab",
+"mode": "app",
+"hex": "1b5b5a"
+},
+{
+"name": "Tab",
+"mode": "app",
+"hex": "09"
+},
+{
+"name": "S-Tab",
+"mode": "app",
+"hex": "09"
+},
+{
+"name": "C-Tab",
+"mode": "app",
+"hex": "09"
+},
+{
+"name": "M-Tab",
+"mode": "app",
+"hex": "1b09"
+},
+{
+"name": "C-S-Tab",
+"mode": "app",
+"hex": "09"
+},
+{
+"name": "M-S-Tab",
+"mode": "app",
+"hex": "1b09"
+},
+{
+"name": "C-M-Tab",
+"mode": "app",
+"hex": "1b09"
+},
+{
+"name": "C-M-S-Tab",
+"mode": "app",
+"hex": "1b09"
+},
+{
+"name": "Enter",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "S-Enter",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "C-Enter",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "M-Enter",
+"mode": "app",
+"hex": "1b0d"
+},
+{
+"name": "C-S-Enter",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "M-S-Enter",
+"mode": "app",
+"hex": "1b0d"
+},
+{
+"name": "C-M-Enter",
+"mode": "app",
+"hex": "1b0d"
+},
+{
+"name": "C-M-S-Enter",
+"mode": "app",
+"hex": "1b0d"
+},
+{
+"name": "Escape",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "S-Escape",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "C-Escape",
+"mode": "app",
+"hex": "432d457363617065"
+},
+{
+"name": "M-Escape",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "C-S-Escape",
+"mode": "app",
+"hex": "432d532d457363617065"
+},
+{
+"name": "M-S-Escape",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "C-M-Escape",
+"mode": "app",
+"hex": "1b432d4d2d457363617065"
+},
+{
+"name": "C-M-S-Escape",
+"mode": "app",
+"hex": "1b432d4d2d532d457363617065"
+},
+{
+"name": "BSpace",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "S-BSpace",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "C-BSpace",
+"mode": "app",
+"hex": "432d425370616365"
+},
+{
+"name": "M-BSpace",
+"mode": "app",
+"hex": "1b7f"
+},
+{
+"name": "C-S-BSpace",
+"mode": "app",
+"hex": "432d532d425370616365"
+},
+{
+"name": "M-S-BSpace",
+"mode": "app",
+"hex": "1b7f"
+},
+{
+"name": "C-M-BSpace",
+"mode": "app",
+"hex": "1b432d4d2d425370616365"
+},
+{
+"name": "C-M-S-BSpace",
+"mode": "app",
+"hex": "1b432d4d2d532d425370616365"
+},
+{
+"name": "Space",
+"mode": "app",
+"hex": "20"
+},
+{
+"name": "S-Space",
+"mode": "app",
+"hex": "20"
+},
+{
+"name": "C-Space",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-Space",
+"mode": "app",
+"hex": "1b20"
+},
+{
+"name": "C-S-Space",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-S-Space",
+"mode": "app",
+"hex": "1b20"
+},
+{
+"name": "C-M-Space",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "C-M-S-Space",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "KP0",
+"mode": "app",
+"hex": "1b4f70"
+},
+{
+"name": "S-KP0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP0",
+"mode": "app",
+"hex": "1b1b4f70"
+},
+{
+"name": "C-S-KP0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KP5",
+"mode": "app",
+"hex": "1b4f75"
+},
+{
+"name": "S-KP5",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP5",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP5",
+"mode": "app",
+"hex": "1b1b4f75"
+},
+{
+"name": "C-S-KP5",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP5",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP5",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP5",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KP/",
+"mode": "app",
+"hex": "1b4f6f"
+},
+{
+"name": "S-KP/",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP/",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP/",
+"mode": "app",
+"hex": "1b1b4f6f"
+},
+{
+"name": "C-S-KP/",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP/",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP/",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP/",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KP*",
+"mode": "app",
+"hex": "1b4f6a"
+},
+{
+"name": "S-KP*",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP*",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP*",
+"mode": "app",
+"hex": "1b1b4f6a"
+},
+{
+"name": "C-S-KP*",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP*",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP*",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP*",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KP-",
+"mode": "app",
+"hex": "1b4f6d"
+},
+{
+"name": "S-KP-",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP-",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP-",
+"mode": "app",
+"hex": "1b1b4f6d"
+},
+{
+"name": "C-S-KP-",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP-",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP-",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP-",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KP+",
+"mode": "app",
+"hex": "1b4f6b"
+},
+{
+"name": "S-KP+",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP+",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP+",
+"mode": "app",
+"hex": "1b1b4f6b"
+},
+{
+"name": "C-S-KP+",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP+",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP+",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP+",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KP.",
+"mode": "app",
+"hex": "1b4f6e"
+},
+{
+"name": "S-KP.",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KP.",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KP.",
+"mode": "app",
+"hex": "1b1b4f6e"
+},
+{
+"name": "C-S-KP.",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KP.",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KP.",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KP.",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "KPEnter",
+"mode": "app",
+"hex": "1b4f4d"
+},
+{
+"name": "S-KPEnter",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-KPEnter",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-KPEnter",
+"mode": "app",
+"hex": "1b1b4f4d"
+},
+{
+"name": "C-S-KPEnter",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "M-S-KPEnter",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-KPEnter",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "C-M-S-KPEnter",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "a",
+"mode": "app",
+"hex": "61"
+},
+{
+"name": "S-a",
+"mode": "app",
+"hex": "61"
+},
+{
+"name": "C-a",
+"mode": "app",
+"hex": "01"
+},
+{
+"name": "M-a",
+"mode": "app",
+"hex": "1b61"
+},
+{
+"name": "C-S-a",
+"mode": "app",
+"hex": "01"
+},
+{
+"name": "M-S-a",
+"mode": "app",
+"hex": "1b61"
+},
+{
+"name": "C-M-a",
+"mode": "app",
+"hex": "1b01"
+},
+{
+"name": "C-M-S-a",
+"mode": "app",
+"hex": "1b01"
+},
+{
+"name": "A",
+"mode": "app",
+"hex": "41"
+},
+{
+"name": "S-A",
+"mode": "app",
+"hex": "41"
+},
+{
+"name": "C-A",
+"mode": "app",
+"hex": "01"
+},
+{
+"name": "M-A",
+"mode": "app",
+"hex": "1b41"
+},
+{
+"name": "C-S-A",
+"mode": "app",
+"hex": "01"
+},
+{
+"name": "M-S-A",
+"mode": "app",
+"hex": "1b41"
+},
+{
+"name": "C-M-A",
+"mode": "app",
+"hex": "1b01"
+},
+{
+"name": "C-M-S-A",
+"mode": "app",
+"hex": "1b01"
+},
+{
+"name": "z",
+"mode": "app",
+"hex": "7a"
+},
+{
+"name": "S-z",
+"mode": "app",
+"hex": "7a"
+},
+{
+"name": "C-z",
+"mode": "app",
+"hex": "1a"
+},
+{
+"name": "M-z",
+"mode": "app",
+"hex": "1b7a"
+},
+{
+"name": "C-S-z",
+"mode": "app",
+"hex": "1a"
+},
+{
+"name": "M-S-z",
+"mode": "app",
+"hex": "1b7a"
+},
+{
+"name": "C-M-z",
+"mode": "app",
+"hex": "1b1a"
+},
+{
+"name": "C-M-S-z",
+"mode": "app",
+"hex": "1b1a"
+},
+{
+"name": "é",
+"mode": "app",
+"hex": "c3a9"
+},
+{
+"name": "S-é",
+"mode": "app",
+"hex": "c3a9"
+},
+{
+"name": "C-é",
+"mode": "app",
+"hex": "c3a9"
+},
+{
+"name": "M-é",
+"mode": "app",
+"hex": "1bc3a9"
+},
+{
+"name": "C-S-é",
+"mode": "app",
+"hex": "c3a9"
+},
+{
+"name": "M-S-é",
+"mode": "app",
+"hex": "1bc3a9"
+},
+{
+"name": "C-M-é",
+"mode": "app",
+"hex": "1bc3a9"
+},
+{
+"name": "C-M-S-é",
+"mode": "app",
+"hex": "1bc3a9"
+},
+{
+"name": "1",
+"mode": "app",
+"hex": "31"
+},
+{
+"name": "S-1",
+"mode": "app",
+"hex": "31"
+},
+{
+"name": "C-1",
+"mode": "app",
+"hex": "31"
+},
+{
+"name": "M-1",
+"mode": "app",
+"hex": "1b31"
+},
+{
+"name": "C-S-1",
+"mode": "app",
+"hex": "31"
+},
+{
+"name": "M-S-1",
+"mode": "app",
+"hex": "1b31"
+},
+{
+"name": "C-M-1",
+"mode": "app",
+"hex": "1b31"
+},
+{
+"name": "C-M-S-1",
+"mode": "app",
+"hex": "1b31"
+},
+{
+"name": "3",
+"mode": "app",
+"hex": "33"
+},
+{
+"name": "S-3",
+"mode": "app",
+"hex": "33"
+},
+{
+"name": "C-3",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "M-3",
+"mode": "app",
+"hex": "1b33"
+},
+{
+"name": "C-S-3",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "M-S-3",
+"mode": "app",
+"hex": "1b33"
+},
+{
+"name": "C-M-3",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "C-M-S-3",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "8",
+"mode": "app",
+"hex": "38"
+},
+{
+"name": "S-8",
+"mode": "app",
+"hex": "38"
+},
+{
+"name": "C-8",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "M-8",
+"mode": "app",
+"hex": "1b38"
+},
+{
+"name": "C-S-8",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "M-S-8",
+"mode": "app",
+"hex": "1b38"
+},
+{
+"name": "C-M-8",
+"mode": "app",
+"hex": "1b7f"
+},
+{
+"name": "C-M-S-8",
+"mode": "app",
+"hex": "1b7f"
+},
+{
+"name": "/",
+"mode": "app",
+"hex": "2f"
+},
+{
+"name": "S-/",
+"mode": "app",
+"hex": "2f"
+},
+{
+"name": "C-/",
+"mode": "app",
+"hex": "1f"
+},
+{
+"name": "M-/",
+"mode": "app",
+"hex": "1b2f"
+},
+{
+"name": "C-S-/",
+"mode": "app",
+"hex": "1f"
+},
+{
+"name": "M-S-/",
+"mode": "app",
+"hex": "1b2f"
+},
+{
+"name": "C-M-/",
+"mode": "app",
+"hex": "1b1f"
+},
+{
+"name": "C-M-S-/",
+"mode": "app",
+"hex": "1b1f"
+},
+{
+"name": "?",
+"mode": "app",
+"hex": "3f"
+},
+{
+"name": "S-?",
+"mode": "app",
+"hex": "3f"
+},
+{
+"name": "C-?",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "M-?",
+"mode": "app",
+"hex": "1b3f"
+},
+{
+"name": "C-S-?",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "M-S-?",
+"mode": "app",
+"hex": "1b3f"
+},
+{
+"name": "C-M-?",
+"mode": "app",
+"hex": "1b7f"
+},
+{
+"name": "C-M-S-?",
+"mode": "app",
+"hex": "1b7f"
+},
+{
+"name": "[",
+"mode": "app",
+"hex": "5b"
+},
+{
+"name": "S-[",
+"mode": "app",
+"hex": "5b"
+},
+{
+"name": "C-[",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "M-[",
+"mode": "app",
+"hex": "1b5b"
+},
+{
+"name": "C-S-[",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "M-S-[",
+"mode": "app",
+"hex": "1b5b"
+},
+{
+"name": "C-M-[",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "C-M-S-[",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "~",
+"mode": "app",
+"hex": "7e"
+},
+{
+"name": "S-~",
+"mode": "app",
+"hex": "7e"
+},
+{
+"name": "C-~",
+"mode": "app",
+"hex": "1e"
+},
+{
+"name": "M-~",
+"mode": "app",
+"hex": "1b7e"
+},
+{
+"name": "C-S-~",
+"mode": "app",
+"hex": "1e"
+},
+{
+"name": "M-S-~",
+"mode": "app",
+"hex": "1b7e"
+},
+{
+"name": "C-M-~",
+"mode": "app",
+"hex": "1b1e"
+},
+{
+"name": "C-M-S-~",
+"mode": "app",
+"hex": "1b1e"
+},
+{
+"name": "`",
+"mode": "app",
+"hex": "60"
+},
+{
+"name": "S-`",
+"mode": "app",
+"hex": "60"
+},
+{
+"name": "C-`",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-`",
+"mode": "app",
+"hex": "1b60"
+},
+{
+"name": "C-S-`",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-S-`",
+"mode": "app",
+"hex": "1b60"
+},
+{
+"name": "C-M-`",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "C-M-S-`",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "@",
+"mode": "app",
+"hex": "40"
+},
+{
+"name": "S-@",
+"mode": "app",
+"hex": "40"
+},
+{
+"name": "C-@",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-@",
+"mode": "app",
+"hex": "1b40"
+},
+{
+"name": "C-S-@",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-S-@",
+"mode": "app",
+"hex": "1b40"
+},
+{
+"name": "C-M-@",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "C-M-S-@",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "C-!",
+"mode": "app",
+"hex": "31"
+},
+{
+"name": "C-\"",
+"mode": "app",
+"hex": "27"
+},
+{
+"name": "C-#",
+"mode": "app",
+"hex": "432d23"
+},
+{
+"name": "C-$",
+"mode": "app",
+"hex": "432d24"
+},
+{
+"name": "C-%",
+"mode": "app",
+"hex": "432d25"
+},
+{
+"name": "C-&",
+"mode": "app",
+"hex": "432d26"
+},
+{
+"name": "C-'",
+"mode": "app",
+"hex": "27"
+},
+{
+"name": "C-(",
+"mode": "app",
+"hex": "39"
+},
+{
+"name": "C-)",
+"mode": "app",
+"hex": "30"
+},
+{
+"name": "C-*",
+"mode": "app",
+"hex": "432d2a"
+},
+{
+"name": "C-+",
+"mode": "app",
+"hex": "2b"
+},
+{
+"name": "C-,",
+"mode": "app",
+"hex": "2c"
+},
+{
+"name": "C--",
+"mode": "app",
+"hex": "1f"
+},
+{
+"name": "C-.",
+"mode": "app",
+"hex": "2e"
+},
+{
+"name": "C-0",
+"mode": "app",
+"hex": "30"
+},
+{
+"name": "C-2",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "C-4",
+"mode": "app",
+"hex": "1c"
+},
+{
+"name": "C-5",
+"mode": "app",
+"hex": "1d"
+},
+{
+"name": "C-6",
+"mode": "app",
+"hex": "1e"
+},
+{
+"name": "C-7",
+"mode": "app",
+"hex": "1f"
+},
+{
+"name": "C-9",
+"mode": "app",
+"hex": "39"
+},
+{
+"name": "C-:",
+"mode": "app",
+"hex": "3b"
+},
+{
+"name": "C-;",
+"mode": "app",
+"hex": "3b"
+},
+{
+"name": "C-<",
+"mode": "app",
+"hex": "2c"
+},
+{
+"name": "C-=",
+"mode": "app",
+"hex": "3d"
+},
+{
+"name": "C->",
+"mode": "app",
+"hex": "2e"
+},
+{
+"name": "C-B",
+"mode": "app",
+"hex": "02"
+},
+{
+"name": "C-C",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "C-D",
+"mode": "app",
+"hex": "04"
+},
+{
+"name": "C-E",
+"mode": "app",
+"hex": "05"
+},
+{
+"name": "C-F",
+"mode": "app",
+"hex": "06"
+},
+{
+"name": "C-G",
+"mode": "app",
+"hex": "07"
+},
+{
+"name": "C-H",
+"mode": "app",
+"hex": "08"
+},
+{
+"name": "C-I",
+"mode": "app",
+"hex": "09"
+},
+{
+"name": "C-J",
+"mode": "app",
+"hex": "0a"
+},
+{
+"name": "C-K",
+"mode": "app",
+"hex": "0b"
+},
+{
+"name": "C-L",
+"mode": "app",
+"hex": "0c"
+},
+{
+"name": "C-M",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "C-N",
+"mode": "app",
+"hex": "0e"
+},
+{
+"name": "C-O",
+"mode": "app",
+"hex": "0f"
+},
+{
+"name": "C-P",
+"mode": "app",
+"hex": "10"
+},
+{
+"name": "C-Q",
+"mode": "app",
+"hex": "11"
+},
+{
+"name": "C-R",
+"mode": "app",
+"hex": "12"
+},
+{
+"name": "C-S",
+"mode": "app",
+"hex": "13"
+},
+{
+"name": "C-T",
+"mode": "app",
+"hex": "14"
+},
+{
+"name": "C-U",
+"mode": "app",
+"hex": "15"
+},
+{
+"name": "C-V",
+"mode": "app",
+"hex": "16"
+},
+{
+"name": "C-W",
+"mode": "app",
+"hex": "17"
+},
+{
+"name": "C-X",
+"mode": "app",
+"hex": "18"
+},
+{
+"name": "C-Y",
+"mode": "app",
+"hex": "19"
+},
+{
+"name": "C-Z",
+"mode": "app",
+"hex": "1a"
+},
+{
+"name": "C-\\",
+"mode": "app",
+"hex": "1c"
+},
+{
+"name": "C-]",
+"mode": "app",
+"hex": "1d"
+},
+{
+"name": "C-^",
+"mode": "app",
+"hex": "1e"
+},
+{
+"name": "C-_",
+"mode": "app",
+"hex": "1f"
+},
+{
+"name": "C-b",
+"mode": "app",
+"hex": "02"
+},
+{
+"name": "C-c",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "C-d",
+"mode": "app",
+"hex": "04"
+},
+{
+"name": "C-e",
+"mode": "app",
+"hex": "05"
+},
+{
+"name": "C-f",
+"mode": "app",
+"hex": "06"
+},
+{
+"name": "C-g",
+"mode": "app",
+"hex": "07"
+},
+{
+"name": "C-h",
+"mode": "app",
+"hex": "08"
+},
+{
+"name": "C-i",
+"mode": "app",
+"hex": "09"
+},
+{
+"name": "C-j",
+"mode": "app",
+"hex": "0a"
+},
+{
+"name": "C-k",
+"mode": "app",
+"hex": "0b"
+},
+{
+"name": "C-l",
+"mode": "app",
+"hex": "0c"
+},
+{
+"name": "C-m",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "C-n",
+"mode": "app",
+"hex": "0e"
+},
+{
+"name": "C-o",
+"mode": "app",
+"hex": "0f"
+},
+{
+"name": "C-p",
+"mode": "app",
+"hex": "10"
+},
+{
+"name": "C-q",
+"mode": "app",
+"hex": "11"
+},
+{
+"name": "C-r",
+"mode": "app",
+"hex": "12"
+},
+{
+"name": "C-s",
+"mode": "app",
+"hex": "13"
+},
+{
+"name": "C-t",
+"mode": "app",
+"hex": "14"
+},
+{
+"name": "C-u",
+"mode": "app",
+"hex": "15"
+},
+{
+"name": "C-v",
+"mode": "app",
+"hex": "16"
+},
+{
+"name": "C-w",
+"mode": "app",
+"hex": "17"
+},
+{
+"name": "C-x",
+"mode": "app",
+"hex": "18"
+},
+{
+"name": "C-y",
+"mode": "app",
+"hex": "19"
+},
+{
+"name": "C-{",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "C-|",
+"mode": "app",
+"hex": "1c"
+},
+{
+"name": "C-}",
+"mode": "app",
+"hex": "1d"
+},
+{
+"name": "M-!",
+"mode": "app",
+"hex": "1b21"
+},
+{
+"name": "M-\"",
+"mode": "app",
+"hex": "1b22"
+},
+{
+"name": "M-#",
+"mode": "app",
+"hex": "1b23"
+},
+{
+"name": "M-$",
+"mode": "app",
+"hex": "1b24"
+},
+{
+"name": "M-%",
+"mode": "app",
+"hex": "1b25"
+},
+{
+"name": "M-&",
+"mode": "app",
+"hex": "1b26"
+},
+{
+"name": "M-'",
+"mode": "app",
+"hex": "1b27"
+},
+{
+"name": "M-(",
+"mode": "app",
+"hex": "1b28"
+},
+{
+"name": "M-)",
+"mode": "app",
+"hex": "1b29"
+},
+{
+"name": "M-*",
+"mode": "app",
+"hex": "1b2a"
+},
+{
+"name": "M-+",
+"mode": "app",
+"hex": "1b2b"
+},
+{
+"name": "M-,",
+"mode": "app",
+"hex": "1b2c"
+},
+{
+"name": "M--",
+"mode": "app",
+"hex": "1b2d"
+},
+{
+"name": "M-.",
+"mode": "app",
+"hex": "1b2e"
+},
+{
+"name": "M-0",
+"mode": "app",
+"hex": "1b30"
+},
+{
+"name": "M-2",
+"mode": "app",
+"hex": "1b32"
+},
+{
+"name": "M-4",
+"mode": "app",
+"hex": "1b34"
+},
+{
+"name": "M-5",
+"mode": "app",
+"hex": "1b35"
+},
+{
+"name": "M-6",
+"mode": "app",
+"hex": "1b36"
+},
+{
+"name": "M-7",
+"mode": "app",
+"hex": "1b37"
+},
+{
+"name": "M-9",
+"mode": "app",
+"hex": "1b39"
+},
+{
+"name": "M-:",
+"mode": "app",
+"hex": "1b3a"
+},
+{
+"name": "M-;",
+"mode": "app",
+"hex": "1b3b"
+},
+{
+"name": "M-<",
+"mode": "app",
+"hex": "1b3c"
+},
+{
+"name": "M-=",
+"mode": "app",
+"hex": "1b3d"
+},
+{
+"name": "M->",
+"mode": "app",
+"hex": "1b3e"
+},
+{
+"name": "M-B",
+"mode": "app",
+"hex": "1b42"
+},
+{
+"name": "M-C",
+"mode": "app",
+"hex": "1b43"
+},
+{
+"name": "M-D",
+"mode": "app",
+"hex": "1b44"
+},
+{
+"name": "M-E",
+"mode": "app",
+"hex": "1b45"
+},
+{
+"name": "M-F",
+"mode": "app",
+"hex": "1b46"
+},
+{
+"name": "M-G",
+"mode": "app",
+"hex": "1b47"
+},
+{
+"name": "M-H",
+"mode": "app",
+"hex": "1b48"
+},
+{
+"name": "M-I",
+"mode": "app",
+"hex": "1b49"
+},
+{
+"name": "M-J",
+"mode": "app",
+"hex": "1b4a"
+},
+{
+"name": "M-K",
+"mode": "app",
+"hex": "1b4b"
+},
+{
+"name": "M-L",
+"mode": "app",
+"hex": "1b4c"
+},
+{
+"name": "M-M",
+"mode": "app",
+"hex": "1b4d"
+},
+{
+"name": "M-N",
+"mode": "app",
+"hex": "1b4e"
+},
+{
+"name": "M-O",
+"mode": "app",
+"hex": "1b4f"
+},
+{
+"name": "M-P",
+"mode": "app",
+"hex": "1b50"
+},
+{
+"name": "M-Q",
+"mode": "app",
+"hex": "1b51"
+},
+{
+"name": "M-R",
+"mode": "app",
+"hex": "1b52"
+},
+{
+"name": "M-S",
+"mode": "app",
+"hex": "1b53"
+},
+{
+"name": "M-T",
+"mode": "app",
+"hex": "1b54"
+},
+{
+"name": "M-U",
+"mode": "app",
+"hex": "1b55"
+},
+{
+"name": "M-V",
+"mode": "app",
+"hex": "1b56"
+},
+{
+"name": "M-W",
+"mode": "app",
+"hex": "1b57"
+},
+{
+"name": "M-X",
+"mode": "app",
+"hex": "1b58"
+},
+{
+"name": "M-Y",
+"mode": "app",
+"hex": "1b59"
+},
+{
+"name": "M-Z",
+"mode": "app",
+"hex": "1b5a"
+},
+{
+"name": "M-\\",
+"mode": "app",
+"hex": "1b5c"
+},
+{
+"name": "M-]",
+"mode": "app",
+"hex": "1b5d"
+},
+{
+"name": "M-^",
+"mode": "app",
+"hex": "1b5e"
+},
+{
+"name": "M-_",
+"mode": "app",
+"hex": "1b5f"
+},
+{
+"name": "M-b",
+"mode": "app",
+"hex": "1b62"
+},
+{
+"name": "M-c",
+"mode": "app",
+"hex": "1b63"
+},
+{
+"name": "M-d",
+"mode": "app",
+"hex": "1b64"
+},
+{
+"name": "M-e",
+"mode": "app",
+"hex": "1b65"
+},
+{
+"name": "M-f",
+"mode": "app",
+"hex": "1b66"
+},
+{
+"name": "M-g",
+"mode": "app",
+"hex": "1b67"
+},
+{
+"name": "M-h",
+"mode": "app",
+"hex": "1b68"
+},
+{
+"name": "M-i",
+"mode": "app",
+"hex": "1b69"
+},
+{
+"name": "M-j",
+"mode": "app",
+"hex": "1b6a"
+},
+{
+"name": "M-k",
+"mode": "app",
+"hex": "1b6b"
+},
+{
+"name": "M-l",
+"mode": "app",
+"hex": "1b6c"
+},
+{
+"name": "M-m",
+"mode": "app",
+"hex": "1b6d"
+},
+{
+"name": "M-n",
+"mode": "app",
+"hex": "1b6e"
+},
+{
+"name": "M-o",
+"mode": "app",
+"hex": "1b6f"
+},
+{
+"name": "M-p",
+"mode": "app",
+"hex": "1b70"
+},
+{
+"name": "M-q",
+"mode": "app",
+"hex": "1b71"
+},
+{
+"name": "M-r",
+"mode": "app",
+"hex": "1b72"
+},
+{
+"name": "M-s",
+"mode": "app",
+"hex": "1b73"
+},
+{
+"name": "M-t",
+"mode": "app",
+"hex": "1b74"
+},
+{
+"name": "M-u",
+"mode": "app",
+"hex": "1b75"
+},
+{
+"name": "M-v",
+"mode": "app",
+"hex": "1b76"
+},
+{
+"name": "M-w",
+"mode": "app",
+"hex": "1b77"
+},
+{
+"name": "M-x",
+"mode": "app",
+"hex": "1b78"
+},
+{
+"name": "M-y",
+"mode": "app",
+"hex": "1b79"
+},
+{
+"name": "M-{",
+"mode": "app",
+"hex": "1b7b"
+},
+{
+"name": "M-|",
+"mode": "app",
+"hex": "1b7c"
+},
+{
+"name": "M-}",
+"mode": "app",
+"hex": "1b7d"
+},
+{
+"name": "C-M-!",
+"mode": "app",
+"hex": "1b31"
+},
+{
+"name": "C-M-\"",
+"mode": "app",
+"hex": "1b27"
+},
+{
+"name": "C-M-#",
+"mode": "app",
+"hex": "1b432d4d2d23"
+},
+{
+"name": "C-M-$",
+"mode": "app",
+"hex": "1b432d4d2d24"
+},
+{
+"name": "C-M-%",
+"mode": "app",
+"hex": "1b432d4d2d25"
+},
+{
+"name": "C-M-&",
+"mode": "app",
+"hex": "1b432d4d2d26"
+},
+{
+"name": "C-M-'",
+"mode": "app",
+"hex": "1b27"
+},
+{
+"name": "C-M-(",
+"mode": "app",
+"hex": "1b39"
+},
+{
+"name": "C-M-)",
+"mode": "app",
+"hex": "1b30"
+},
+{
+"name": "C-M-*",
+"mode": "app",
+"hex": "1b432d4d2d2a"
+},
+{
+"name": "C-M-+",
+"mode": "app",
+"hex": "1b2b"
+},
+{
+"name": "C-M-,",
+"mode": "app",
+"hex": "1b2c"
+},
+{
+"name": "C-M--",
+"mode": "app",
+"hex": "1b1f"
+},
+{
+"name": "C-M-.",
+"mode": "app",
+"hex": "1b2e"
+},
+{
+"name": "C-M-0",
+"mode": "app",
+"hex": "1b30"
+},
+{
+"name": "C-M-2",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "C-M-4",
+"mode": "app",
+"hex": "1b1c"
+},
+{
+"name": "C-M-5",
+"mode": "app",
+"hex": "1b1d"
+},
+{
+"name": "C-M-6",
+"mode": "app",
+"hex": "1b1e"
+},
+{
+"name": "C-M-7",
+"mode": "app",
+"hex": "1b1f"
+},
+{
+"name": "C-M-9",
+"mode": "app",
+"hex": "1b39"
+},
+{
+"name": "C-M-:",
+"mode": "app",
+"hex": "1b3b"
+},
+{
+"name": "C-M-;",
+"mode": "app",
+"hex": "1b3b"
+},
+{
+"name": "C-M-<",
+"mode": "app",
+"hex": "1b2c"
+},
+{
+"name": "C-M-=",
+"mode": "app",
+"hex": "1b3d"
+},
+{
+"name": "C-M->",
+"mode": "app",
+"hex": "1b2e"
+},
+{
+"name": "C-M-B",
+"mode": "app",
+"hex": "1b02"
+},
+{
+"name": "C-M-C",
+"mode": "app",
+"hex": "1b03"
+},
+{
+"name": "C-M-D",
+"mode": "app",
+"hex": "1b04"
+},
+{
+"name": "C-M-E",
+"mode": "app",
+"hex": "1b05"
+},
+{
+"name": "C-M-F",
+"mode": "app",
+"hex": "1b06"
+},
+{
+"name": "C-M-G",
+"mode": "app",
+"hex": "1b07"
+},
+{
+"name": "C-M-H",
+"mode": "app",
+"hex": "1b08"
+},
+{
+"name": "C-M-I",
+"mode": "app",
+"hex": "1b09"
+},
+{
+"name": "C-M-J",
+"mode": "app",
+"hex": "1b0a"
+},
+{
+"name": "C-M-K",
+"mode": "app",
+"hex": "1b0b"
+},
+{
+"name": "C-M-L",
+"mode": "app",
+"hex": "1b0c"
+},
+{
+"name": "C-M-M",
+"mode": "app",
+"hex": "1b0d"
+},
+{
+"name": "C-M-N",
+"mode": "app",
+"hex": "1b0e"
+},
+{
+"name": "C-M-O",
+"mode": "app",
+"hex": "1b0f"
+},
+{
+"name": "C-M-P",
+"mode": "app",
+"hex": "1b10"
+},
+{
+"name": "C-M-Q",
+"mode": "app",
+"hex": "1b11"
+},
+{
+"name": "C-M-R",
+"mode": "app",
+"hex": "1b12"
+},
+{
+"name": "C-M-S",
+"mode": "app",
+"hex": "1b13"
+},
+{
+"name": "C-M-T",
+"mode": "app",
+"hex": "1b14"
+},
+{
+"name": "C-M-U",
+"mode": "app",
+"hex": "1b15"
+},
+{
+"name": "C-M-V",
+"mode": "app",
+"hex": "1b16"
+},
+{
+"name": "C-M-W",
+"mode": "app",
+"hex": "1b17"
+},
+{
+"name": "C-M-X",
+"mode": "app",
+"hex": "1b18"
+},
+{
+"name": "C-M-Y",
+"mode": "app",
+"hex": "1b19"
+},
+{
+"name": "C-M-Z",
+"mode": "app",
+"hex": "1b1a"
+},
+{
+"name": "C-M-\\",
+"mode": "app",
+"hex": "1b1c"
+},
+{
+"name": "C-M-]",
+"mode": "app",
+"hex": "1b1d"
+},
+{
+"name": "C-M-^",
+"mode": "app",
+"hex": "1b1e"
+},
+{
+"name": "C-M-_",
+"mode": "app",
+"hex": "1b1f"
+},
+{
+"name": "C-M-b",
+"mode": "app",
+"hex": "1b02"
+},
+{
+"name": "C-M-c",
+"mode": "app",
+"hex": "1b03"
+},
+{
+"name": "C-M-d",
+"mode": "app",
+"hex": "1b04"
+},
+{
+"name": "C-M-e",
+"mode": "app",
+"hex": "1b05"
+},
+{
+"name": "C-M-f",
+"mode": "app",
+"hex": "1b06"
+},
+{
+"name": "C-M-g",
+"mode": "app",
+"hex": "1b07"
+},
+{
+"name": "C-M-h",
+"mode": "app",
+"hex": "1b08"
+},
+{
+"name": "C-M-i",
+"mode": "app",
+"hex": "1b09"
+},
+{
+"name": "C-M-j",
+"mode": "app",
+"hex": "1b0a"
+},
+{
+"name": "C-M-k",
+"mode": "app",
+"hex": "1b0b"
+},
+{
+"name": "C-M-l",
+"mode": "app",
+"hex": "1b0c"
+},
+{
+"name": "C-M-m",
+"mode": "app",
+"hex": "1b0d"
+},
+{
+"name": "C-M-n",
+"mode": "app",
+"hex": "1b0e"
+},
+{
+"name": "C-M-o",
+"mode": "app",
+"hex": "1b0f"
+},
+{
+"name": "C-M-p",
+"mode": "app",
+"hex": "1b10"
+},
+{
+"name": "C-M-q",
+"mode": "app",
+"hex": "1b11"
+},
+{
+"name": "C-M-r",
+"mode": "app",
+"hex": "1b12"
+},
+{
+"name": "C-M-s",
+"mode": "app",
+"hex": "1b13"
+},
+{
+"name": "C-M-t",
+"mode": "app",
+"hex": "1b14"
+},
+{
+"name": "C-M-u",
+"mode": "app",
+"hex": "1b15"
+},
+{
+"name": "C-M-v",
+"mode": "app",
+"hex": "1b16"
+},
+{
+"name": "C-M-w",
+"mode": "app",
+"hex": "1b17"
+},
+{
+"name": "C-M-x",
+"mode": "app",
+"hex": "1b18"
+},
+{
+"name": "C-M-y",
+"mode": "app",
+"hex": "1b19"
+},
+{
+"name": "C-M-{",
+"mode": "app",
+"hex": "1b1b"
+},
+{
+"name": "C-M-|",
+"mode": "app",
+"hex": "1b1c"
+},
+{
+"name": "C-M-}",
+"mode": "app",
+"hex": "1b1d"
+},
+{
+"name": "!",
+"mode": "app",
+"hex": "21"
+},
+{
+"name": "\"",
+"mode": "app",
+"hex": "22"
+},
+{
+"name": "#",
+"mode": "app",
+"hex": "23"
+},
+{
+"name": "$",
+"mode": "app",
+"hex": "24"
+},
+{
+"name": "%",
+"mode": "app",
+"hex": "25"
+},
+{
+"name": "&",
+"mode": "app",
+"hex": "26"
+},
+{
+"name": "'",
+"mode": "app",
+"hex": "27"
+},
+{
+"name": "(",
+"mode": "app",
+"hex": "28"
+},
+{
+"name": ")",
+"mode": "app",
+"hex": "29"
+},
+{
+"name": "*",
+"mode": "app",
+"hex": "2a"
+},
+{
+"name": "+",
+"mode": "app",
+"hex": "2b"
+},
+{
+"name": ",",
+"mode": "app",
+"hex": "2c"
+},
+{
+"name": "-",
+"mode": "app",
+"hex": "2d"
+},
+{
+"name": ".",
+"mode": "app",
+"hex": "2e"
+},
+{
+"name": "0",
+"mode": "app",
+"hex": "30"
+},
+{
+"name": "2",
+"mode": "app",
+"hex": "32"
+},
+{
+"name": "4",
+"mode": "app",
+"hex": "34"
+},
+{
+"name": "5",
+"mode": "app",
+"hex": "35"
+},
+{
+"name": "6",
+"mode": "app",
+"hex": "36"
+},
+{
+"name": "7",
+"mode": "app",
+"hex": "37"
+},
+{
+"name": "9",
+"mode": "app",
+"hex": "39"
+},
+{
+"name": ":",
+"mode": "app",
+"hex": "3a"
+},
+{
+"name": ";",
+"mode": "app",
+"hex": "3b"
+},
+{
+"name": "<",
+"mode": "app",
+"hex": "3c"
+},
+{
+"name": "=",
+"mode": "app",
+"hex": "3d"
+},
+{
+"name": ">",
+"mode": "app",
+"hex": "3e"
+},
+{
+"name": "B",
+"mode": "app",
+"hex": "42"
+},
+{
+"name": "C",
+"mode": "app",
+"hex": "43"
+},
+{
+"name": "D",
+"mode": "app",
+"hex": "44"
+},
+{
+"name": "E",
+"mode": "app",
+"hex": "45"
+},
+{
+"name": "F",
+"mode": "app",
+"hex": "46"
+},
+{
+"name": "G",
+"mode": "app",
+"hex": "47"
+},
+{
+"name": "H",
+"mode": "app",
+"hex": "48"
+},
+{
+"name": "I",
+"mode": "app",
+"hex": "49"
+},
+{
+"name": "J",
+"mode": "app",
+"hex": "4a"
+},
+{
+"name": "K",
+"mode": "app",
+"hex": "4b"
+},
+{
+"name": "L",
+"mode": "app",
+"hex": "4c"
+},
+{
+"name": "M",
+"mode": "app",
+"hex": "4d"
+},
+{
+"name": "N",
+"mode": "app",
+"hex": "4e"
+},
+{
+"name": "O",
+"mode": "app",
+"hex": "4f"
+},
+{
+"name": "P",
+"mode": "app",
+"hex": "50"
+},
+{
+"name": "Q",
+"mode": "app",
+"hex": "51"
+},
+{
+"name": "R",
+"mode": "app",
+"hex": "52"
+},
+{
+"name": "S",
+"mode": "app",
+"hex": "53"
+},
+{
+"name": "T",
+"mode": "app",
+"hex": "54"
+},
+{
+"name": "U",
+"mode": "app",
+"hex": "55"
+},
+{
+"name": "V",
+"mode": "app",
+"hex": "56"
+},
+{
+"name": "W",
+"mode": "app",
+"hex": "57"
+},
+{
+"name": "X",
+"mode": "app",
+"hex": "58"
+},
+{
+"name": "Y",
+"mode": "app",
+"hex": "59"
+},
+{
+"name": "Z",
+"mode": "app",
+"hex": "5a"
+},
+{
+"name": "\\",
+"mode": "app",
+"hex": "5c"
+},
+{
+"name": "]",
+"mode": "app",
+"hex": "5d"
+},
+{
+"name": "^",
+"mode": "app",
+"hex": "5e"
+},
+{
+"name": "_",
+"mode": "app",
+"hex": "5f"
+},
+{
+"name": "b",
+"mode": "app",
+"hex": "62"
+},
+{
+"name": "c",
+"mode": "app",
+"hex": "63"
+},
+{
+"name": "d",
+"mode": "app",
+"hex": "64"
+},
+{
+"name": "e",
+"mode": "app",
+"hex": "65"
+},
+{
+"name": "f",
+"mode": "app",
+"hex": "66"
+},
+{
+"name": "g",
+"mode": "app",
+"hex": "67"
+},
+{
+"name": "h",
+"mode": "app",
+"hex": "68"
+},
+{
+"name": "i",
+"mode": "app",
+"hex": "69"
+},
+{
+"name": "j",
+"mode": "app",
+"hex": "6a"
+},
+{
+"name": "k",
+"mode": "app",
+"hex": "6b"
+},
+{
+"name": "l",
+"mode": "app",
+"hex": "6c"
+},
+{
+"name": "m",
+"mode": "app",
+"hex": "6d"
+},
+{
+"name": "n",
+"mode": "app",
+"hex": "6e"
+},
+{
+"name": "o",
+"mode": "app",
+"hex": "6f"
+},
+{
+"name": "p",
+"mode": "app",
+"hex": "70"
+},
+{
+"name": "q",
+"mode": "app",
+"hex": "71"
+},
+{
+"name": "r",
+"mode": "app",
+"hex": "72"
+},
+{
+"name": "s",
+"mode": "app",
+"hex": "73"
+},
+{
+"name": "t",
+"mode": "app",
+"hex": "74"
+},
+{
+"name": "u",
+"mode": "app",
+"hex": "75"
+},
+{
+"name": "v",
+"mode": "app",
+"hex": "76"
+},
+{
+"name": "w",
+"mode": "app",
+"hex": "77"
+},
+{
+"name": "x",
+"mode": "app",
+"hex": "78"
+},
+{
+"name": "y",
+"mode": "app",
+"hex": "79"
+},
+{
+"name": "{",
+"mode": "app",
+"hex": "7b"
+},
+{
+"name": "|",
+"mode": "app",
+"hex": "7c"
+},
+{
+"name": "}",
+"mode": "app",
+"hex": "7d"
+},
+{
+"name": "Insert",
+"mode": "app",
+"hex": "1b5b327e"
+},
+{
+"name": "Delete",
+"mode": "app",
+"hex": "1b5b337e"
+},
+{
+"name": "PageUp",
+"mode": "app",
+"hex": "1b5b357e"
+},
+{
+"name": "PageDown",
+"mode": "app",
+"hex": "1b5b367e"
+},
+{
+"name": "PgUp",
+"mode": "app",
+"hex": "1b5b357e"
+},
+{
+"name": "PgDn",
+"mode": "app",
+"hex": "1b5b367e"
+},
+{
+"name": "F3",
+"mode": "app",
+"hex": "1b4f52"
+},
+{
+"name": "F6",
+"mode": "app",
+"hex": "1b5b31377e"
+},
+{
+"name": "F7",
+"mode": "app",
+"hex": "1b5b31387e"
+},
+{
+"name": "F8",
+"mode": "app",
+"hex": "1b5b31397e"
+},
+{
+"name": "F10",
+"mode": "app",
+"hex": "1b5b32317e"
+},
+{
+"name": "F11",
+"mode": "app",
+"hex": "1b5b32337e"
+},
+{
+"name": "KP1",
+"mode": "app",
+"hex": "1b4f71"
+},
+{
+"name": "KP2",
+"mode": "app",
+"hex": "1b4f72"
+},
+{
+"name": "KP3",
+"mode": "app",
+"hex": "1b4f73"
+},
+{
+"name": "KP4",
+"mode": "app",
+"hex": "1b4f74"
+},
+{
+"name": "KP6",
+"mode": "app",
+"hex": "1b4f76"
+},
+{
+"name": "KP7",
+"mode": "app",
+"hex": "1b4f77"
+},
+{
+"name": "KP8",
+"mode": "app",
+"hex": "1b4f78"
+},
+{
+"name": "KP9",
+"mode": "app",
+"hex": "1b4f79"
+},
+{
+"name": "[NUL]",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "[SOH]",
+"mode": "app",
+"hex": "01"
+},
+{
+"name": "[STX]",
+"mode": "app",
+"hex": "02"
+},
+{
+"name": "[ETX]",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "[EOT]",
+"mode": "app",
+"hex": "04"
+},
+{
+"name": "[ENQ]",
+"mode": "app",
+"hex": "05"
+},
+{
+"name": "[ASC]",
+"mode": "app",
+"hex": "06"
+},
+{
+"name": "[BEL]",
+"mode": "app",
+"hex": "07"
+},
+{
+"name": "[BS]",
+"mode": "app",
+"hex": "08"
+},
+{
+"name": "[HT]",
+"mode": "app",
+"hex": "5b48545d"
+},
+{
+"name": "[LF]",
+"mode": "app",
+"hex": "0a"
+},
+{
+"name": "[VT]",
+"mode": "app",
+"hex": "0b"
+},
+{
+"name": "[FF]",
+"mode": "app",
+"hex": "0c"
+},
+{
+"name": "[CR]",
+"mode": "app",
+"hex": "5b43525d"
+},
+{
+"name": "[SO]",
+"mode": "app",
+"hex": "0e"
+},
+{
+"name": "[SI]",
+"mode": "app",
+"hex": "0f"
+},
+{
+"name": "[DLE]",
+"mode": "app",
+"hex": "10"
+},
+{
+"name": "[DC1]",
+"mode": "app",
+"hex": "11"
+},
+{
+"name": "[DC2]",
+"mode": "app",
+"hex": "12"
+},
+{
+"name": "[DC3]",
+"mode": "app",
+"hex": "13"
+},
+{
+"name": "[DC4]",
+"mode": "app",
+"hex": "14"
+},
+{
+"name": "[NAK]",
+"mode": "app",
+"hex": "15"
+},
+{
+"name": "[SYN]",
+"mode": "app",
+"hex": "16"
+},
+{
+"name": "[ETB]",
+"mode": "app",
+"hex": "17"
+},
+{
+"name": "[CAN]",
+"mode": "app",
+"hex": "18"
+},
+{
+"name": "[EM]",
+"mode": "app",
+"hex": "19"
+},
+{
+"name": "[SUB]",
+"mode": "app",
+"hex": "1a"
+},
+{
+"name": "[ESC]",
+"mode": "app",
+"hex": "5b4553435d"
+},
+{
+"name": "[FS]",
+"mode": "app",
+"hex": "1c"
+},
+{
+"name": "[GS]",
+"mode": "app",
+"hex": "1d"
+},
+{
+"name": "[RS]",
+"mode": "app",
+"hex": "1e"
+},
+{
+"name": "[US]",
+"mode": "app",
+"hex": "1f"
+},
+{
+"name": "[DEL]",
+"mode": "app",
+"hex": "5b44454c5d"
+},
+{
+"name": "[ACK]",
+"mode": "app",
+"hex": "5b41434b5d"
+},
+{
+"name": "[nul]",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "M-[NUL]",
+"mode": "app",
+"hex": "1b00"
+},
+{
+"name": "C-[LF]",
+"mode": "app",
+"hex": "0a"
+},
+{
+"name": "^C",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "^c",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "^[",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "^?",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "^@",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "^ ",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "^^",
+"mode": "app",
+"hex": "1e"
+},
+{
+"name": "^C-a",
+"mode": "app",
+"hex": "01"
+},
+{
+"name": "C-^c",
+"mode": "app",
+"hex": "432d5e63"
+},
+{
+"name": "enter",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "ENTER",
+"mode": "app",
+"hex": "0d"
+},
+{
+"name": "up",
+"mode": "app",
+"hex": "1b4f41"
+},
+{
+"name": "f1",
+"mode": "app",
+"hex": "1b4f50"
+},
+{
+"name": "kp5",
+"mode": "app",
+"hex": "1b4f75"
+},
+{
+"name": "kpenter",
+"mode": "app",
+"hex": "1b4f4d"
+},
+{
+"name": "bspace",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "c-c",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "m-x",
+"mode": "app",
+"hex": "1b78"
+},
+{
+"name": "s-up",
+"mode": "app",
+"hex": "1b5b313b3241"
+},
+{
+"name": "M-C-x",
+"mode": "app",
+"hex": "1b18"
+},
+{
+"name": "c-M-s-up",
+"mode": "app",
+"hex": "1b5b313b3841"
+},
+{
+"name": "0x1b",
+"mode": "app",
+"hex": "1b"
+},
+{
+"name": "0x03",
+"mode": "app",
+"hex": "03"
+},
+{
+"name": "0x7f",
+"mode": "app",
+"hex": "7f"
+},
+{
+"name": "0x41",
+"mode": "app",
+"hex": "41"
+},
+{
+"name": "0xe9",
+"mode": "app",
+"hex": "c3a9"
+},
+{
+"name": "0x0",
+"mode": "app",
+"hex": "00"
+},
+{
+"name": "0x",
+"mode": "app",
+"hex": "3078"
+},
+{
+"name": "0x1F600",
+"mode": "app",
+"hex": "f09f9880"
+},
+{
+"name": "0xzz",
+"mode": "app",
+"hex": "30787a7a"
+},
+{
+"name": "0x80",
+"mode": "app",
+"hex": "c280"
+},
+{
+"name": "0x9b",
+"mode": "app",
+"hex": "c29b"
+},
+{
+"name": "None",
+"mode": "app",
+"hex": "4e6f6e65"
+},
+{
+"name": "Any",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "User0",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "User9",
+"mode": "app",
+"hex": ""
+},
+{
+"name": "MouseDown1",
+"mode": "app",
+"hex": "4d6f757365446f776e31"
+},
+{
+"name": "WheelUp",
+"mode": "app",
+"hex": "576865656c5570"
+},
+{
+"name": "F13",
+"mode": "app",
+"hex": "463133"
+},
+{
+"name": "F0",
+"mode": "app",
+"hex": "4630"
+},
+{
+"name": "C-F13",
+"mode": "app",
+"hex": "432d463133"
+},
+{
+"name": "KP",
+"mode": "app",
+"hex": "4b50"
+},
+{
+"name": "Up2",
+"mode": "app",
+"hex": "557032"
+},
+{
+"name": "Enter2",
+"mode": "app",
+"hex": "456e74657232"
+},
+{
+"name": "hello",
+"mode": "app",
+"hex": "68656c6c6f"
+},
+{
+"name": "C-",
+"mode": "app",
+"hex": "432d"
+},
+{
+"name": "M-",
+"mode": "app",
+"hex": "4d2d"
+},
+{
+"name": "S-",
+"mode": "app",
+"hex": "532d"
+},
+{
+"name": "X-a",
+"mode": "app",
+"hex": "582d61"
+},
+{
+"name": "C-X-a",
+"mode": "app",
+"hex": "432d582d61"
+},
+{
+"name": "日",
+"mode": "app",
+"hex": "e697a5"
+},
+{
+"name": "😀",
+"mode": "app",
+"hex": "f09f9880"
+},
+{
+"name": "C-😀",
+"mode": "app",
+"hex": "f09f9880"
+},
+{
+"name": "M-😀",
+"mode": "app",
+"hex": "1bf09f9880"
+},
+{
+"name": "é",
+"mode": "app",
+"hex": "65cc81"
+},
+{
+"name": " ",
+"mode": "app",
+"hex": "20"
+},
+{
+"name": "  ",
+"mode": "app",
+"hex": "2020"
+}
+]
+}

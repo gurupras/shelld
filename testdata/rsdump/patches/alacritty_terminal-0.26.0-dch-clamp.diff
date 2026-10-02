@@ -1,0 +1,19 @@
+--- a/src/term/mod.rs
++++ b/src/term/mod.rs
+@@ -1565,10 +1565,13 @@
+         let cursor = &self.grid.cursor;
+         let bg = cursor.template.bg;
+ 
+-        // Ensure deleting within terminal bounds.
+-        let count = cmp::min(count, columns);
+-
+         let start = cursor.point.column.0;
++
++        // Ensure deleting only the cells at or after the cursor. Clamping to
++        // columns instead lets the trailing fill, which starts at columns - count,
++        // blank cells to the LEFT of the cursor: CSI 80 P in column 5 of an
++        // 80-column row erases the whole row.
++        let count = cmp::min(count, columns - start);
+         let end = cmp::min(start + count, columns - 1);
+         let num_cells = columns - end;
+ 

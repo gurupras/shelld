@@ -1,0 +1,14 @@
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -698,7 +698,10 @@
+                     performer.print(c);
+ 
+                     self.partial_utf8_len = 0;
+-                    return valid_bytes - old_bytes;
++                    // Only the first character was printed, so only its bytes were
++                    // consumed: valid_bytes can cover further characters that this
++                    // call has not printed, and returning it drops them.
++                    return c.len_utf8() - old_bytes;
+                 }
+ 
+                 match err.error_len() {
