@@ -1,0 +1,13 @@
+# Generator for ../table.go. Pinned to the exact unicode-width release that
+# alacritty_terminal 0.26 (shelld-rs) uses, so Go and Rust agree on every
+# codepoint's cell width. Regenerate with `go generate ./uniwidth`.
+[package]
+name = "uniwidth-gen"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+unicode-width = "=0.2.2"
+
+[workspace]
