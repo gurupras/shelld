@@ -1,0 +1,9 @@
+/bin/
+target/
+*.test
+*.prof
+__pycache__/
+
+# The study tree (harnesses, measurement data and review evidence) stays local:
+# it is 25 MB of scaffolding that a consumer of the library has no use for.
+/study/
