@@ -747,8 +747,8 @@ func csiChunk(rng *rand.Rand) []byte {
 // opposite directions: compare() ends in t.Fatalf, so TestVtDiffFuzz's loop dies at its
 // FIRST diverging seed and one run can only ever name one. "N of 400" from an unmodified
 // run is a first-divergence index, not a population. The 14 above came from a harness
-// that collects instead of failing (kept at countfuzz_test.go.txt in the study scratch,
-// out of the repo so a second copy of this loop cannot drift from it), and on this tree
+// that collects instead of failing (kept out of the repo so a second copy of this
+// loop cannot drift from it), and on this tree
 // the population is 14 while the first diverging seed is also 14 — which is exactly what
 // makes the mistake invisible.
 //

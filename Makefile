@@ -46,8 +46,7 @@ test:
 # below while iterating.
 #
 # This recipe stays a single ./... on purpose — spelling out the other packages
-# here means a package added later is silently left untested under -race, and
-# `./...` covers the study/ tools too.
+# here means a package added later is silently left untested under -race.
 race:
 	go test -race -count=1 -timeout 60m ./...
 
@@ -58,8 +57,7 @@ race-pkg:
 	go test -race -timeout 60m $(PKG)
 
 # Differential test against shelld-rs's VtGrid (requires cargo and
-# SHELLD_RS_DIR=<shelld-rs tree with the study's patches>, e.g.
-# /android/tmp/shelld-study/shelld-rs-src from RS_SRC_ONLY=1 study/harness/setup.sh).
+# SHELLD_RS_DIR=/path/to/shelld-rs).
 vtdiff:
 	SHELLD_VTDIFF=1 go test . -run TestVtDiff -v
 
