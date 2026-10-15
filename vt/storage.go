@@ -22,7 +22,8 @@ func newStorage(visibleLines, columns int) storage {
 	return s
 }
 
-// allocRows allocates n rows, each with cells of its own.
+// allocRows allocates n full rows, each with cells of its own. Only the viewport
+// is allocated this way; rows the ring grows by start empty (see initialize).
 //
 // A row must own its cells: no row's cells may live in an allocation another row also
 // points into. That is the invariant, and it is not a style preference.
@@ -32,7 +33,9 @@ func newStorage(visibleLines, columns int) storage {
 // into a slab keeps the whole slab reachable however few of its rows survive. Since
 // initialize allocates maxCacheSize rows to add one and replaceInner then discards
 // the spare, a resize-heavy workload pins a fresh slab per resize. Alacritty's Row
-// owns its own Vec<Cell>, so the port did not inherit this.
+// owns its own Vec<Cell>, so the port did not inherit this. Compaction keeps to
+// it: a compacted row gets an array of its own or one an evicted row gave up,
+// never a slice of a shared one.
 func allocRows(n, columns int) []Row {
 	rows := make([]Row, n)
 	for i := range rows {
@@ -57,9 +60,7 @@ func (s *storage) swap(a, b int) {
 }
 
 func (s *storage) growVisibleLines(next int) {
-	additional := next - s.visibleLines
-	columns := s.row(0).Len()
-	s.initialize(additional, columns)
+	s.initialize(next - s.visibleLines)
 	s.visibleLines = next
 }
 
@@ -85,11 +86,18 @@ func (s *storage) truncate() {
 	s.inner = s.inner[:s.len]
 }
 
-func (s *storage) initialize(additional, columns int) {
+// initialize brings additional rows into use, growing the ring by at least
+// maxCacheSize rows when it has too few. The rows it adds store no cells: a row
+// coming into the viewport is given its cells by whatever brings it there (the
+// grid's blankRow, or the normalisation that ends a resize), and one that becomes
+// history is compacted anyway, so allocating a full row here would pay for 1000
+// rows a window may never use and that stay allocated as the ring's slack once
+// the history is full.
+func (s *storage) initialize(additional int) {
 	if s.len+additional > len(s.inner) {
 		s.rezero()
 		grow := max(additional, maxCacheSize)
-		s.inner = append(s.inner, allocRows(grow, columns)...)
+		s.inner = append(s.inner, make([]Row, grow)...)
 	}
 	s.len += additional
 }

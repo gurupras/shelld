@@ -93,9 +93,8 @@ func freezeHistory(term *vt.Term) *FrozenHistory {
 	// in the order a viewer scrolls through it.
 	for i := 0; i < f.rows; i++ {
 		row := f.cells[i*cols : (i+1)*cols]
-		cells := grid.Row(i - hist).Cells()[:cols]
 		// Pairing matches a live capture: only rows holding a wide half need it.
-		if slotsFromCells(row, cells)&(attrWide|attrWideSpacer) != 0 {
+		if rowSlots(row, grid.Row(i-hist))&(attrWide|attrWideSpacer) != 0 {
 			pairWide(row)
 		}
 	}

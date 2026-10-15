@@ -91,6 +91,9 @@ type Grid struct {
 	// rows no push counted and drive the net below zero. HistoryPushed says what
 	// a reader may and may not conclude from it.
 	pushed int64
+
+	// spare holds arrays scrolling freed, for the next scroll to reuse.
+	spare rowPool
 }
 
 func newGrid(lines, columns, maxScrollLimit int) *Grid {
@@ -157,7 +160,7 @@ func (g *Grid) cursorCell() *Cell {
 func (g *Grid) increaseScrollLimit(count int) {
 	count = min(count, g.maxScrollLimit-g.HistorySize())
 	if count != 0 {
-		g.raw.initialize(count, g.columns)
+		g.raw.initialize(count)
 	}
 }
 
@@ -174,7 +177,7 @@ func (g *Grid) scrollDown(start, end, positions int) {
 	tmpl := &g.Cursor.Template
 	if end-start <= positions {
 		for i := start; i < end; i++ {
-			g.raw.row(i).reset(tmpl)
+			g.blankRow(i, tmpl)
 		}
 		return
 	}
@@ -184,7 +187,7 @@ func (g *Grid) scrollDown(start, end, positions int) {
 		}
 		g.raw.rotateDown(positions)
 		for i := 0; i < positions; i++ {
-			g.raw.row(i).reset(tmpl)
+			g.blankRow(i, tmpl)
 		}
 		for i := 0; i < start; i++ {
 			g.raw.swap(i, i+positions)
@@ -195,7 +198,7 @@ func (g *Grid) scrollDown(start, end, positions int) {
 		g.raw.swap(line, line-positions)
 	}
 	for line := start + positions - 1; line >= start; line-- {
-		g.raw.row(line).reset(tmpl)
+		g.blankRow(line, tmpl)
 	}
 }
 
@@ -205,7 +208,7 @@ func (g *Grid) scrollUp(start, end, positions int) {
 	tmpl := &g.Cursor.Template
 	if end-start <= positions && start != 0 {
 		for i := start; i < end; i++ {
-			g.raw.row(i).reset(tmpl)
+			g.blankRow(i, tmpl)
 		}
 		return
 	}
@@ -218,14 +221,63 @@ func (g *Grid) scrollUp(start, end, positions int) {
 		for i := g.lines - 1; i >= end; i-- {
 			g.raw.swap(i, i-positions)
 		}
+		g.compactPushed(end, positions)
 	} else {
 		for i := start; i < end-positions; i++ {
 			g.raw.swap(i, i+positions)
 		}
 	}
 	for i := end - positions; i < end; i++ {
-		g.raw.row(i).reset(tmpl)
+		g.blankRow(i, tmpl)
 	}
+	g.spare.trim()
+}
+
+// compactPushed compacts the rows a scroll from the top of the screen just
+// pushed into history, lines -1 back to -positions, and frees the arrays they
+// give up for the rows that took their places at the bottom of the region,
+// end-1 back to end-positions, which the caller blanks next. Such a row came
+// out of the ring's slack or, once the history is full, is the oldest history
+// line the scroll evicted, and when it stores fewer cells than a viewport row
+// needs its array goes to the pool first, for a pushed line of about its size.
+// So the steady state of a full history trades arrays through g.spare (see
+// rowPool) and allocates only where the lines' lengths do not match up.
+//
+// Rows on the alternate screen, or with no history configured, never reach
+// history, so nothing is compacted there and their arrays cycle through the
+// ring's slack at full width.
+func (g *Grid) compactPushed(end, positions int) {
+	for k := 1; k <= min(positions, g.HistorySize()); k++ {
+		if k <= end {
+			if in := g.raw.row(end - k); in.Len() < g.columns {
+				// The pool owns the array now. blankRow replaces in anyway,
+				// but not until after the pool may have handed the array out.
+				g.spare.put(*in, g.columns)
+				*in = Row{}
+			}
+		}
+		out := g.raw.row(-k)
+		occ, dirty := out.occ, out.dirty
+		buf := g.spare.takeShort(out.trimmedLen())
+		if old := out.compact(buf); old != nil {
+			g.spare.put(Row{inner: old, occ: occ, dirty: dirty}, g.columns)
+		} else if buf != nil {
+			g.spare.put(Row{inner: buf}, g.columns)
+		}
+	}
+}
+
+// blankRow resets a line to blanks carrying tmpl's background, first giving
+// it a full row of cells if it stores fewer: the line can be a ring slot that
+// held history or slack, which store fewer cells than a viewport row.
+func (g *Grid) blankRow(line int, tmpl *Cell) {
+	r := g.raw.row(line)
+	if r.Len() < g.columns {
+		if *r = g.spare.takeFull(); r.Len() != g.columns {
+			*r = newRow(g.columns)
+		}
+	}
+	r.reset(tmpl)
 }
 
 // clearViewport scrolls the used part of the viewport into history and
@@ -234,7 +286,7 @@ func (g *Grid) clearViewport() {
 	positions := g.usedLines()
 	g.scrollUp(0, g.lines, positions)
 	for line := 0; line < g.lines-positions; line++ {
-		g.raw.row(line).reset(&g.Cursor.Template)
+		g.blankRow(line, &g.Cursor.Template)
 	}
 }
 
@@ -246,7 +298,7 @@ func (g *Grid) clearViewport() {
 func (g *Grid) usedLines() int {
 	for line := g.lines - 1; line >= 0; line-- {
 		inner := g.raw.row(line).inner
-		cells := inner[:g.columns:len(inner)] // panics, like Cell, if a row is short
+		cells := inner[:g.columns:len(inner)] // panics if a viewport row is short
 		for i := len(cells) - 1; i >= 0; i-- {
 			if !cells[i].isEmpty() {
 				return line + 1
@@ -264,14 +316,14 @@ func (g *Grid) reset() {
 	g.SavedCursor = Cursor{}
 	g.Cursor = Cursor{}
 	for line := g.topmostLine(); line < g.lines; line++ {
-		g.raw.row(line).reset(&g.Cursor.Template)
+		g.blankRow(line, &g.Cursor.Template)
 	}
 }
 
 // resetRegion blanks viewport lines [start, end).
 func (g *Grid) resetRegion(start, end int) {
 	for line := start; line < end; line++ {
-		g.raw.row(line).reset(&g.Cursor.Template)
+		g.blankRow(line, &g.Cursor.Template)
 	}
 }
 

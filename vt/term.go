@@ -282,8 +282,12 @@ func (t *Term) writeAtCursor(c rune) {
 		} else if p.Column > 0 {
 			row.at(p.Column - 1).clearWide()
 		}
+		// The line above can be history, which stores no cells past its content;
+		// a column it does not store holds a default cell, with no flag to clear.
 		if p.Column <= 1 && p.Line != g.topmostLine() {
-			g.raw.row(p.Line - 1).at(t.lastColumn()).flags &^= FlagLeadingWideCharSpacer
+			if above := g.raw.row(p.Line - 1); t.lastColumn() < above.Len() {
+				above.at(t.lastColumn()).flags &^= FlagLeadingWideCharSpacer
+			}
 		}
 	}
 

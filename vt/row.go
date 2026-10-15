@@ -26,15 +26,99 @@ type Row struct {
 
 func newRow(columns int) Row { return Row{inner: make([]Cell, columns)} }
 
-// Len is the number of cells in the row.
+// Len is the number of cells the row stores. A viewport row stores one per
+// column; a history row may store fewer, and every column past Len holds the
+// default cell (see compact).
 func (r *Row) Len() int { return len(r.inner) }
 
-// Cells returns the row's cells for reading, limited to its length.
+// Cells returns the row's stored cells for reading, limited to its length,
+// which for a history row can be less than the grid's width.
 // Writing through it would bypass the occupancy tracking reset relies on.
 func (r *Row) Cells() []Cell { return r.inner[:len(r.inner):len(r.inner)] }
 
-// Cell returns the cell at col for reading.
-func (r *Row) Cell(col int) *Cell { return &r.inner[col] }
+// Cell returns the cell at col for reading. A column past what the row stores
+// reads as a default cell; the pointer is then to a fresh copy, so a write
+// through it is lost. A harness that writes through Cell calls Expand first.
+func (r *Row) Cell(col int) *Cell {
+	if col >= len(r.inner) {
+		return new(Cell)
+	}
+	return &r.inner[col]
+}
+
+// Expand makes the row store at least columns cells, so that Cell returns a
+// pointer into the row for every column. Nothing in a terminal needs it; it is
+// for harnesses that fabricate a grid by writing through Cell, in the shape of
+// MarkOccupied.
+func (r *Row) Expand(columns int) { r.grow(columns) }
+
+// trimmedLen is the length compact cuts the row to: one past its last non-zero
+// cell when the row's last cell is the zero cell and that one does not carry
+// FlagWrapline, and its whole length otherwise. Every cell at or past occ equals the last cell, so when that cell is
+// zero the scan back starts at occ.
+func (r *Row) trimmedLen() int {
+	n := len(r.inner)
+	if n == 0 || r.inner[n-1] != (Cell{}) {
+		return n
+	}
+	i := min(int(r.occ), n)
+	for i > 0 && r.inner[i-1] == (Cell{}) {
+		i--
+	}
+	// A wrapped line's flag is read off the row's last cell (growColumns'
+	// shouldReflow), so a row whose content ends in it is kept whole: trimmed,
+	// it would read as a line that wraps where the full row reads as one that
+	// does not.
+	if i > 0 && r.inner[i-1].flags&FlagWrapline != 0 {
+		return n
+	}
+	return i
+}
+
+// compact moves a history row onto an array no longer than its content and
+// returns the array it gave up, or nil when it kept its own.
+//
+// History is where a terminal's memory goes: 10,000 lines of history at 200
+// columns are 40 MB stored a full row each, and the lines a shell prints are
+// mostly short. A compacted row stores the cells up to its last non-zero one, and
+// the default cells past it are implicit: Cell reads them back, and the readers
+// that walk Cells pad with them. Only the zero cell is dropped, because it is the
+// cell grow appends, so a compacted row and the row it came from read the same at
+// every column and widen to the same row. A row ending in anything else — blanks
+// carrying a background, a wrapped line's last cell — is stored whole.
+//
+// buf, when not nil, is an array to reuse for the content: one a row just
+// evicted from history gave up. It is reused when its capacity is at least the
+// content and at most compactReuseFactor times it, so a reused array never holds
+// more than that factor over what it carries, and it is cut to its length so
+// nothing reaches the cells past it.
+//
+// A row that has nothing to trim keeps its array unless that array holds more
+// than compactReuseFactor times its length, which is what a narrowing leaves:
+// truncate keeps up to shrinkKeepFactor times the new width for a later widen to
+// reuse, and a history row is never widened again.
+func (r *Row) compact(buf []Cell) []Cell {
+	n := r.trimmedLen()
+	if n == len(r.inner) && cap(r.inner) <= compactReuseFactor*n {
+		return nil
+	}
+	var cells []Cell
+	if n > 0 {
+		if cap(buf) >= n && cap(buf) <= compactReuseFactor*n {
+			cells = buf[:n:n]
+		} else {
+			cells = make([]Cell, n)
+		}
+		copy(cells, r.inner)
+	}
+	old := r.inner
+	*r = Row{inner: cells, occ: int32(n)}
+	return old
+}
+
+// compactReuseFactor bounds the capacity a compacted row may hold, as a multiple
+// of what it stores.
+const compactReuseFactor = 2
 
 // MarkOccupied declares the row's first n cells occupied. Nothing in a terminal
 // needs it — every write inside this package goes through at, span, lastMut or

@@ -20,8 +20,31 @@ func (g *Grid) resize(reflow bool, lines, columns int) {
 	case g.columns > columns:
 		g.shrinkColumns(reflow, columns)
 	}
+	g.normalizeRows()
 
 	g.Cursor.Template = template
+}
+
+// normalizeRows puts every row back in the form the grid keeps it in between
+// resizes, which a resize breaks by moving rows across the top of the viewport
+// and by reflowing them: each viewport row stores a cell per column, and each
+// history row is compacted (see Row.compact). A row already in its form costs a
+// comparison or two, so this is a walk over the history and not a copy of it.
+//
+// Between growLines and the column passes the rows growLines pulled out of
+// history are still short, and that is safe because every viewport row the
+// column passes index at full width is the cursor's, which growLines moves down
+// with its content and so is never one of those.
+func (g *Grid) normalizeRows() {
+	g.spare.reset()
+	for line := g.topmostLine(); line < 0; line++ {
+		g.raw.row(line).compact(nil)
+	}
+	for line := 0; line < g.lines; line++ {
+		if r := g.raw.row(line); r.Len() < g.columns {
+			r.grow(g.columns)
+		}
+	}
 }
 
 // growLines adds viewport lines, pulling them from history while it lasts so
@@ -76,6 +99,7 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 		return reflow && n > 0 && n < columns && r.inner[n-1].flags&FlagWrapline != 0
 	}
 
+	oldColumns := g.columns
 	g.columns = columns
 	if g.Cursor.InputNeedsWrap && reflow {
 		g.Cursor.InputNeedsWrap = false
@@ -108,7 +132,13 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 		numWrapped := columns - lastLen
 		n := min(row.Len(), numWrapped)
 
-		if row.inner[n-1].flags&FlagWideChar != 0 {
+		// A compacted history row can store fewer cells than the oldColumns a
+		// full row holds, none at all when it is blank. The cells it does not
+		// store are default ones, so the cell a full row would split at,
+		// min(oldColumns, numWrapped)-1, is a wide one only when the row stores
+		// it, and moving just the cells it stores leaves the row above reading
+		// the same.
+		if row.Len() >= min(oldColumns, numWrapped) && row.inner[n-1].flags&FlagWideChar != 0 {
 			// A wide character cannot be split over the join, so it stays on this row
 			// and the row above takes the spacer that stands in for its first half.
 			numWrapped--
@@ -159,10 +189,16 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 		g.Cursor.Point.Line = max(g.Cursor.Point.Line-overflow, 0)
 	}
 
+	// The viewport, the first g.lines rows of the ring, is widened. A history
+	// row is left short, which reads as the row widened with default cells,
+	// and resize compacts it — except one whose last cell carries
+	// FlagWrapline, which a join can leave short of the width: widened, the
+	// flag is no longer on the last cell and the row no longer reads as
+	// wrapped to the next widening, and compact keeps such a row whole.
 	newRaw := make([]Row, len(reversed))
 	for i := range reversed {
 		row := reversed[len(reversed)-1-i]
-		if row.Len() < columns {
+		if n := row.Len(); n < columns && (i < g.lines || n > 0 && row.inner[n-1].flags&FlagWrapline != 0) {
 			row.grow(columns)
 		}
 		newRaw[i] = row

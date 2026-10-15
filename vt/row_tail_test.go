@@ -364,19 +364,34 @@ func TestShrinkFastPathFires(t *testing.T) {
 	}
 	defer func() { rowShrinkTookFastPath = nil }()
 
-	// A history of short lines narrowed well below the width: the shape the
+	// A screen of short lines narrowed well below the width: the shape the
 	// optimisation exists for, where almost every row is mostly trailing blanks.
+	//
+	// The history of such lines no longer reaches the fast path. A history row
+	// is compacted to its content (Row.compact), so it arrives at shrink no
+	// wider than the narrow width and shrink returns before the guard. What
+	// still arrives at full width is the viewport, so that is the population
+	// this counts; the history's side is asserted below as the property that
+	// took it away, since a history stored at full width would take the fast
+	// path again and pass the count.
+	const line = "2026-09-15 20:00:00 INFO line"
 	term := NewTerm(Config{ScrollingHistory: 2000}, 200, 50, nil)
 	p := NewProcessor()
 	for range 2000 {
-		feed(term, p, "2026-09-15 20:00:00 INFO line\r\n")
+		feed(term, p, line+"\r\n")
+	}
+	g := term.Grid()
+	for l := -g.HistorySize(); l < 0; l++ {
+		if n := g.Row(l).Len(); n > len(line) {
+			t.Fatalf("history line %d stores %d cells for a %d-character line: history is not compacted", l, n, len(line))
+		}
 	}
 	term.Resize(80, 24)
 
-	// The exact count depends on how the history is laid out, so the assertion is
-	// on the order of magnitude: most of the history, not a handful of rows.
-	if hits < 1000 {
-		t.Errorf("fast path fired %d times narrowing 2000 blank-tailed history rows from 200 to 80 columns; want most of them", hits)
+	// Every viewport row but the cursor's empty one holds a line, so all but a
+	// couple of the 50 take it.
+	if want := g.ScreenLines() - 2; hits < want {
+		t.Errorf("fast path fired %d times narrowing 50 blank-tailed viewport rows from 200 to 80 columns; want at least %d", hits, want)
 	}
 	t.Logf("fast path fired %d times", hits)
 }
@@ -457,6 +472,12 @@ func TestGrowClearsOnlyRowsShrinkDirtied(t *testing.T) {
 // clears nothing. Without it a count of zero and a hook that is never installed look
 // the same.
 //
+// History rows are compacted (Row.compact) and a widen grows only the viewport,
+// so the rows a widen can reuse capacity on are the viewport's, and both counts
+// are bounded by its height. The join can now dirty a viewport row too: a
+// compacted row joined onto the one above moves only the cells it stores, which
+// can leave that row short of the width with the array append grew it into.
+//
 // What this does not test is the clear itself. The hook fires before it, and in this
 // shape the same pass writes over the region anyway, so a grow that skipped the clear
 // entirely still passes here — TestShrinkLeavesDefaultCapacity and
@@ -467,12 +488,12 @@ func TestGrowClearsOnlyRowsShrinkDirtied(t *testing.T) {
 func TestGrowClearsRowsAJoinDirtied(t *testing.T) {
 	const wrapped = 300 // characters per line, and lines: eight rows deep at width 40
 	for _, tc := range []struct {
-		name       string
-		line       string
-		wantClears int
+		name  string
+		line  string
+		joins bool
 	}{
-		{"lines that wrap, so widening joins them", strings.Repeat("the quick brown fox jumps over the lazy dog ", 7)[:wrapped], wrapped},
-		{"lines that fit the start width", "short line", 0},
+		{"lines that wrap, so widening joins them", strings.Repeat("the quick brown fox jumps over the lazy dog ", 7)[:wrapped], true},
+		{"lines that fit the start width", "short line", false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			var clears int
@@ -482,19 +503,25 @@ func TestGrowClearsRowsAJoinDirtied(t *testing.T) {
 			term, p := NewTerm(Config{ScrollingHistory: 10000}, 40, 24, nil), NewProcessor()
 			feed(term, p, strings.Repeat(tc.line+"\r\n", wrapped))
 			term.Resize(80, 24) // joins the wrapped rows, which is what sets the flag
-			if clears != 0 {
-				t.Fatalf("the widen that joins cleared %d rows; it grows past every row's capacity, so it has nothing to reuse and this test is not measuring what it says", clears)
-			}
+			first := clears
 			term.Resize(200, 24) // reuses the capacity the join left behind
-			if clears != tc.wantClears {
-				t.Errorf("widening 80 to 200 over %d such lines cleared %d rows, want %d", wrapped, clears, tc.wantClears)
+			second := clears - first
+			switch screen := term.ScreenLines(); {
+			case first > screen || second > screen:
+				t.Errorf("the widens cleared %d and %d rows, more than the %d viewport rows: a history row was widened", first, second, screen)
+			case tc.joins && second == 0:
+				t.Errorf("widening 80 to 200 over %d wrapped lines cleared nothing: the counter cannot see a clear, so the control proves nothing", wrapped)
+			case !tc.joins && clears != 0:
+				t.Errorf("widening a history of lines that never wrapped cleared %d rows; no join dirtied any of them", clears)
 			}
+			t.Logf("%d clears joining, %d widening again", first, second)
 
 			g, rows := term.Grid(), (len(tc.line)+199)/200
 			var got strings.Builder
 			for line := range rows {
-				for _, c := range g.Row(-g.HistorySize() + line).Cells() {
-					got.WriteRune(c.Rune())
+				row := g.Row(-g.HistorySize() + line)
+				for c := range g.Columns() {
+					got.WriteRune(row.Cell(c).Rune())
 				}
 			}
 			if want := tc.line + strings.Repeat(" ", rows*200-len(tc.line)); got.String() != want {

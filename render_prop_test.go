@@ -102,6 +102,11 @@ func propScribble(rng *rand.Rand, g *VtGrid) {
 		// so the loss lands on both sides and cancels. The assertion that can see
 		// that class is TestMarkOccupiedKeepsFabricatedCells in vt.
 		row.MarkOccupied(row.Len())
+		// A history row stores only its content, and a write through Cell past
+		// that lands in a fresh copy and is lost; Expand stores the whole width.
+		// It is after MarkOccupied so the cells it adds stay outside occ, as a
+		// row allocated at full width keeps them.
+		row.Expand(cols)
 		switch rng.Intn(7) {
 		case 0: // one cell
 			*(*rawCell)(unsafe.Pointer(row.Cell(rng.Intn(cols)))) = propCell(rng)

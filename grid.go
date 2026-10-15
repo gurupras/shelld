@@ -454,6 +454,24 @@ const (
 // than the grid).
 var padSlot = CellSlot{Fg: vt.NewNamedColor(vt.Foreground), Bg: vt.NewNamedColor(vt.Background)}
 
+// blankSlot is a default cell's slot. A history row stores only its content,
+// and the columns past it are default cells, which is not padSlot: a default
+// cell's character is a space.
+var blankSlot = slotFromCell(&vt.Cell{})
+
+// rowSlots converts a row cropped to len(dst) columns into dst, filling the
+// columns the row does not store with blankSlot, and returns the OR of the
+// stored cells' attributes.
+func rowSlots(dst []CellSlot, row *vt.Row) uint32 {
+	cells := row.Cells()
+	cells = cells[:min(len(cells), len(dst))]
+	attrs := slotsFromCells(dst, cells)
+	for i := len(cells); i < len(dst); i++ {
+		dst[i] = blankSlot
+	}
+	return attrs
+}
+
 // WideSpacer reports whether the slot is the right half of a double-width
 // character, which has no glyph of its own.
 func (s CellSlot) WideSpacer() bool { return s.Attrs&attrWideSpacer != 0 }
@@ -683,12 +701,11 @@ func snapshotInto(dst *GridSnapshot, term *vt.Term, offset, outCols, outRows int
 		if r < copyRows {
 			// Pairing runs on the row cropped to the client's width, and only
 			// for rows holding a wide-character half.
-			cells := grid.Row(r - offset).Cells()[:copyCols]
-			row := out[:len(cells)]
-			if slotsFromCells(row, cells)&(attrWide|attrWideSpacer) != 0 {
+			row := out[:copyCols]
+			if rowSlots(row, grid.Row(r-offset))&(attrWide|attrWideSpacer) != 0 {
 				pairWide(row)
 			}
-			out = out[len(cells):]
+			out = out[copyCols:]
 		}
 		for i := range out {
 			out[i] = padSlot
@@ -739,7 +756,8 @@ func renderFull(out []byte, term *vt.Term, offset, outCols, outRows int) []byte 
 		}
 		row := grid.Row(r - offset)
 		last := -1
-		for c := 0; c < copyCols; c++ {
+		// Columns a history row does not store are default cells, which are blank.
+		for c := 0; c < min(copyCols, row.Len()); c++ {
 			if !isBlank(row.Cell(c)) {
 				last = c
 			}
