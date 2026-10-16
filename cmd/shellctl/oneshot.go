@@ -684,8 +684,14 @@ func roundTrip(socket, method, path string, body []byte) (int, []byte, error) {
 }
 
 // timedOut names the bound when err is the connection's deadline.
+//
+// It asks the error whether it is a timeout rather than comparing it with
+// os.ErrDeadlineExceeded, because a Windows pipe does not return that: go-winio
+// reports a passed deadline as winio.ErrTimeout, a type of its own whose
+// Timeout method says so.
 func timedOut(err error) error {
-	if errors.Is(err, os.ErrDeadlineExceeded) {
+	var te interface{ Timeout() bool }
+	if errors.As(err, &te) && te.Timeout() {
 		return fmt.Errorf("%w: the daemon did not answer within %v", err, oneShotTimeout)
 	}
 	return err

@@ -232,7 +232,8 @@ func TestOneShotGivesUpOnAWedgedDaemon(t *testing.T) {
 	if took := time.Since(start); took > 5*time.Second {
 		t.Fatalf("took %v against a bound of %v", took, oneShotTimeout)
 	}
-	if !errors.Is(err, os.ErrDeadlineExceeded) || !strings.Contains(err.Error(), "did not answer within 300ms") || out.Len() != 0 {
+	var te interface{ Timeout() bool }
+	if !errors.As(err, &te) || !te.Timeout() || !strings.Contains(err.Error(), "did not answer within 300ms") || out.Len() != 0 {
 		t.Fatalf("err %v, output %q; want the deadline named and no output", err, out.String())
 	}
 }
