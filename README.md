@@ -211,6 +211,9 @@ also captures a Go execution trace. Details: `internal/tracing`.
   screen, not the program's bytes: long lines are split at the console width
   and each resize adds a copy of the screen. Read the visible capture there
   (`capture?mode=visible`).
+- **Default colours on Windows.** ConPTY drops a program's OSC 10, 11 and 12
+  queries before shelld sees them, so on Windows `set-colors` answers only
+  palette (OSC 4) queries.
 
 ## Verification
 

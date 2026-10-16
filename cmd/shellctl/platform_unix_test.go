@@ -75,6 +75,6 @@ const tabOnScreen = `\t`
 // terminal echoes the brackets as typed, and cat writes back the text.
 const bracketedEcho = "^[[200~br^[[201~\nbr\n"
 
-// coloursReachTheProgram reports whether a program's colour query is answered
-// with what set-colors set.
-const coloursReachTheProgram = true
+// colourAnswers is what queryShell shows of the answers to its colour queries,
+// once set-colors has set them all.
+func colourAnswers() string { return allColourAnswers }

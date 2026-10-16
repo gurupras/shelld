@@ -250,14 +250,14 @@ func TestResizeWindow(t *testing.T) {
 	refused(t, sock, 404, "resize-window", "s", "nope", "10", "10")
 }
 
+// allColourAnswers is what queryShell shows of the answers to all four of its
+// colour queries.
+const allColourAnswers = "]11;rgb:1010/2020/3030^G^[]10;rgb:a0a0/b0b0/c0c0^G^[]12;rgb:0101/0202/0303^G^[]4;1;rgb:ffff/8080/0000^G"
+
 // The colours are read back the way a program reads them: the window answers
 // an OSC 11 or OSC 4 query with what set-colors set, and cat's terminal echoes
 // the answer onto the screen.
 func TestSetColorsAnswersTheProgramsQuery(t *testing.T) {
-	if !coloursReachTheProgram {
-		// What set-colors sends is checked on the wire by TestEveryCommandsRequestOnTheWire.
-		t.Skip("this platform's terminal does not pass a colour query's answer to the program")
-	}
 	sock := bootDaemon(t)
 	mustRun(t, sock, "new-window", "--cols", "200", "--shell", queryShell(), "s", "q")
 	if out := mustRun(t, sock, "set-colors", "--background", "#102030", "--foreground", "a0b0c0", "--cursor", "#010203",
@@ -265,8 +265,7 @@ func TestSetColorsAnswersTheProgramsQuery(t *testing.T) {
 		t.Fatalf("set-colors printed %q; want nothing", out)
 	}
 	mustRun(t, sock, "send-keys", "s", "q", "go")
-	waitScreen(t, sock, "s", "q", regexp.MustCompile(regexp.QuoteMeta(
-		"]11;rgb:1010/2020/3030^G^[]10;rgb:a0a0/b0b0/c0c0^G^[]12;rgb:0101/0202/0303^G^[]4;1;rgb:ffff/8080/0000^G")))
+	waitScreen(t, sock, "s", "q", regexp.MustCompile(regexp.QuoteMeta(colourAnswers())))
 	refused(t, sock, 400, "set-colors", "--background", "nothex", "s", "q")
 	refused(t, sock, 400, "set-colors", "s", "q")
 	refused(t, sock, 404, "set-colors", "--background", "#000000", "s", "nope")

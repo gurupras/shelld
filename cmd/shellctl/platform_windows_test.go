@@ -193,7 +193,7 @@ const tabOnScreen = `      `
 // takes the brackets off the input, so the program reads the text alone.
 const bracketedEcho = "\nbr\nbr\n"
 
-// coloursReachTheProgram reports whether a program's colour query is answered
-// with what set-colors set. Measured on Windows 11 build 26200: ConPTY answers
-// OSC 10, 11 and 12 itself and passes on OSC 4 but not the answer to it.
-const coloursReachTheProgram = false
+// colourAnswers is what queryShell shows of the answers to its colour queries,
+// once set-colors has set them all. The console in Windows drops a program's
+// OSC 10, 11 and 12 queries, so only the palette entry's answer comes back.
+func colourAnswers() string { return "^[]4;1;rgb:ffff/8080/0000^G" }
