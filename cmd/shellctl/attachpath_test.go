@@ -1,5 +1,3 @@
-//go:build linux || darwin
-
 package main
 
 import (
@@ -66,7 +64,7 @@ func TestAttachReachesAWindowWhoseNamesAreNotPathSegments(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			post(t, sock, "/sessions", `{"name":`+strconv.Quote(name)+`}`)
 			post(t, sock, "/sessions/"+url.PathEscape(name)+"/windows",
-				`{"name":`+strconv.Quote(name)+`,"cols":80,"rows":24,"shell":"/bin/cat"}`)
+				`{"name":`+strconv.Quote(name)+`,"cols":80,"rows":24,"shell":`+strconv.Quote(catShell())+`}`)
 
 			out, errs := attachNamed(t, sock, name, name, 2*time.Second)
 			if out == "" {

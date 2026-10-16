@@ -1,5 +1,3 @@
-//go:build linux || darwin
-
 package main
 
 import (
@@ -8,30 +6,18 @@ import (
 	"errors"
 	"io"
 	"net"
-	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
 )
 
-// fakeDaemon listens on a unix socket and answers every connection with
+// fakeDaemon listens on a socket and answers every connection with
 // respond, after reading the whole request. It returns the socket path and a
 // channel that carries each request as it arrived on the wire.
 func fakeDaemon(t *testing.T, respond func(c net.Conn)) (string, <-chan string) {
 	t.Helper()
-	// A short directory keeps the socket path inside sun_path's 108 bytes.
-	dir, err := os.MkdirTemp("", "sw")
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() { os.RemoveAll(dir) })
-	path := filepath.Join(dir, "f.sock")
-	ln, err := net.Listen("unix", path)
-	if err != nil {
-		t.Fatal(err)
-	}
+	ln, path := listenFake(t)
 	t.Cleanup(func() { ln.Close() })
 	reqs := make(chan string, 16)
 	go func() {
@@ -208,6 +194,9 @@ func keysReq(body string) string {
 // KEYS that are not UTF-8 cannot travel as JSON text without being changed, so
 // they are refused before anything is sent rather than typed as U+FFFD.
 func TestSendKeysRefusesInvalidUTF8(t *testing.T) {
+	if !argvCarriesBytes {
+		t.Skip("this platform's command line cannot carry invalid UTF-8")
+	}
 	sock, reqs := fakeDaemon(t, answer("HTTP/1.0 200 OK\r\n\r\n"))
 	_, errs, code := shellctl(t, "--socket", sock, "send-keys", "s", "w", "a\xffb")
 	if code != 2 || !strings.Contains(errs, "not valid UTF-8") {

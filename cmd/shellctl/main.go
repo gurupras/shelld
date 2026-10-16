@@ -167,9 +167,7 @@ func main() {
 	if cmd == "attach" {
 		err = attach(socket, positional[1], positional[2])
 	} else {
-		if err = oneShotUnsupported(cmd, runtime.GOOS); err == nil {
-			err = oneShot(os.Stdout, os.Stdin, socket, cmd, positional[1:], sub)
-		}
+		err = oneShot(os.Stdout, os.Stdin, socket, cmd, positional[1:], sub)
 	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)

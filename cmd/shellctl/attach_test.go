@@ -1,5 +1,3 @@
-//go:build linux || darwin
-
 package main
 
 import (
@@ -12,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -35,8 +34,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
-	shellctlBin = filepath.Join(dir, "shellctl")
-	shelldBin = filepath.Join(dir, "shelld")
+	shellctlBin = filepath.Join(dir, binName("shellctl"))
+	shelldBin = filepath.Join(dir, binName("shelld"))
 	for _, b := range []struct{ out, pkg, env string }{
 		{shellctlBin, ".", "SHELLCTL_TEST_BIN"},
 		{shelldBin, "../shelld", "SHELLD_TEST_BIN"},
@@ -87,13 +86,13 @@ func buildOrCopy(out, pkg, env string) error {
 // window is drawing something of its own. cat writes nothing unprompted.
 func bootDaemon(t *testing.T) string {
 	t.Helper()
-	// A short directory keeps the socket path inside sun_path's 108 bytes.
+	// A short directory keeps a socket path inside sun_path's 108 bytes.
 	dir, err := os.MkdirTemp("", "sc")
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { os.RemoveAll(dir) })
-	sock := filepath.Join(dir, "s.sock")
+	sock := daemonSocket(dir)
 	pid := filepath.Join(dir, "s.pid")
 	c := exec.Command(shelldBin, "run", "--socket", sock, "--pidfile", pid, "--logfile", filepath.Join(dir, "s.log"))
 	if err := c.Start(); err != nil {
@@ -108,11 +107,12 @@ func bootDaemon(t *testing.T) string {
 		time.Sleep(20 * time.Millisecond)
 	}
 	post(t, sock, "/sessions", `{"name":"s"}`)
-	post(t, sock, "/sessions/s/windows", `{"name":"w","cols":80,"rows":24,"shell":"/bin/cat"}`)
+	post(t, sock, "/sessions/s/windows", `{"name":"w","cols":80,"rows":24,"shell":`+strconv.Quote(catShell())+`}`)
+	awaitHistoryBase(t, sock)
 	return sock
 }
 
-// post sends a JSON POST over the daemon's unix socket. HTTPRoundTrip cannot be
+// post sends a JSON POST over the daemon's socket. HTTPRoundTrip cannot be
 // used here because it sends no body, and creating a session and a window is the
 // whole reason these cases speak HTTP at all.
 func post(t *testing.T, sock, path, body string) {

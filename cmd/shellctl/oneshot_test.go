@@ -1,5 +1,3 @@
-//go:build linux || darwin
-
 package main
 
 import (
@@ -7,7 +5,9 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -130,13 +130,13 @@ func TestCaptureAndScrollPrintTheHistory(t *testing.T) {
 	if code != 0 || json.Unmarshal([]byte(js), &resp) != nil || resp.Output != "three\nthree" || resp.LinesReturned != 2 {
 		t.Fatalf("capture --json = %q (exit %d)", js, code)
 	}
-	out, _, code = shellctl(t, "--socket", sock, "scroll", "--offset", "0", "--lines", "2", "s", "w")
+	out, _, code = shellctl(t, "--socket", sock, "scroll", "--offset", strconv.Itoa(historyBase), "--lines", "2", "s", "w")
 	if code != 0 || out != "one\none\n" {
-		t.Fatalf("scroll --offset 0 --lines 2 = %q (exit %d), want the oldest two lines", out, code)
+		t.Fatalf("scroll --offset %d --lines 2 = %q (exit %d), want the oldest two lines", historyBase, out, code)
 	}
-	out, _, code = shellctl(t, "--socket", sock, "scroll", "--offset", "2", "--lines", "1", "s", "w")
+	out, _, code = shellctl(t, "--socket", sock, "scroll", "--offset", strconv.Itoa(historyBase+2), "--lines", "1", "s", "w")
 	if code != 0 || out != "two\n" {
-		t.Fatalf("scroll --offset 2 --lines 1 = %q (exit %d)", out, code)
+		t.Fatalf("scroll --offset %d --lines 1 = %q (exit %d)", historyBase+2, out, code)
 	}
 	if _, errs, _ := shellctl(t, "--socket", sock, "scroll", "--offset", "0", "--lines", "2", "s", "w"); errs != "" {
 		t.Fatalf("an untruncated scroll wrote stderr %q", errs)
@@ -178,7 +178,7 @@ func TestCaptureVisibleMatchesTheRoute(t *testing.T) {
 func TestOneShotEscapesTheNames(t *testing.T) {
 	sock := bootDaemon(t)
 	post(t, sock, "/sessions", `{"name":"a b/c"}`)
-	post(t, sock, "/sessions/a%20b%2Fc/windows", `{"name":"x?y#z","cols":80,"rows":24,"shell":"/bin/cat"}`)
+	post(t, sock, "/sessions/a%20b%2Fc/windows", `{"name":"x?y#z","cols":80,"rows":24,"shell":`+strconv.Quote(catShell())+`}`)
 	if _, errs, code := shellctl(t, "--socket", sock, "send-keys", "a b/c", "x?y#z", "esc"); code != 0 {
 		t.Fatalf("send-keys exited %d: %s", code, errs)
 	}
@@ -215,7 +215,7 @@ func TestARefusalExitsOneWithTheDaemonsError(t *testing.T) {
 }
 
 func TestOneShotWithNoDaemonFailsToConnect(t *testing.T) {
-	out, errs, code := shellctl(t, "--socket", t.TempDir()+"/none.sock", "health")
+	out, errs, code := shellctl(t, "--socket", missingSocket(t), "health")
 	if code != 1 || out != "" || !strings.Contains(errs, "connect to") {
 		t.Fatalf("exit %d, stdout %q, stderr %q", code, out, errs)
 	}
@@ -267,15 +267,23 @@ func TestSubcommandHelpNamesTheRoute(t *testing.T) {
 // The one-shot path's startup is its latency, so the binary must not link the
 // server: internal/daemon (and through it the root package's regexps) or
 // net/http, whose package inits run on every start whatever the command.
+// Every platform's build is listed, since each links its own files.
 func TestShellctlDoesNotLinkTheServer(t *testing.T) {
-	out, err := exec.Command("go", "list", "-deps", ".").Output()
-	if err != nil {
-		t.Fatal(err)
+	if _, err := exec.LookPath("go"); err != nil {
+		t.Skip("no go toolchain to list the dependencies with")
 	}
-	for _, p := range strings.Fields(string(out)) {
-		switch p {
-		case "github.com/gurupras/shelld/internal/daemon", "github.com/gurupras/shelld", "net/http", "crypto/tls":
-			t.Errorf("shellctl links %s", p)
+	for _, goos := range []string{"linux", "darwin", "windows"} {
+		c := exec.Command("go", "list", "-deps", ".")
+		c.Env = append(os.Environ(), "GOOS="+goos)
+		out, err := c.Output()
+		if err != nil {
+			t.Fatalf("GOOS=%s: %v", goos, err)
+		}
+		for _, p := range strings.Fields(string(out)) {
+			switch p {
+			case "github.com/gurupras/shelld/internal/daemon", "github.com/gurupras/shelld", "net/http", "crypto/tls":
+				t.Errorf("shellctl for %s links %s", goos, p)
+			}
 		}
 	}
 }

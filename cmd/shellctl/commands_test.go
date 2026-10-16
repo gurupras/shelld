@@ -1,5 +1,3 @@
-//go:build linux || darwin
-
 package main
 
 import (
@@ -16,6 +14,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"unicode/utf8"
 )
 
 // shellctlIn is shellctl with stdin.
@@ -112,8 +111,8 @@ type windowInfo struct {
 	PasteMode string `json:"pasteMode"`
 }
 
-// windows is list-windows decoded, by name.
-func windows(t *testing.T, sock, session string) map[string]windowInfo {
+// listWindows is list-windows decoded, by name.
+func listWindows(t *testing.T, sock, session string) map[string]windowInfo {
 	t.Helper()
 	var resp struct {
 		Windows []windowInfo `json:"windows"`
@@ -173,11 +172,12 @@ func TestSessionCommands(t *testing.T) {
 }
 
 func TestNewWindowAppliesItsOptions(t *testing.T) {
-	sock := bootDaemon(t)
+	// Made first, so that it is removed after the daemon and its windows are
+	// gone: Windows refuses to remove a directory a live process works in.
 	dir := t.TempDir()
+	sock := bootDaemon(t)
 	out := mustRun(t, sock, "new-window", "-c", dir, "--cols", "91", "--rows=31", "-e", "FOO=one", "--env", "BAR=two",
-		"--unset-env", "HOME", "--paste-mode", "bracketed",
-		"--shell", `sh -c 'echo "cwd=$PWD foo=$FOO bar=$BAR home=[$HOME]"; exec cat'`, "s", "w2")
+		"--unset-env", homeVar, "--paste-mode", "bracketed", "--shell", envShell(), "s", "w2")
 	var resp struct {
 		OK  bool `json:"ok"`
 		Pid int  `json:"pid"`
@@ -187,12 +187,12 @@ func TestNewWindowAppliesItsOptions(t *testing.T) {
 	}
 	// Raw history, because the line is wider than the window and the screen wraps it.
 	waitCaptured(t, sock, "s", "w2", regexp.MustCompile(regexp.QuoteMeta("cwd="+dir+" foo=one bar=two home=[]")))
-	w := windows(t, sock, "s")["w2"]
+	w := listWindows(t, sock, "s")["w2"]
 	if w.Pid != resp.Pid || w.Cols != 91 || w.Rows != 31 || w.PasteMode != "bracketed" || !w.Alive {
 		t.Fatalf("list-windows has %+v; want pid %d, 91x31, bracketed, alive", w, resp.Pid)
 	}
-	mustRun(t, sock, "neww", "--shell", "/bin/cat", "s", "w3")
-	if got := windows(t, sock, "s"); len(got) != 3 {
+	mustRun(t, sock, "neww", "--shell", catShell(), "s", "w3")
+	if got := listWindows(t, sock, "s"); len(got) != 3 {
 		t.Fatalf("list-windows after neww: %v", got)
 	}
 	var a, b struct{ Windows []map[string]any }
@@ -200,7 +200,7 @@ func TestNewWindowAppliesItsOptions(t *testing.T) {
 		len(a.Windows) != 3 || !sameSet(a.Windows, b.Windows) {
 		t.Fatalf("lsw printed %v, list-windows %v", a, b)
 	}
-	refused(t, sock, 409, "new-window", "--shell", "/bin/cat", "s", "w2")
+	refused(t, sock, 409, "new-window", "--shell", catShell(), "s", "w2")
 	refused(t, sock, 400, "new-window", "-c", filepath.Join(dir, "none"), "s", "w4")
 	refused(t, sock, 400, "new-window", "--paste-mode", "sideways", "s", "w4")
 	refused(t, sock, 404, "new-window", "nope", "w4")
@@ -208,11 +208,11 @@ func TestNewWindowAppliesItsOptions(t *testing.T) {
 
 func TestKillAndMoveWindow(t *testing.T) {
 	sock := bootDaemon(t)
-	mustRun(t, sock, "new-window", "--shell", "/bin/cat", "s", "w2")
+	mustRun(t, sock, "new-window", "--shell", catShell(), "s", "w2")
 	if out := mustRun(t, sock, "kill-window", "s", "w2"); out != "" {
 		t.Fatalf("kill-window printed %q; want nothing", out)
 	}
-	if got := windows(t, sock, "s"); len(got) != 1 || got["w"].Name != "w" {
+	if got := listWindows(t, sock, "s"); len(got) != 1 || got["w"].Name != "w" {
 		t.Fatalf("list-windows after kill-window w2: %v", got)
 	}
 	refused(t, sock, 404, "kill-window", "nope", "w")
@@ -229,7 +229,7 @@ func TestKillAndMoveWindow(t *testing.T) {
 	}
 	refused(t, sock, 409, "move-window", "s", "nope", "t")
 	mustRun(t, sock, "killw", "s", "moved")
-	if got := windows(t, sock, "s"); len(got) != 0 {
+	if got := listWindows(t, sock, "s"); len(got) != 0 {
 		t.Fatalf("list-windows after killw: %v", got)
 	}
 }
@@ -239,11 +239,11 @@ func TestResizeWindow(t *testing.T) {
 	if out := mustRun(t, sock, "resize-window", "s", "w", "100", "40"); out != "" {
 		t.Fatalf("resize-window printed %q; want nothing", out)
 	}
-	if w := windows(t, sock, "s")["w"]; w.Cols != 100 || w.Rows != 40 {
+	if w := listWindows(t, sock, "s")["w"]; w.Cols != 100 || w.Rows != 40 {
 		t.Fatalf("after resize-window 100 40: %+v", w)
 	}
 	mustRun(t, sock, "resizew", "s", "w", "60", "20")
-	if w := windows(t, sock, "s")["w"]; w.Cols != 60 || w.Rows != 20 {
+	if w := listWindows(t, sock, "s")["w"]; w.Cols != 60 || w.Rows != 20 {
 		t.Fatalf("after resizew 60 20: %+v", w)
 	}
 	refused(t, sock, 400, "resize-window", "s", "w", "0", "20")
@@ -254,8 +254,12 @@ func TestResizeWindow(t *testing.T) {
 // an OSC 11 or OSC 4 query with what set-colors set, and cat's terminal echoes
 // the answer onto the screen.
 func TestSetColorsAnswersTheProgramsQuery(t *testing.T) {
+	if !coloursReachTheProgram {
+		// What set-colors sends is checked on the wire by TestEveryCommandsRequestOnTheWire.
+		t.Skip("this platform's terminal does not pass a colour query's answer to the program")
+	}
 	sock := bootDaemon(t)
-	mustRun(t, sock, "new-window", "--cols", "200", "--shell", `sh -c 'read x; printf "\033]11;?\007\033]10;?\007\033]12;?\007\033]4;1;?\007"; exec cat'`, "s", "q")
+	mustRun(t, sock, "new-window", "--cols", "200", "--shell", queryShell(), "s", "q")
 	if out := mustRun(t, sock, "set-colors", "--background", "#102030", "--foreground", "a0b0c0", "--cursor", "#010203",
 		"--palette", "1=#ff8000", "s", "q"); out != "" {
 		t.Fatalf("set-colors printed %q; want nothing", out)
@@ -273,7 +277,7 @@ func TestSendKeysNamesAndHex(t *testing.T) {
 	if out := mustRun(t, sock, "send-keys", "-K", "s", "w", "a", "b", "Tab", "c", "Enter"); out != "" {
 		t.Fatalf("send-keys -K printed %q; want nothing", out)
 	}
-	waitScreen(t, sock, "s", "w", regexp.MustCompile(`ab\tc\nab\tc`))
+	waitScreen(t, sock, "s", "w", regexp.MustCompile(`ab`+tabOnScreen+`c\nab`+tabOnScreen+`c`))
 	mustRun(t, sock, "send-keys", "-H", "s", "w", "6869", "0d")
 	waitScreen(t, sock, "s", "w", regexp.MustCompile(`\nhi\nhi\n`))
 	mustRun(t, sock, "send", "--key-names", "s", "w", "zz", "Enter")
@@ -305,9 +309,8 @@ func TestPaste(t *testing.T) {
 		t.Fatalf("paste from stdin: exit %d, stdout %q, stderr %q", code, out, errs)
 	}
 	waitScreen(t, sock, "s", "w", regexp.MustCompile(`\nfrom stdin\nfrom stdin\n`))
-	// The brackets reach cat as typed, and its terminal echoes them.
 	mustRun(t, sock, "paste", "--mode", "bracketed", "s", "w", "br")
-	waitScreen(t, sock, "s", "w", regexp.MustCompile(regexp.QuoteMeta("^[[200~br^[[201~\nbr\n")))
+	waitScreen(t, sock, "s", "w", regexp.MustCompile(regexp.QuoteMeta(bracketedEcho)))
 	// Sanitized, DEL arrives as the text ^?; literal, it is the terminal's
 	// erase character and takes the X with it.
 	mustRun(t, sock, "paste", "s", "w", "saX\x7fn")
@@ -359,11 +362,11 @@ func TestCapturePaneAndFrame(t *testing.T) {
 	if out := mustRun(t, sock, "capture-pane", "--lines", "2", "s", "w"); out != "three\nthree\n" {
 		t.Fatalf("capture-pane --lines 2 = %q", out)
 	}
-	if out := mustRun(t, sock, "capture-pane", "-S", "0", "--lines", "2", "s", "w"); out != "one\none\n" {
-		t.Fatalf("capture-pane -S 0 --lines 2 = %q", out)
+	if out := mustRun(t, sock, "capture-pane", "-S", strconv.Itoa(historyBase), "--lines", "2", "s", "w"); out != "one\none\n" {
+		t.Fatalf("capture-pane -S %d --lines 2 = %q", historyBase, out)
 	}
-	if out := mustRun(t, sock, "capturep", "--offset=2", "--lines", "1", "s", "w"); out != "two\n" {
-		t.Fatalf("capturep --offset=2 --lines 1 = %q", out)
+	if out := mustRun(t, sock, "capturep", "--offset="+strconv.Itoa(historyBase+2), "--lines", "1", "s", "w"); out != "two\n" {
+		t.Fatalf("capturep --offset=%d --lines 1 = %q", historyBase+2, out)
 	}
 	if a, b := mustRun(t, sock, "capture-pane", "--visible", "--json", "s", "w"), mustRun(t, sock, "capture", "--visible", "--json", "s", "w"); !strings.Contains(a, `"mode":"visible"`) || !strings.Contains(b, `"mode":"visible"`) {
 		t.Fatalf("capture-pane --visible --json = %q, capture's %q", a, b)
@@ -642,6 +645,9 @@ func TestNewCommandsUsageErrorsExitTwo(t *testing.T) {
 		{"capture-pane", "--visible", "-S", "0", "s", "w"}, {"capture-pane", "-S", "-1", "s", "w"},
 		{"capture", "-S", "0", "s", "w"}, {"has"}, {"ls", "x"},
 	} {
+		if !argvCarriesBytes && slices.ContainsFunc(args, func(a string) bool { return !utf8.ValidString(a) }) {
+			continue // see argvCarriesBytes; paste's stdin can carry it, and is tested
+		}
 		_, errs, code := shellctl(t, append([]string{"--socket", "/nonexistent/x.sock"}, args...)...)
 		if code != 2 || strings.Contains(errs, "connect to") {
 			t.Fatalf("%q: exit %d, stderr %q; want a usage error (2) before any connect", args, code, errs)

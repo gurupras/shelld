@@ -108,7 +108,7 @@ one and taking its aliases: `list-sessions` (`ls`), `new-session`,
 `kill-session`, `new-window`, `kill-window`, `move-window`, `send-keys`,
 `paste`, `capture-pane` and so on. `shellctl --help` lists them, and
 `shellctl <COMMAND> --help` gives a command's options and the route it calls.
-These one-shot commands run on Linux and macOS; on Windows only `attach` does.
+They run on Linux, macOS and Windows.
 
 `--socket`, `--pidfile` and `--logfile` (or `SHELLD_SOCKET`, `SHELLD_PIDFILE`,
 `SHELLD_LOGFILE`) choose the daemon's files; `shelld --help` lists every option

@@ -620,17 +620,6 @@ func oneShot(w io.Writer, stdin io.Reader, socket, cmd string, pos, opts []strin
 	return nil
 }
 
-// oneShotUnsupported refuses the one-shot commands on a platform their tests
-// have not run on. linux and darwin have; windows reaches the daemon over a
-// named pipe the tests do not cover yet. attach, which these commands do not
-// change, runs everywhere.
-func oneShotUnsupported(cmd, goos string) error {
-	if goos != "windows" {
-		return nil
-	}
-	return fmt.Errorf("shellctl %s is not supported on %s yet; use the HTTP API", cmd, goos)
-}
-
 // writeLine writes b, ending it with a newline if it is not empty and has none,
 // so the next prompt starts on a line of its own.
 func writeLine(w io.Writer, b []byte) error {
