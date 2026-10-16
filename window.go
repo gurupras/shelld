@@ -1871,6 +1871,10 @@ func (w *Window) Kill() {
 	// Kill never waits on a write: queued input is dropped and the master
 	// is closed without taking a lock the writer holds, which releases a
 	// write parked on a program that isn't reading.
+	if CurrentKillMode() == KillHangup {
+		w.killHangup()
+		return
+	}
 	w.killMu.Lock()
 	defer w.killMu.Unlock()
 	w.stopDrain()
@@ -1903,6 +1907,44 @@ func (w *Window) Kill() {
 	w.mu.Unlock()
 	// Wake attached tick loops so the window's last state and its death reach
 	// clients at once; the read loop's own notify may already be past.
+	w.dirty.NotifyWaiters()
+}
+
+// killHangup is Kill under SHELLD_KILL_MODE=hangup: tmux's kill-window
+// (server_kill_window -> window_pane_destroy, which closes the pane's master fd
+// and nothing else). Closing the master makes the kernel hang up the slave, which
+// sends SIGHUP (and SIGCONT) to the session leader -- the shell, which pty.Start
+// made one -- and an interactive shell passes the SIGHUP on to its jobs before it
+// exits. It returns without waiting for any of that: the shell is reaped by
+// waitLoop whenever it exits, which is what tmux's server_child_signal does, so
+// no zombie is left and nothing here blocks on it.
+//
+// What it does NOT do, on purpose, is everything the default Kill adds: no
+// /proc scan, no SIGKILL, no wait, no cgroup.kill. A process that ignores SIGHUP
+// or has left the terminal's session survives, as it survives tmux. The window's
+// cgroup is handed to reapCgroupWhenEmpty, which removes it once the last member
+// exits (immediately, if it is already empty), without blocking the caller.
+func (w *Window) killHangup() {
+	w.killMu.Lock()
+	defer w.killMu.Unlock()
+	w.stopDrain()
+	w.input.close(w.deadErr())
+	w.ptyMu.Lock()
+	p := w.pty
+	w.pty, w.ptyClosed = nil, true
+	w.ptyMu.Unlock()
+	if p != nil {
+		w.closePTY(p)
+	}
+	// Taken off the window under the lock releaseCgroup also takes, so the read
+	// loop's EOF teardown -- which the close above triggers -- finds nil and leaves
+	// the directory to the reaper. A second Kill finds nil too.
+	w.mu.Lock()
+	c := w.cg
+	w.cg = nil
+	w.alive = false
+	w.mu.Unlock()
+	reapCgroupWhenEmpty(c)
 	w.dirty.NotifyWaiters()
 }
 

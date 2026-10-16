@@ -94,6 +94,14 @@ func CloseCgroups() {
 	if cgManager == nil {
 		return
 	}
+	// Windows killed in hangup mode hand their cgroup to a reaper that removes it
+	// once it empties; give the ones killed just before shutdown the same bound a
+	// default Kill gives its own cgroup. What is still populated after that holds a
+	// process the hangup did not end, and is left like any other populated cgroup.
+	if left := hupReaper.drain(cgroupDrainTimeout); left > 0 {
+		slog.Info("hung-up window cgroups still hold a process at shutdown; left for the next daemon's GC",
+			"cgroups", left)
+	}
 	if err := cgManager.Close(); err != nil {
 		slog.Warn("releasing the cgroup base", "err", err)
 	}

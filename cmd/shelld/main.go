@@ -320,6 +320,19 @@ func cmdRun(c cli) int {
 	// taking a process-wide directory is a decision for a program, not a package.
 	shelld.InitCgroups()
 	defer shelld.CloseCgroups()
+	// Read once, here, for the whole life of the daemon. An unknown value is
+	// fatal rather than ignored: the two modes differ in what survives a kill,
+	// and a typo must not quietly pick either one.
+	killMode, err := shelld.ParseKillMode(os.Getenv(shelld.KillModeEnv))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "shelld: %v\n", err)
+		return 1
+	}
+	shelld.SetKillMode(killMode)
+	if killMode != shelld.KillTree {
+		slog.Info("window kill mode", "mode", killMode.String(),
+			"note", "tmux kill-window semantics: hang up the terminal, reply at once; SIGHUP-ignoring and setsid'd processes survive")
+	}
 	// Concurrently, because the expansion blocks for a full RCU grace period --
 	// 12-25 ms, see InitDescriptorTable -- and whatever the listen waits behind is
 	// waited out by every caller that waits for this daemon to come up. Three do:
