@@ -18,6 +18,9 @@ the daemon and its control CLI.
   window, including into a session that does not exist yet. Deleting a window
   kills the program's whole process tree, including descendants that called
   `setsid`, and on Linux it also kills everything in the window's cgroup.
+  With `SHELLD_KILL_MODE=hangup` the daemon kills a window as tmux does
+  instead: it closes the terminal, which hangs up the program, and returns;
+  a process that ignores the hangup or left the session keeps running.
 - **Input.** Send text with an optional Enter and a delay before it, single raw
   keys, tmux key names (`Up`, `C-c`, `F5`...), and pastes, plain or bracketed,
   with tmux 3.7c's paste semantics. Input is queued per window with a byte
@@ -97,7 +100,15 @@ shelld [OPTIONS] [COMMAND]
   windows    List windows in a session
 
 shellctl attach <SESSION> <WINDOW>   # Ctrl-] detaches
+shellctl <COMMAND> [ARGS]            # one HTTP request, then exit
 ```
+
+shellctl has a command for every API route, named after tmux's where tmux has
+one and taking its aliases: `list-sessions` (`ls`), `new-session`,
+`kill-session`, `new-window`, `kill-window`, `move-window`, `send-keys`,
+`paste`, `capture-pane` and so on. `shellctl --help` lists them, and
+`shellctl <COMMAND> --help` gives a command's options and the route it calls.
+These one-shot commands run on Linux and macOS; on Windows only `attach` does.
 
 `--socket`, `--pidfile` and `--logfile` (or `SHELLD_SOCKET`, `SHELLD_PIDFILE`,
 `SHELLD_LOGFILE`) choose the daemon's files; `shelld --help` lists every option
