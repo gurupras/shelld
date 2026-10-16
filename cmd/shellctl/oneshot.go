@@ -622,11 +622,11 @@ func oneShot(w io.Writer, stdin io.Reader, socket, cmd string, pos, opts []strin
 }
 
 // oneShotUnsupported refuses the one-shot commands on a platform their tests
-// have not run on. Only linux has: the wire tests are built for darwin too but
-// have never run there, and windows reaches the daemon over a named pipe they do
-// not cover. attach, which these commands do not change, runs everywhere.
+// have not run on. linux and darwin have; windows reaches the daemon over a
+// named pipe the tests do not cover yet. attach, which these commands do not
+// change, runs everywhere.
 func oneShotUnsupported(cmd, goos string) error {
-	if goos == "linux" {
+	if goos != "windows" {
 		return nil
 	}
 	return fmt.Errorf("shellctl %s is not supported on %s yet; use the HTTP API", cmd, goos)

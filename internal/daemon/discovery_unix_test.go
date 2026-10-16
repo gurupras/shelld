@@ -968,7 +968,8 @@ func TestRemoveStaleRefusesAPathThatHoldsNoSocket(t *testing.T) {
 func TestLocateDaemonDoesNotTrustANonShelldLockHolder(t *testing.T) {
 	dir := shortDir(t)
 	sock := filepath.Join(dir, "s.sock")
-	held := holdInstanceLockAs(t, sock, "not-shelld-at-all")
+	// At most 16 characters: darwin keeps the first 16 of a process name (MAXCOMLEN).
+	held := holdInstanceLockAs(t, sock, "not-shelld-ever")
 
 	// The premise: the kernel really does name this process as the holder. Without
 	// it the refusal below could be a socket with no holder at all, which is a
@@ -989,7 +990,7 @@ func TestLocateDaemonDoesNotTrustANonShelldLockHolder(t *testing.T) {
 	if loc.Pid != held.pid {
 		t.Errorf("LocateDaemon reported pid %d, want the holder %d so the message can name it", loc.Pid, held.pid)
 	}
-	if !strings.Contains(loc.Reason, "not-shelld-at-all") {
+	if !strings.Contains(loc.Reason, "not-shelld-ever") {
 		t.Errorf("reason %q does not name the executable that was found", loc.Reason)
 	}
 

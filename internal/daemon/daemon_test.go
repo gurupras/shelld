@@ -1036,7 +1036,7 @@ func TestInjectOnADeadWindowIsRefusedAsKeysRefusesIt(t *testing.T) {
 	if st, _, raw := request(t, sock, "POST", "/sessions", `{"name":"s"}`); st != 200 {
 		t.Fatalf("create session: %d %s", st, raw)
 	}
-	if st, _, raw := request(t, sock, "POST", "/sessions/s/windows", `{"name":"w","shell":"/bin/true"}`); st != 200 {
+	if st, _, raw := request(t, sock, "POST", "/sessions/s/windows", `{"name":"w","shell":"/usr/bin/true"}`); st != 200 {
 		t.Fatalf("create window: %d %s", st, raw)
 	}
 	var keysSt int
