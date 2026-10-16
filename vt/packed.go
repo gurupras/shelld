@@ -189,32 +189,67 @@ func (s *packScratch) encode(cells []Cell) (size, ext int, ok bool) {
 	}
 	var a [packedEntry - 1]byte
 	// A run is a stretch of cells whose bytes past ch — fg, bg, ul, flags and
-	// zw — are equal, compared as words held in locals. misfit is 0 while the
-	// run's cells fit an entry given a character below 256.
-	key := cellTail(&cells[0])
-	misfit, attrs := runAttrs(&a, &cells[0])
-	for i := range cells {
-		c := &cells[i]
-		if t := cellTail(c); t != key {
-			key = t
-			misfit, attrs = runAttrs(&a, c)
-		}
-		e := ent[packedEntry*i : packedEntry*i+packedEntry]
-		if misfit|uint32(c.ch)>>8 == 0 {
-			e[0] = byte(c.ch)
-			binary.LittleEndian.PutUint32(e[1:], attrs)
+	// zw — are equal. Its attributes are encoded once, at its first cell, and
+	// the loops below walk the run comparing each cell's tail with words held
+	// in registers. The inline loop stores only characters; it stops at the
+	// run's end or at a character of 256 or more, which takes an extended cell
+	// without ending the run. A run whose attributes do not fit an entry is
+	// extended cells throughout.
+	for i := 0; i < n; {
+		k0, k1 := tailWords(&cells[i])
+		misfit, attrs := runAttrs(&a, &cells[i])
+		if misfit == 0 {
+			for {
+				for ; i < n; i++ {
+					c := &cells[i]
+					t0, t1 := tailWords(c)
+					if t0 != k0 || t1 != k1 || uint32(c.ch) >= 256 {
+						break
+					}
+					e := ent[packedEntry*i:]
+					e = e[:packedEntry]
+					e[0] = byte(c.ch)
+					binary.LittleEndian.PutUint32(e[1:], attrs)
+				}
+				if i == n {
+					break
+				}
+				if t0, t1 := tailWords(&cells[i]); t0 != k0 || t1 != k1 {
+					break
+				}
+				if !s.extAt(ent, i, &ext, maxExt) {
+					return 0, ext + 1, false
+				}
+				i++
+			}
 			continue
 		}
-		if ext > maxExt {
-			return 0, ext + 1, false
+		for ; i < n; i++ {
+			if t0, t1 := tailWords(&cells[i]); t0 != k0 || t1 != k1 {
+				break
+			}
+			if !s.extAt(ent, i, &ext, maxExt) {
+				return 0, ext + 1, false
+			}
 		}
-		binary.LittleEndian.PutUint16(e, uint16(ext))
-		e[2], e[3], e[4] = 0, 0, packedExtBit
-		s.x = append(s.x, int32(i))
-		ext++
 	}
 	size = packedEntry*n + packedExt*ext
 	return size, ext, packedCells(size) < n
+}
+
+// extAt makes entry i of ent refer to extended cell *ext, unless the row already
+// holds maxExt+1 of them, and records the column for copyTo.
+func (s *packScratch) extAt(ent []byte, i int, ext *int, maxExt int) bool {
+	if *ext > maxExt {
+		return false
+	}
+	e := ent[packedEntry*i:]
+	e = e[:packedEntry]
+	binary.LittleEndian.PutUint16(e, uint16(*ext))
+	e[2], e[3], e[4] = 0, 0, packedExtBit
+	s.x = append(s.x, int32(i))
+	*ext++
+	return true
 }
 
 // runAttrs encodes c's attributes into a and returns them as a word, with
@@ -227,13 +262,14 @@ func runAttrs(a *[packedEntry - 1]byte, c *Cell) (misfit, attrs uint32) {
 	return misfit, binary.LittleEndian.Uint32(a[:])
 }
 
-// cellTail is the 16 bytes of c past ch: fg, bg, ul, flags and zw. It reads
-// them as words of the fields' own alignment, which checkptr requires.
-func cellTail(c *Cell) [4]uint32 {
-	return *(*[4]uint32)(unsafe.Pointer(&c.fg))
+// tailWords is the 16 bytes of c past ch — fg, bg, ul, flags and zw — as two
+// words. The words are unaligned; checkptr allows that for a pointer-free type.
+func tailWords(c *Cell) (uint64, uint64) {
+	w := (*[2]uint64)(unsafe.Pointer(&c.fg))
+	return w[0], w[1]
 }
 
-// cellTail's view holds if fg starts the 16 bytes that end the Cell.
+// tailWords' view holds if fg starts the 16 bytes that end the Cell.
 var _ = [1]struct{}{}[unsafe.Offsetof(Cell{}.fg)+16-unsafe.Sizeof(Cell{})]
 
 // copyTo writes the row encode was given, cells, into pk, which is the size
