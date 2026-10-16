@@ -285,8 +285,17 @@ func (t *Term) writeAtCursor(c rune) {
 		// The line above can be history, which stores no cells past its content;
 		// a column it does not store holds a default cell, with no flag to clear.
 		if p.Column <= 1 && p.Line != g.topmostLine() {
-			if above := g.raw.row(p.Line - 1); t.lastColumn() < above.Len() {
+			if above := g.raw.row(p.Line - 1); t.lastColumn() < above.Len() &&
+				above.CellAt(t.lastColumn()).flags&FlagLeadingWideCharSpacer != 0 {
+				// A history row is packed; it is unpacked to be written and
+				// stored again as a scroll would store it.
+				packed := above.packed
+				above.unpack()
 				above.at(t.lastColumn()).flags &^= FlagLeadingWideCharSpacer
+				if packed {
+					countPack(func(s *PackStats) *int { return &s.Rewrites })
+					above.packOrCompact(nil, g.columns, g.noPack)
+				}
 			}
 		}
 	}

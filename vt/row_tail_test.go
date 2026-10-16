@@ -430,6 +430,9 @@ func TestGrowClearsOnlyRowsShrinkDirtied(t *testing.T) {
 			defer func() { rowGrowClearedTail = nil }()
 
 			term := NewTerm(Config{ScrollingHistory: 2000}, 200, 24, nil)
+			// The subject is a plain row's tail, which a packed history row does
+			// not have: it is stored without one and never grown back.
+			term.Grid().SetNoPack(true)
 			p := NewProcessor()
 			for range 400 {
 				feed(term, p, tc.line+"\r\n")

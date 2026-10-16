@@ -94,6 +94,8 @@ type Grid struct {
 
 	// spare holds arrays scrolling freed, for the next scroll to reuse.
 	spare rowPool
+	// noPack keeps history rows plain; see SetNoPack.
+	noPack bool
 }
 
 func newGrid(lines, columns, maxScrollLimit int) *Grid {
@@ -249,7 +251,10 @@ func (g *Grid) scrollUp(start, end, positions int) {
 func (g *Grid) compactPushed(end, positions int) {
 	for k := 1; k <= min(positions, g.HistorySize()); k++ {
 		if k <= end {
-			if in := g.raw.row(end - k); in.Len() < g.columns {
+			if in := g.raw.row(end - k); !in.full(g.columns) {
+				if in.packed {
+					countPack(func(s *PackStats) *int { return &s.Replaced })
+				}
 				// The pool owns the array now. blankRow replaces in anyway,
 				// but not until after the pool may have handed the array out.
 				g.spare.put(*in, g.columns)
@@ -258,11 +263,8 @@ func (g *Grid) compactPushed(end, positions int) {
 		}
 		out := g.raw.row(-k)
 		occ, dirty := out.occ, out.dirty
-		buf := g.spare.takeShort(out.trimmedLen())
-		if old := out.compact(buf); old != nil {
+		if old := out.packOrCompact(&g.spare, g.columns, g.noPack); old != nil {
 			g.spare.put(Row{inner: old, occ: occ, dirty: dirty}, g.columns)
-		} else if buf != nil {
-			g.spare.put(Row{inner: buf}, g.columns)
 		}
 	}
 }
@@ -272,7 +274,11 @@ func (g *Grid) compactPushed(end, positions int) {
 // held history or slack, which store fewer cells than a viewport row.
 func (g *Grid) blankRow(line int, tmpl *Cell) {
 	r := g.raw.row(line)
-	if r.Len() < g.columns {
+	// A packed row can store a full row's cells, so the test is full, not Len.
+	if !r.full(g.columns) {
+		if r.packed {
+			countPack(func(s *PackStats) *int { return &s.Replaced })
+		}
 		if *r = g.spare.takeFull(); r.Len() != g.columns {
 			*r = newRow(g.columns)
 		}

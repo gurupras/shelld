@@ -14,6 +14,12 @@ func (g *Grid) resize(reflow bool, lines, columns int) {
 	case g.lines > lines:
 		g.shrinkLines(lines)
 	}
+	// growLines brings history rows, possibly packed, onto the screen. The column
+	// passes do not need this today: each write unpacks its row first, and the
+	// raw reads they make are of rows a write has just unpacked or of the cursor
+	// row, which growLines never takes from history. It keeps them from
+	// depending on either, for a walk of the viewport.
+	g.unpackViewport()
 	switch {
 	case g.columns < columns:
 		g.growColumns(reflow, columns)
@@ -38,12 +44,19 @@ func (g *Grid) resize(reflow bool, lines, columns int) {
 func (g *Grid) normalizeRows() {
 	g.spare.reset()
 	for line := g.topmostLine(); line < 0; line++ {
-		g.raw.row(line).compact(nil)
+		g.raw.row(line).settle(g.columns, g.noPack)
 	}
 	for line := 0; line < g.lines; line++ {
-		if r := g.raw.row(line); r.Len() < g.columns {
-			r.grow(g.columns)
+		if r := g.raw.row(line); !r.full(g.columns) {
+			r.grow(g.columns) // grow unpacks
 		}
+	}
+}
+
+// unpackViewport turns any packed viewport row back into a plain one.
+func (g *Grid) unpackViewport() {
+	for line := 0; line < g.lines; line++ {
+		g.raw.row(line).unpack()
 	}
 }
 
@@ -96,7 +109,7 @@ func (g *Grid) shrinkLines(target int) {
 func (g *Grid) growColumns(reflow bool, columns int) {
 	shouldReflow := func(r *Row) bool {
 		n := r.Len()
-		return reflow && n > 0 && n < columns && r.inner[n-1].flags&FlagWrapline != 0
+		return reflow && n > 0 && n < columns && r.CellAt(n-1).flags&FlagWrapline != 0
 	}
 
 	oldColumns := g.columns
@@ -111,16 +124,29 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 	cursorLineDelta := 0
 
 	// rows[0] is the bottom line; walk from the oldest history line down.
+	// A row g.lines back from the end of reversed is history whatever later rows
+	// do, so it is settled there rather than left plain until normalizeRows. Rows
+	// nearer the end may end up on the screen, and are left as they are.
+	appendRow := func(row Row) {
+		if n := len(reversed) - g.lines; n > 0 {
+			reversed[n-1].settle(columns, g.noPack)
+		}
+		reversed = append(reversed, row)
+	}
 	for i := len(rows) - 1; i >= 0; i-- {
 		row := rows[i]
+		rows[i] = Row{}
 		var last *Row
 		if n := len(reversed); n > 0 && shouldReflow(&reversed[n-1]) {
 			last = &reversed[n-1]
 		} else {
-			reversed = append(reversed, row)
+			appendRow(row)
 			continue
 		}
 
+		// A join writes both rows in place.
+		last.unpack()
+		row.unpack()
 		last.lastMut().flags &^= FlagWrapline
 
 		lastLen := last.Len()
@@ -170,7 +196,7 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 		}
 
 		last.lastMut().flags |= FlagWrapline
-		reversed = append(reversed, row)
+		appendRow(row)
 	}
 
 	if len(reversed) < g.lines {
@@ -198,7 +224,14 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 	newRaw := make([]Row, len(reversed))
 	for i := range reversed {
 		row := reversed[len(reversed)-1-i]
-		if n := row.Len(); n < columns && (i < g.lines || n > 0 && row.inner[n-1].flags&FlagWrapline != 0) {
+		if i < g.lines {
+			if !row.full(columns) {
+				row.grow(columns) // grow unpacks
+			}
+		} else if n := row.Len(); n > 0 && n < columns && row.CellAt(n-1).flags&FlagWrapline != 0 {
+			if row.packed {
+				countPack(func(s *PackStats) *int { return &s.WrapGrows })
+			}
 			row.grow(columns)
 		}
 		newRaw[i] = row
@@ -221,6 +254,13 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 	limit := g.maxScrollLimit + g.lines
 	newRaw := make([]Row, 0, min(len(rows), 2*limit))
 	var buffered []Cell
+	// As in growColumns, a row g.lines back from the end of newRaw is history,
+	// and nothing writes to it again.
+	settleBehind := func() {
+		if n := len(newRaw) - g.lines; n > 0 {
+			newRaw[n-1].settle(columns, g.noPack)
+		}
+	}
 
 	for i := len(rows) - 1; i >= 0; i-- {
 		row := rows[i]
@@ -248,6 +288,7 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 					wrapped = []Cell{}
 					backing, off = wrapped, 0
 				} else {
+					settleBehind()
 					newRaw = append(newRaw, row)
 					break
 				}
@@ -270,6 +311,7 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 			if n := len(wrapped); n > 0 && wrapped[n-1].flags&FlagLeadingWideCharSpacer != 0 {
 				if n == 1 {
 					row.at(columns - 1).flags |= FlagWrapline
+					settleBehind()
 					newRaw = append(newRaw, row)
 					break
 				}
@@ -277,6 +319,7 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 				wrapped = wrapped[:n-1]
 			}
 
+			settleBehind()
 			newRaw = append(newRaw, row)
 			newRaw[len(newRaw)-1].lastMut().flags |= FlagWrapline
 
@@ -326,6 +369,13 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 		reversed[i] = newRaw[len(newRaw)-1-i]
 	}
 	g.raw.replaceInner(reversed)
+	// The cursor logic below reads the cursor row's last column raw. That row is
+	// already full and plain (see unpackViewport above); this does not rely on it.
+	for line := 0; line < g.lines; line++ {
+		if r := g.raw.row(line); !r.full(columns) {
+			r.grow(columns)
+		}
+	}
 
 	switch {
 	case !reflow:

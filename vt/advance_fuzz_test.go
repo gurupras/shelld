@@ -103,11 +103,15 @@ func checkOccupancy(t *testing.T, g *Grid, when string) {
 		if occ < 0 || occ > n {
 			t.Fatalf("%s: line %d has occ %d, outside [0, %d]", when, line, occ, n)
 		}
-		last := row.inner[n-1]
+		// A packed row stores exactly its cells, so occ is their number.
+		if row.packed && occ != n {
+			t.Fatalf("%s: packed line %d has occ %d for %d cells", when, line, occ, n)
+		}
+		last := row.CellAt(n - 1)
 		for c := occ; c < n; c++ {
-			if row.inner[c] != last {
+			if cell := row.CellAt(c); cell != last {
 				t.Fatalf("%s: line %d cell %d is at or past occ %d but differs from the last cell: %+v vs %+v",
-					when, line, c, occ, row.inner[c], last)
+					when, line, c, occ, cell, last)
 			}
 		}
 	}

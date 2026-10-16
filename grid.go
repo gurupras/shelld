@@ -461,9 +461,10 @@ var blankSlot = slotFromCell(&vt.Cell{})
 
 // rowSlots converts a row cropped to len(dst) columns into dst, filling the
 // columns the row does not store with blankSlot, and returns the OR of the
-// stored cells' attributes.
-func rowSlots(dst []CellSlot, row *vt.Row) uint32 {
-	cells := row.Cells()
+// stored cells' attributes. scratch holds the cells of a packed history row,
+// decoded (vt.Row.View), and is reused across calls.
+func rowSlots(dst []CellSlot, row *vt.Row, scratch *[]vt.Cell) uint32 {
+	cells := row.View(scratch)
 	cells = cells[:min(len(cells), len(dst))]
 	attrs := slotsFromCells(dst, cells)
 	for i := len(cells); i < len(dst); i++ {
@@ -509,13 +510,14 @@ func pairWide(row []CellSlot) {
 
 // wideHalf applies the rule to cell c of a row cropped to cols: skip is a
 // spacer that follows its wide character (drawn with it), blank is a wide
-// character without its spacer.
-func wideHalf(row *vt.Row, c, cols int) (skip, blank bool) {
-	switch row.Cell(c).Flags() & wideFlags {
+// character without its spacer. cells are the row's stored cells; a column
+// past them is a default cell, which is neither half.
+func wideHalf(cells []vt.Cell, c, cols int) (skip, blank bool) {
+	switch cells[c].Flags() & wideFlags {
 	case vt.FlagWideCharSpacer:
-		return c > 0 && row.Cell(c-1).Flags()&vt.FlagWideChar != 0, false
+		return c > 0 && cells[c-1].Flags()&vt.FlagWideChar != 0, false
 	case vt.FlagWideChar:
-		return false, c+1 == cols || row.Cell(c+1).Flags()&vt.FlagWideCharSpacer == 0
+		return false, c+1 == cols || c+1 >= len(cells) || cells[c+1].Flags()&vt.FlagWideCharSpacer == 0
 	}
 	return false, false
 }
@@ -696,13 +698,14 @@ func snapshotInto(dst *GridSnapshot, term *vt.Term, offset, outCols, outRows int
 	grid := term.Grid()
 	copyRows := min(outRows, grid.ScreenLines())
 	copyCols := min(outCols, grid.Columns())
+	var scratch []vt.Cell
 	for r := 0; r < outRows; r++ {
 		out := dst.Cells[r*outCols : (r+1)*outCols]
 		if r < copyRows {
 			// Pairing runs on the row cropped to the client's width, and only
 			// for rows holding a wide-character half.
 			row := out[:copyCols]
-			if rowSlots(row, grid.Row(r-offset))&(attrWide|attrWideSpacer) != 0 {
+			if rowSlots(row, grid.Row(r-offset), &scratch)&(attrWide|attrWideSpacer) != 0 {
 				pairWide(row)
 			}
 			out = out[copyCols:]
@@ -750,23 +753,24 @@ func renderFull(out []byte, term *vt.Term, offset, outCols, outRows int) []byte 
 
 	out = append(out, "\x1b[?25l\x1b[2J\x1b[H\x1b[0m\x1b[0m"...)
 	cur := padSlot // default style
+	var scratch []vt.Cell
 	for r := 0; r < copyRows; r++ {
 		if r > 0 {
 			out = append(out, "\r\n"...)
 		}
-		row := grid.Row(r - offset)
+		cells := grid.Row(r - offset).View(&scratch)
 		last := -1
 		// Columns a history row does not store are default cells, which are blank.
-		for c := 0; c < min(copyCols, row.Len()); c++ {
-			if !isBlank(row.Cell(c)) {
+		for c := 0; c < min(copyCols, len(cells)); c++ {
+			if !isBlank(&cells[c]) {
 				last = c
 			}
 		}
 		for c := 0; c <= last; c++ {
-			cell := row.Cell(c)
+			cell := &cells[c]
 			slot := slotFromCell(cell)
 			if cell.Flags()&wideFlags != 0 {
-				skip, blank := wideHalf(row, c, copyCols)
+				skip, blank := wideHalf(cells, c, copyCols)
 				if skip {
 					continue
 				}

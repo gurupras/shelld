@@ -22,6 +22,18 @@ type Row struct {
 	// is deliberately conservative, since a false positive costs one clear and a
 	// false negative resurrects cells.
 	dirty bool
+	// kept records that packOrCompact left the row plain because packed it
+	// would not be smaller, so a resize does not judge it again. Every method that
+	// changes a row's length or moves its cells clears it; at, span and lastMut do
+	// not, so a flag left stale by a write keeps a row plain that could have
+	// packed, which costs memory and nothing else. A write that changes what a
+	// pushed row holds cannot leave it stale: compactPushed ignores the flag.
+	kept bool
+	// packed records that the row's cells are stored packed (packed.go): occ is
+	// then their number, and the bytes are in inner's array past its length,
+	// which is 0, so that at and lastMut fail on a packed row rather than write
+	// into its bytes. Only history rows are packed.
+	packed bool
 }
 
 func newRow(columns int) Row { return Row{inner: make([]Cell, columns)} }
@@ -29,17 +41,34 @@ func newRow(columns int) Row { return Row{inner: make([]Cell, columns)} }
 // Len is the number of cells the row stores. A viewport row stores one per
 // column; a history row may store fewer, and every column past Len holds the
 // default cell (see compact).
-func (r *Row) Len() int { return len(r.inner) }
+func (r *Row) Len() int {
+	if r.packed {
+		return int(r.occ)
+	}
+	return len(r.inner)
+}
 
 // Cells returns the row's stored cells for reading, limited to its length,
 // which for a history row can be less than the grid's width.
 // Writing through it would bypass the occupancy tracking reset relies on.
-func (r *Row) Cells() []Cell { return r.inner[:len(r.inner):len(r.inner)] }
+// A packed row's cells are decoded into a new slice; View reuses one instead.
+func (r *Row) Cells() []Cell {
+	if r.packed {
+		var cells []Cell
+		return r.View(&cells)
+	}
+	return r.inner[:len(r.inner):len(r.inner)]
+}
 
 // Cell returns the cell at col for reading. A column past what the row stores
 // reads as a default cell; the pointer is then to a fresh copy, so a write
-// through it is lost. A harness that writes through Cell calls Expand first.
+// through it is lost, as it is for every column of a packed row. A harness that
+// writes through Cell calls Expand first.
 func (r *Row) Cell(col int) *Cell {
+	if r.packed {
+		c := r.CellAt(col)
+		return &c
+	}
 	if col >= len(r.inner) {
 		return new(Cell)
 	}
@@ -50,13 +79,17 @@ func (r *Row) Cell(col int) *Cell {
 // pointer into the row for every column. Nothing in a terminal needs it; it is
 // for harnesses that fabricate a grid by writing through Cell, in the shape of
 // MarkOccupied.
-func (r *Row) Expand(columns int) { r.grow(columns) }
+func (r *Row) Expand(columns int) { r.grow(columns) } // grow unpacks
 
 // trimmedLen is the length compact cuts the row to: one past its last non-zero
 // cell when the row's last cell is the zero cell and that one does not carry
 // FlagWrapline, and its whole length otherwise. Every cell at or past occ equals the last cell, so when that cell is
 // zero the scan back starts at occ.
 func (r *Row) trimmedLen() int {
+	if r.packed {
+		// A row is packed with its content already trimmed.
+		return int(r.occ)
+	}
 	n := len(r.inner)
 	if n == 0 || r.inner[n-1] != (Cell{}) {
 		return n
@@ -98,6 +131,9 @@ func (r *Row) trimmedLen() int {
 // truncate keeps up to shrinkKeepFactor times the new width for a later widen to
 // reuse, and a history row is never widened again.
 func (r *Row) compact(buf []Cell) []Cell {
+	if r.packed {
+		return nil // already no longer than its content
+	}
 	n := r.trimmedLen()
 	if n == len(r.inner) && cap(r.inner) <= compactReuseFactor*n {
 		return nil
@@ -127,7 +163,8 @@ const compactReuseFactor = 2
 // occupancy is understated loses those cells at the next reset and at the next
 // narrowing.
 func (r *Row) MarkOccupied(n int) {
-	if n > int(r.occ) {
+	// A packed row's occ is its length already, and its cells cannot be written.
+	if !r.packed && n > int(r.occ) {
 		r.occ = int32(min(n, len(r.inner)))
 	}
 }
@@ -145,12 +182,16 @@ func (r *Row) span(from, to int) []Cell {
 	if to > int(r.occ) {
 		r.occ = int32(to)
 	}
-	return r.inner[from:to]
+	// The capacity bound makes a span past the length fail as at does,
+	// rather than reach into the capacity, where a packed row keeps its bytes.
+	return r.inner[from:to:len(r.inner)]
 }
 
 // grow extends the row to columns default cells, reusing capacity left by an
 // earlier shrink.
 func (r *Row) grow(columns int) {
+	r.unpack()
+	r.kept = false
 	n := len(r.inner)
 	if n >= columns {
 		return
@@ -211,9 +252,11 @@ func (r *Row) markTail() {
 // shrink truncates the row to columns and returns the removed cells up to
 // the last non-empty one, or nil when nothing non-empty was removed.
 func (r *Row) shrink(columns int) []Cell {
-	if len(r.inner) <= columns {
-		return nil
+	if r.Len() <= columns {
+		return nil // a packed row stays packed
 	}
+	r.unpack()
+	r.kept = false
 	// Every cell at or past occ equals the row's last cell, so when occ is inside
 	// the kept part and that last cell is the default blank, every removed cell is
 	// a default blank too: there is nothing to return, and the tail this leaves in
@@ -367,6 +410,11 @@ var rowShrinkTookFastPath func(Row, int)
 // Restructuring the blanking so that it inlines again is a real alternative with a
 // real cost; see fillBlank for the candidate that was measured and how the trade went.
 func (r *Row) reset(template *Cell) {
+	if r.packed {
+		// Only a viewport row is reset, and the viewport is never packed: a
+		// packed row reaching here is a ring slot a shape test let through.
+		panic("vt: reset of a packed row")
+	}
 	n := len(r.inner)
 	if n == 0 {
 		return
@@ -580,18 +628,24 @@ func (r *Row) lastMut() *Cell {
 }
 
 func (r *Row) appendCells(cells []Cell) {
+	r.unpack()
+	r.kept = false
 	r.occ += int32(len(cells))
 	r.inner = append(r.inner, cells...)
 	r.markTail()
 }
 
 func (r *Row) appendCell(c Cell) {
+	r.unpack()
+	r.kept = false
 	r.occ++
 	r.inner = append(r.inner, c)
 	r.markTail()
 }
 
 func (r *Row) appendFront(cells []Cell) {
+	r.unpack()
+	r.kept = false
 	r.occ += int32(len(cells))
 	out := make([]Cell, 0, len(cells)+len(r.inner))
 	out = append(out, cells...)
@@ -600,6 +654,14 @@ func (r *Row) appendFront(cells []Cell) {
 }
 
 func (r *Row) isClear() bool {
+	if r.packed {
+		for i := range int(r.occ) {
+			if c := r.CellAt(i); !c.isEmpty() {
+				return false
+			}
+		}
+		return true
+	}
 	for i := range r.inner {
 		if !r.inner[i].isEmpty() {
 			return false
@@ -652,6 +714,8 @@ func (r *Row) isClear() bool {
 // no pair, though close enough at the ends that the ranges touch.
 // BenchmarkWorstClearSequence is that sequence.
 func (r *Row) moveFrontTo(dst *Row, at int) {
+	r.unpack()
+	r.kept = false
 	dst.appendCells(r.inner[:at])
 	r.occ = max(r.occ-int32(at), 0)
 	r.inner = r.inner[:copy(r.inner, r.inner[at:])]

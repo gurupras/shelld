@@ -13,14 +13,17 @@ import (
 // turns any occ divergence into wrong cells after the next scroll or erase.
 func shrinkDiffState(t *Term) string {
 	var b strings.Builder
+	var scratch []Cell
 	for _, g := range []*Grid{t.grid, t.inactiveGrid} {
 		fmt.Fprintf(&b, "grid %dx%d hist=%d pushed=%d cur=%v saved=%v wrap=%v\n",
 			g.columns, g.lines, g.HistorySize(), g.pushed, g.Cursor.Point, g.SavedCursor.Point, g.Cursor.InputNeedsWrap)
 		for line := -g.HistorySize(); line < g.lines; line++ {
 			row := g.raw.row(line)
 			fmt.Fprintf(&b, "%d:", line)
-			for i := range row.inner {
-				b.WriteString(cellKey(&row.inner[i]))
+			// View, not inner: a packed history row stores its cells past a 0 length.
+			cells := row.View(&scratch)
+			for i := range cells {
+				b.WriteString(cellKey(&cells[i]))
 				b.WriteByte(' ')
 			}
 			b.WriteByte('\n')

@@ -91,10 +91,11 @@ func freezeHistory(term *vt.Term) *FrozenHistory {
 	}
 	// Oldest first, so row i is grid line i-hist: the copy reads top to bottom
 	// in the order a viewer scrolls through it.
+	var scratch []vt.Cell
 	for i := 0; i < f.rows; i++ {
 		row := f.cells[i*cols : (i+1)*cols]
 		// Pairing matches a live capture: only rows holding a wide half need it.
-		if rowSlots(row, grid.Row(i-hist))&(attrWide|attrWideSpacer) != 0 {
+		if rowSlots(row, grid.Row(i-hist), &scratch)&(attrWide|attrWideSpacer) != 0 {
 			pairWide(row)
 		}
 	}

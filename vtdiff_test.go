@@ -99,7 +99,7 @@ func goDump(g *VtGrid, w *bufio.Writer) {
 		row := grid.Row(l)
 		fmt.Fprintf(w, "L%d", l)
 		for c := 0; c < grid.Columns(); c++ {
-			cell := row.Cell(c)
+			cell := row.CellAt(c) // no allocation on a packed row, unlike Cell
 			if cell.Rune() == ' ' && cell.Flags() == 0 && cell.UnderlineColor() == vt.NoColor && cell.Fg() == defFg && cell.Bg() == defBg {
 				continue
 			}
@@ -806,6 +806,16 @@ func TestVtDiffFuzz(t *testing.T) {
 	if testing.Short() {
 		seeds = 40
 	}
+	// The grid packs history rows; a run in which none packed compared nothing
+	// packing does.
+	var stats vt.PackStats
+	defer vt.SetPackStats(vt.SetPackStats(&stats))
+	defer func() {
+		t.Logf("pack counters %+v", stats)
+		if !t.Failed() && (stats.Packed == 0 || stats.Ext == 0) {
+			t.Errorf("no history row was packed with an extended cell: %+v", stats)
+		}
+	}()
 	for seed := 1; seed <= seeds; seed++ {
 		rng := rand.New(rand.NewSource(int64(seed)))
 		cols, rows := 2+rng.Intn(120), 1+rng.Intn(40)

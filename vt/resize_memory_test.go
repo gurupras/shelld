@@ -115,7 +115,13 @@ func TestShrinkColumnsBoundsRetainedCapacity(t *testing.T) {
 	for i := range raw.inner {
 		row := &raw.inner[i]
 		held += cap(row.inner)
-		needed += len(row.inner)
+		// A packed row's cells are bytes in its array past a 0 length, and the
+		// array is all it needs.
+		if row.packed {
+			needed += cap(row.inner)
+		} else {
+			needed += len(row.inner)
+		}
 		if cap(row.inner) > shrinkKeepFactor*narrow {
 			over++
 		}
