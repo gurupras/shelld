@@ -1,5 +1,7 @@
 package shelld
 
+import "github.com/gurupras/shelld/vt"
+
 // LiveFramer builds the messages one client of a window's live view receives:
 // on each tick a frame with what changed since the client's last message, and
 // once output settles the cursor it kept hidden. It holds its own model of the
@@ -38,10 +40,21 @@ type LiveFramer struct {
 	gen           uint64
 	ok            bool // last is the client's screen, captured at gen
 
+	// The damage epoch each buffer was captured at, and the term it was
+	// captured from; a buffer whose ...OK is false is copied in full.
+	lastE, scratchE   uint64
+	lastOK, scratchOK bool
+	term              *vt.Term
+
 	burst bool       // the cursor is kept hidden until Settle
 	shown bool       // the client shows the cursor
 	at    liveCursor // the client's cursor
 }
+
+// damageFrames lets Frame copy only the rows damaged since a buffer was last
+// captured, instead of snapshotting the whole screen. Tests turn it off to
+// compare the two.
+var damageFrames = true
 
 // DefaultSyncMin is LiveFramer.SyncMin's default.
 const DefaultSyncMin = 256
@@ -58,6 +71,7 @@ var (
 // paused view).
 func (f *LiveFramer) Invalidate() {
 	f.ok, f.burst = false, false
+	f.lastOK, f.scratchOK = false, false
 	f.at = liveCursor{}
 	if f.last != nil {
 		f.last.Cells = f.last.Cells[:0]
@@ -87,11 +101,30 @@ func (f *LiveFramer) Frame(dst []byte, g *VtGrid, cols, rows int, dirty bool) (o
 	if f.ok && gen == f.gen && f.last.Cols == cols && f.last.Rows == rows {
 		return dst, false, false
 	}
-	cur := g.SnapshotInto(f.scratch, 0, cols, rows)
+	var cur *GridSnapshot
 	prev := f.last
+	damaged := damageFrames && f.ok && f.term == g.term && f.lastOK && f.scratchOK &&
+		f.scratch.Cols == cols && f.scratch.Rows == rows && len(f.scratch.Cells) == cols*rows &&
+		prev.Cols == cols && prev.Rows == rows && len(prev.Cells) == cols*rows
+	if damaged {
+		cur = snapshotDamaged(f.scratch, g.term, cols, rows, f.scratchE)
+	} else {
+		cur = g.SnapshotInto(f.scratch, 0, cols, rows)
+	}
 	total := cur.Cols * cur.Rows
+	var changed int
+	if damaged {
+		changed = countChangedSince(prev, cur, g.term, f.lastE)
+	} else if f.ok && len(prev.Cells) != 0 && prev.Cols == cur.Cols && prev.Rows == cur.Rows {
+		changed = CountChanged(prev, cur)
+	}
 	full = !f.ok || len(prev.Cells) == 0 || prev.Cols != cur.Cols || prev.Rows != cur.Rows ||
-		total > 0 && CountChanged(prev, cur) > total/2
+		total > 0 && changed > total/2
+	if damageFrames {
+		e := g.term.DamageEpoch()
+		f.scratchE, f.scratchOK = f.lastE, f.lastOK && f.term == g.term
+		f.lastE, f.lastOK, f.term = e, true, g.term
+	}
 	moved := !f.ok || cur.CursorRow != prev.CursorRow || cur.CursorCol != prev.CursorCol
 
 	start := len(dst)

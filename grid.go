@@ -679,6 +679,48 @@ func slotsEqual(a, b []CellSlot) bool {
 	return string(ab) == string(bb)
 }
 
+// snapshotDamaged is snapshotInto at offset 0 for a dst that already holds
+// this term's live view at the same size as of damage epoch since: only the
+// rows the term reports changed after since are copied again.
+func snapshotDamaged(dst *GridSnapshot, term *vt.Term, outCols, outRows int, since uint64) *GridSnapshot {
+	dst.marks = term.MarkTable()
+	grid := term.Grid()
+	copyRows := min(outRows, grid.ScreenLines())
+	copyCols := min(outCols, grid.Columns())
+	var scratch []vt.Cell
+	for r := 0; r < copyRows; r++ {
+		if !term.LineChangedSince(r, since) {
+			continue
+		}
+		row := dst.Cells[r*outCols : r*outCols+copyCols]
+		if rowSlots(row, grid.Row(r), &scratch)&(attrWide|attrWideSpacer) != 0 {
+			pairWide(row)
+		}
+	}
+	cur := grid.Cursor.Point
+	dst.CursorRow = min(max(cur.Line, 0), max(outRows-1, 0))
+	dst.CursorCol = min(cur.Column, max(outCols-1, 0))
+	dst.CursorVisible = term.Mode()&vt.ModeShowCursor != 0
+	return dst
+}
+
+// countChangedSince is CountChanged over only the rows term reports changed
+// after since, prev being the snapshot taken at since: the others are equal.
+func countChangedSince(prev, cur *GridSnapshot, term *vt.Term, since uint64) int {
+	cols := max(cur.Cols, 1)
+	n := 0
+	for r := 0; r < cur.Rows; r++ {
+		if !term.LineChangedSince(r, since) {
+			continue
+		}
+		a, b := prev.Cells[r*cols:(r+1)*cols], cur.Cells[r*cols:(r+1)*cols]
+		if !slotsEqual(a, b) {
+			n += countChangedCells(a, b)
+		}
+	}
+	return n
+}
+
 // snapshotInto captures the term at a declared size. offset 0 is the live
 // view (cursor from the term); offset > 0 is a paused history view with the
 // cursor hidden at the origin. dst is reused when non-nil.

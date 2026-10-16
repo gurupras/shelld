@@ -149,10 +149,10 @@ func (g *Grid) HistorySize() int {
 func (g *Grid) HistoryPushed() int64 { return g.pushed }
 
 // Row returns a line; valid lines are -HistorySize()..ScreenLines()-1.
-func (g *Grid) Row(line int) *Row { return g.raw.row(line) }
+func (g *Grid) Row(line int) *Row { return g.raw.peek(line) }
 
 // Cell returns the cell at p.
-func (g *Grid) Cell(p Point) *Cell { return g.raw.row(p.Line).Cell(p.Column) }
+func (g *Grid) Cell(p Point) *Cell { return g.raw.peek(p.Line).Cell(p.Column) }
 
 func (g *Grid) topmostLine() int    { return -g.HistorySize() }
 func (g *Grid) bottommostLine() int { return g.lines - 1 }

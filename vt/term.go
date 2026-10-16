@@ -113,6 +113,8 @@ type Config struct {
 type Term struct {
 	grid         *Grid // active
 	inactiveGrid *Grid
+	// epoch is the damage epoch rows are stamped with.
+	epoch uint64
 
 	activeCharset int
 	tabs          []bool
@@ -148,6 +150,9 @@ func NewTerm(cfg Config, columns, lines int, listener Listener) *Term {
 		beforeHistoryClear: cfg.BeforeHistoryClear,
 	}
 	t.tabs = newTabs(columns)
+	t.epoch = 1
+	t.grid.raw.epoch, t.inactiveGrid.raw.epoch = &t.epoch, &t.epoch
+	t.stampAll()
 	return t
 }
 
@@ -202,6 +207,7 @@ func (t *Term) bottommostLine() int { return t.grid.lines - 1 }
 // MinColumns columns or one line are raised to them.
 func (t *Term) Resize(columns, lines int) {
 	columns, lines = max(columns, MinColumns), max(lines, 1)
+	defer t.stampAll()
 	oldCols, oldLines := t.grid.columns, t.grid.lines
 	if oldCols == columns && oldLines == lines {
 		return
@@ -225,7 +231,30 @@ func resizeTabs(tabs []bool, columns int) []bool {
 	return tabs
 }
 
+// stampAll marks every line of both grids changed now.
+func (t *Term) stampAll() {
+	t.grid.raw.stampAll()
+	t.inactiveGrid.raw.stampAll()
+}
+
+// DamageEpoch closes the current damage epoch and returns it: a line changed
+// after this call reports LineChangedSince(line, e) true. Call it under the
+// same lock as the reads it dates, right after them.
+func (t *Term) DamageEpoch() uint64 {
+	e := t.epoch
+	t.epoch++
+	return e
+}
+
+// LineChangedSince reports whether visible line of the active grid may differ
+// from what it held when DamageEpoch returned e. It is conservative: true
+// whenever it cannot tell.
+func (t *Term) LineChangedSince(line int, e uint64) bool {
+	return t.grid.raw.changedSince(line, e)
+}
+
 func (t *Term) swapAlt() {
+	defer t.stampAll()
 	if t.mode&ModeAltScreen == 0 {
 		t.inactiveGrid.Cursor = t.grid.Cursor
 		t.grid.SavedCursor = t.grid.Cursor

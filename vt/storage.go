@@ -14,6 +14,33 @@ type storage struct {
 	zero         int // ring index of the bottommost line
 	visibleLines int
 	len          int // scrollback + visible lines currently in use
+
+	// Damage stamps: stamps[line] is the epoch at which visible
+	// line was last reached through row or swap, allStamp the epoch of the
+	// last change that may have moved or rewritten every line. Reaching a row
+	// is taken as changing it, which over-reports reads and never misses a
+	// write: every write to a visible row goes through row or swap.
+	epoch    *uint64
+	stamps   []uint64
+	allStamp uint64
+}
+
+func (s *storage) stampAll() {
+	if s.epoch == nil {
+		return
+	}
+	s.allStamp = *s.epoch
+	if len(s.stamps) != s.visibleLines {
+		s.stamps = make([]uint64, s.visibleLines)
+	}
+}
+
+// changedSince reports whether visible line may have changed after epoch e.
+func (s *storage) changedSince(line int, e uint64) bool {
+	if s.allStamp > e || uint(line) >= uint(len(s.stamps)) {
+		return true
+	}
+	return s.stamps[line] > e
 }
 
 func newStorage(visibleLines, columns int) storage {
@@ -52,24 +79,42 @@ func (s *storage) computeIndex(line int) int {
 	return zeroed
 }
 
-func (s *storage) row(line int) *Row { return &s.inner[s.computeIndex(line)] }
+func (s *storage) row(line int) *Row {
+	if uint(line) < uint(len(s.stamps)) {
+		s.stamps[line] = *s.epoch
+	}
+	return &s.inner[s.computeIndex(line)]
+}
+
+// peek is row without the damage stamp, for readers outside the package: the
+// exported Grid.Row and Grid.Cell, which nothing in this package writes through.
+func (s *storage) peek(line int) *Row { return &s.inner[s.computeIndex(line)] }
 
 func (s *storage) swap(a, b int) {
+	if uint(a) < uint(len(s.stamps)) && uint(b) < uint(len(s.stamps)) {
+		e := *s.epoch
+		s.stamps[a], s.stamps[b] = e, e
+	} else {
+		s.stampAll()
+	}
 	ia, ib := s.computeIndex(a), s.computeIndex(b)
 	s.inner[ia], s.inner[ib] = s.inner[ib], s.inner[ia]
 }
 
 func (s *storage) growVisibleLines(next int) {
+	defer s.stampAll()
 	s.initialize(next - s.visibleLines)
 	s.visibleLines = next
 }
 
 func (s *storage) shrinkVisibleLines(next int) {
+	defer s.stampAll()
 	s.shrinkLines(s.visibleLines - next)
 	s.visibleLines = next
 }
 
 func (s *storage) shrinkLines(n int) {
+	defer s.stampAll()
 	s.len -= n
 	if len(s.inner) > s.len+maxCacheSize {
 		s.truncate()
@@ -77,6 +122,7 @@ func (s *storage) shrinkLines(n int) {
 }
 
 func (s *storage) truncate() {
+	defer s.stampAll()
 	s.rezero()
 	// The clear is what drops the trimmed rows, not the reslice: a reslice leaves their
 	// Rows in [len, cap) with their cell pointers intact, so the cells would stay
@@ -94,6 +140,7 @@ func (s *storage) truncate() {
 // rows a window may never use and that stay allocated as the ring's slack once
 // the history is full.
 func (s *storage) initialize(additional int) {
+	defer s.stampAll()
 	if s.len+additional > len(s.inner) {
 		s.rezero()
 		grow := max(additional, maxCacheSize)
@@ -104,21 +151,25 @@ func (s *storage) initialize(additional int) {
 
 // rotate moves every line count positions (negative = up into history).
 func (s *storage) rotate(count int) {
+	defer s.stampAll()
 	n := len(s.inner)
 	s.zero = ((s.zero+count)%n + n) % n
 }
 
 func (s *storage) rotateDown(count int) {
+	defer s.stampAll()
 	s.zero = (s.zero + count) % len(s.inner)
 }
 
 func (s *storage) replaceInner(rows []Row) {
+	defer s.stampAll()
 	s.len = len(rows)
 	s.inner = rows
 	s.zero = 0
 }
 
 func (s *storage) takeAll() []Row {
+	defer s.stampAll()
 	s.truncate()
 	rows := s.inner
 	s.inner = nil
@@ -133,6 +184,7 @@ func (s *storage) takeAll() []Row {
 // arithmetic on every element, which matters because a Row is 32 bytes and the
 // ring can hold the whole of a large scrollback.
 func (s *storage) rezero() {
+	defer s.stampAll()
 	if s.zero == 0 {
 		return
 	}
