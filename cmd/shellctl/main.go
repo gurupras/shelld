@@ -1,4 +1,10 @@
-// Command shellctl attaches a terminal to a shelld window.
+// Command shellctl attaches a terminal to a shelld window, and runs a one-shot
+// request against every other route of the daemon's API (list-sessions,
+// new-window, send-keys, capture-pane, ...).
+//
+// It imports internal/sock rather than internal/daemon: everything a package
+// links runs its init on every start, and internal/daemon links the server.
+// A one-shot command is a process per request, so its startup is the cost.
 package main
 
 import (
@@ -19,8 +25,8 @@ import (
 
 	"golang.org/x/term"
 
-	"github.com/gurupras/shelld/internal/daemon"
 	"github.com/gurupras/shelld/internal/dotenv"
+	"github.com/gurupras/shelld/internal/sock"
 	"github.com/gurupras/shelld/ws"
 )
 
@@ -34,7 +40,29 @@ const usage = `Client for shelld
 Usage: shellctl [OPTIONS] <COMMAND>
 
 Commands:
-  attach  Attach to a window: stdin/stdout piped over WebSocket
+  attach         Attach to a window: stdin/stdout piped over WebSocket
+  list-sessions  List sessions and their windows (ls)
+  new-session    Create a session (new)
+  show-session   Print whether a session exists (has)
+  kill-session   Delete a session and its windows
+  list-windows   List a session's windows (lsw)
+  new-window     Create a window (neww)
+  kill-window    Delete a window (killw)
+  move-window    Move a window to another session (movew)
+  resize-window  Resize a window (resizew)
+  set-colors     Set a window's colours
+  send-keys      Type text, tmux key names or raw bytes into a window (send)
+  paste          Paste text into a window
+  inject         Queue a payload to be typed when the window is next idle
+  inject-queue   Print a window's inject queue
+  capture-pane   Print a window's output: capture, or scroll with -S (capturep)
+  capture        Print a window's output: raw history, or the visible screen
+  scroll         Print a page of a window's raw history, counted from the oldest line
+  frame          Print a window's screen as the escape sequences that repaint it
+  health         Print the daemon's health report
+  kill-server    Shut the daemon down (shutdown)
+
+Run 'shellctl <COMMAND> --help' for a command's options and route.
 
 Options:
       --socket <SOCKET>  Path to the Unix socket / named pipe (overrides SHELLD_SOCKET)
@@ -51,17 +79,28 @@ func main() {
 	_ = dotenv.Load()
 	socket := ""
 	var positional []string
+	var sub []string // subcommand options, parsed by the subcommand
 	args := os.Args[1:]
 	for i := 0; i < len(args); i++ {
 		name, val, hasVal := strings.Cut(args[i], "=")
-		switch name {
-		case "-h", "--help":
+		switch {
+		case name == "--":
+			positional = append(positional, args[i+1:]...)
+			i = len(args)
+			continue
+		case name == "-h" || name == "--help":
+			if len(positional) > 0 {
+				if h, ok := subUsage[canonical(positional[0])]; ok {
+					fmt.Print(h)
+					return
+				}
+			}
 			fmt.Print(usage)
 			return
-		case "-V", "--version":
+		case name == "-V" || name == "--version":
 			fmt.Printf("shellctl %s\n", version)
 			return
-		case "--socket":
+		case name == "--socket":
 			if !hasVal {
 				if i+1 >= len(args) {
 					usageError("a value is required for '--socket <SOCKET>' but none was supplied")
@@ -70,10 +109,24 @@ func main() {
 				val = args[i]
 			}
 			socket = val
-		default:
-			if strings.HasPrefix(args[i], "-") {
-				usageError(fmt.Sprintf("unexpected argument '%s' found", args[i]))
+		case strings.HasPrefix(args[i], "-") && args[i] != "-":
+			// An option of the subcommand, which only a subcommand that
+			// declares it accepts; the value travels with it.
+			if len(positional) > 0 {
+				if kind, ok := subOptions[canonical(positional[0])][name]; ok {
+					sub = append(sub, args[i])
+					if kind != optFlag && !hasVal {
+						if i+1 >= len(args) {
+							usageError(fmt.Sprintf("a value is required for '%s' but none was supplied", name))
+						}
+						i++
+						sub = append(sub, args[i])
+					}
+					continue
+				}
 			}
+			usageError(fmt.Sprintf("unexpected argument '%s' found", args[i]))
+		default:
 			positional = append(positional, args[i])
 		}
 	}
@@ -81,15 +134,20 @@ func main() {
 		fmt.Fprint(os.Stderr, usage)
 		os.Exit(2)
 	}
-	if positional[0] != "attach" {
-		usageError(fmt.Sprintf("unrecognized subcommand '%s'", positional[0]))
+	cmd := canonical(positional[0])
+	if _, ok := subOptions[cmd]; !ok {
+		usageError(fmt.Sprintf("unrecognized subcommand '%s'", cmd))
 	}
-	if len(positional) != 3 {
-		fmt.Fprint(os.Stderr, "error: the following required arguments were not provided:\n  <SESSION>\n  <WINDOW>\n\nUsage: shellctl attach <SESSION> <WINDOW>\n\nFor more information, try '--help'.\n")
+	want := subArgs[cmd]
+	if lo, hi := argBounds(want); hi >= 0 && len(positional)-1 > hi {
+		usageError(fmt.Sprintf("unexpected argument '%s' found", positional[hi+1]))
+	} else if len(positional)-1 < lo {
+		fmt.Fprintf(os.Stderr, "error: the following required arguments were not provided:\n  %s\n\nUsage: shellctl %s %s\n\nFor more information, try '--help'.\n",
+			strings.Join(want[len(positional)-1:lo], "\n  "), cmd, strings.Join(want, " "))
 		os.Exit(2)
 	}
 	if socket == "" {
-		socket = daemon.DefaultSocket()
+		socket = sock.DefaultSocket()
 	}
 	// Anchored to the cwd as shelld anchors it, so a relative path into the
 	// default directory gets that directory's check below.
@@ -98,15 +156,27 @@ func main() {
 			socket = abs
 		}
 	}
-	if dir := daemon.DefaultDir(); filepath.Dir(socket) == dir {
+	if dir := sock.DefaultDir(); filepath.Dir(socket) == dir {
 		// Refuse a default directory another user could have created.
-		if err := daemon.CheckPrivateDir(dir); err != nil && !errors.Is(err, os.ErrNotExist) {
+		if err := sock.CheckPrivateDir(dir); err != nil && !errors.Is(err, os.ErrNotExist) {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(1)
 		}
 	}
-	if err := attach(socket, positional[1], positional[2]); err != nil {
+	var err error
+	if cmd == "attach" {
+		err = attach(socket, positional[1], positional[2])
+	} else {
+		if err = oneShotUnsupported(cmd, runtime.GOOS); err == nil {
+			err = oneShot(os.Stdout, os.Stdin, socket, cmd, positional[1:], sub)
+		}
+	}
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		var ue usageErr
+		if errors.As(err, &ue) {
+			os.Exit(2)
+		}
 		os.Exit(1)
 	}
 }
@@ -159,7 +229,7 @@ func termSize() (int, int) {
 }
 
 func attach(socket, session, window string) error {
-	nc, err := daemon.Dial(context.Background(), socket, 5*time.Second)
+	nc, err := sock.Dial(context.Background(), socket, 5*time.Second)
 	if err != nil {
 		return fmt.Errorf("connect to %s: %w", socket, err)
 	}
