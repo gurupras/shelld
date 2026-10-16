@@ -1,5 +1,7 @@
 package vt
 
+import "slices"
+
 // Row is one grid line. occ is an upper bound on the cells modified since the
 // last reset: every cell at or past occ equals the row's last cell, so a reset
 // only has to clear [0, occ) once it has checked that last cell.
@@ -714,7 +716,27 @@ func (r *Row) isClear() bool {
 // no pair, though close enough at the ends that the ranges touch.
 // BenchmarkWorstClearSequence is that sequence.
 func (r *Row) moveFrontTo(dst *Row, at int) {
-	r.unpack()
+	if r.packed {
+		// Decode the cells that move straight onto dst and the rest onto an
+		// array of their own: unpacking the whole row first would build an
+		// array only to copy out of it. The row ends with the cells and occ the
+		// plain path leaves it, on an array exactly that long.
+		n := int(r.occ)
+		dst.unpack()
+		dst.kept = false
+		l := len(dst.inner)
+		dst.inner = slices.Grow(dst.inner, at)[:l+at]
+		r.decodeRange(dst.inner[l:], 0)
+		dst.occ += int32(at)
+		dst.markTail()
+		var rest []Cell
+		if n > at {
+			rest = make([]Cell, n-at)
+			r.decodeRange(rest, at)
+		}
+		*r = Row{inner: rest, occ: int32(n - at)}
+		return
+	}
 	r.kept = false
 	dst.appendCells(r.inner[:at])
 	r.occ = max(r.occ-int32(at), 0)

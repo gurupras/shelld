@@ -26,6 +26,7 @@ func (g *Grid) resize(reflow bool, lines, columns int) {
 	case g.columns > columns:
 		g.shrinkColumns(reflow, columns)
 	}
+	g.reflowFree = nil
 	g.normalizeRows()
 
 	g.Cursor.Template = template
@@ -44,7 +45,7 @@ func (g *Grid) resize(reflow bool, lines, columns int) {
 func (g *Grid) normalizeRows() {
 	g.spare.reset()
 	for line := g.topmostLine(); line < 0; line++ {
-		g.raw.row(line).settle(g.columns, g.noPack)
+		g.raw.row(line).settle(nil, g.columns, g.noPack)
 	}
 	for line := 0; line < g.lines; line++ {
 		if r := g.raw.row(line); !r.full(g.columns) {
@@ -129,7 +130,7 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 	// nearer the end may end up on the screen, and are left as they are.
 	appendRow := func(row Row) {
 		if n := len(reversed) - g.lines; n > 0 {
-			reversed[n-1].settle(columns, g.noPack)
+			g.settleReflow(&reversed[n-1])
 		}
 		reversed = append(reversed, row)
 	}
@@ -144,9 +145,11 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 			continue
 		}
 
-		// A join writes both rows in place.
-		last.unpack()
-		row.unpack()
+		// A join writes last in place, onto an array with room for the
+		// cells it takes; moveFrontTo reads row where it is.
+		if last.packed {
+			g.putPacked(last.unpackWith(g.takeReflow(0, columns)))
+		}
 		last.lastMut().flags &^= FlagWrapline
 
 		lastLen := last.Len()
@@ -164,7 +167,7 @@ func (g *Grid) growColumns(reflow bool, columns int) {
 		// min(oldColumns, numWrapped)-1, is a wide one only when the row stores
 		// it, and moving just the cells it stores leaves the row above reading
 		// the same.
-		if row.Len() >= min(oldColumns, numWrapped) && row.inner[n-1].flags&FlagWideChar != 0 {
+		if row.Len() >= min(oldColumns, numWrapped) && row.CellAt(n-1).flags&FlagWideChar != 0 {
 			// A wide character cannot be split over the join, so it stays on this row
 			// and the row above takes the spacer that stands in for its first half.
 			numWrapped--
@@ -258,7 +261,7 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 	// and nothing writes to it again.
 	settleBehind := func() {
 		if n := len(newRaw) - g.lines; n > 0 {
-			newRaw[n-1].settle(columns, g.noPack)
+			g.settleReflow(&newRaw[n-1])
 		}
 	}
 
@@ -278,6 +281,10 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 		// backing starting at off. Rows split off from it get cells of their
 		// own, so no row keeps the (possibly much longer) rest reachable,
 		// and splitting a line copies each cell once.
+		if row.packed && row.Len() > columns {
+			// shrink would unpack it onto an array of its own.
+			g.putPacked(row.unpackWith(g.takeReflow(0, row.Len())))
+		}
 		wrapped := row.shrink(columns)
 		backing, off := wrapped, 0
 		for {
@@ -340,7 +347,7 @@ func (g *Grid) shrinkColumns(reflow bool, columns int) {
 			// The next row: the first columns cells of the rest, and what
 			// Row.shrink would have returned for it.
 			occ := len(wrapped)
-			cells := make([]Cell, columns)
+			cells := g.takeReflow(columns, columns)
 			copy(cells, wrapped)
 			row = Row{inner: cells, occ: int32(min(occ, columns))}
 			wrapped = nil

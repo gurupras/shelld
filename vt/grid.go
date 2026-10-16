@@ -96,6 +96,9 @@ type Grid struct {
 	spare rowPool
 	// noPack keeps history rows plain; see SetNoPack.
 	noPack bool
+	// reflowFree holds plain arrays a column pass's settle gave up, for the
+	// rows the same pass unpacks or splits next; the resize drops it.
+	reflowFree [][]Cell
 }
 
 func newGrid(lines, columns, maxScrollLimit int) *Grid {
@@ -356,4 +359,48 @@ func (g *Grid) subCursorBoundary(p Point, rhs int) Point {
 	p.Line -= lineChanges
 	p.Column = (cols + p.Column - rhs%cols) % cols
 	return g.clampCursorBoundary(p)
+}
+
+// reflowFreeMax bounds the arrays reflowFree holds.
+const reflowFreeMax = 64
+
+// takeReflow returns a zeroed array of n cells with room for c, from
+// reflowFree when it holds one of c to 2c cells, the slack compact accepts.
+func (g *Grid) takeReflow(n, c int) []Cell {
+	f := g.reflowFree
+	for i := len(f) - 1; i >= 0 && i >= len(f)-4; i-- {
+		if a := f[i]; cap(a) >= c && cap(a) <= compactReuseFactor*max(c, 1) {
+			f[i] = f[len(f)-1]
+			f[len(f)-1] = nil
+			g.reflowFree = f[:len(f)-1]
+			a = a[:cap(a)]
+			clear(a)
+			return a[:n]
+		}
+	}
+	return make([]Cell, n, c)
+}
+
+// putReflow offers a, which no row references any more, to takeReflow.
+func (g *Grid) putReflow(a []Cell) {
+	if cap(a) > 0 && len(g.reflowFree) < reflowFreeMax {
+		g.reflowFree = append(g.reflowFree, a[:0])
+	}
+}
+
+// putPacked offers a packed array a row gave up to the scroll pool, which a
+// settle with that pool packs the next row into.
+func (g *Grid) putPacked(a []Cell) {
+	if cap(a) > 0 {
+		g.spare.put(Row{inner: a[:0], packed: true}, g.columns)
+	}
+}
+
+// settleReflow settles r, a row a column pass leaves in history, packing it
+// into the scroll pool's arrays and keeping the plain array it gives up for the
+// pass to reuse.
+func (g *Grid) settleReflow(r *Row) {
+	if old := r.settle(&g.spare, g.columns, g.noPack); old != nil {
+		g.putReflow(old)
+	}
 }

@@ -334,9 +334,13 @@ func (r *Row) View(scratch *[]Cell) []Cell {
 // decodeTo decodes the row's cells into cells. Like encode it works in runs:
 // an entry whose attribute bytes match the previous inline entry's is that cell
 // with its own character.
-func (r *Row) decodeTo(cells []Cell) {
+func (r *Row) decodeTo(cells []Cell) { r.decodeRange(cells, 0) }
+
+// decodeRange decodes the row's cells from column from on into cells.
+func (r *Row) decodeRange(cells []Cell, from int) {
 	pk := r.pk()
-	ext := pk[packedEntry*len(cells):]
+	ext := pk[packedEntry*int(r.occ):]
+	pk = pk[packedEntry*from : packedEntry*(from+len(cells))]
 	var run Cell
 	key := uint32(packedExtBit) << 24 // meta with packedExtBit: no inline entry's
 	for i := range cells {
@@ -357,17 +361,29 @@ func (r *Row) decodeTo(cells []Cell) {
 
 // unpack turns a packed row back into a plain one of the cells it stores, with
 // occ at their number, which is the row compact makes of the same cells.
-func (r *Row) unpack() {
+func (r *Row) unpack() { r.unpackWith(nil) }
+
+// unpackWith is unpack onto buf's array when it holds the row's cells — buf is
+// then zeroed past its length — and returns the packed array the row gave up,
+// nil when it was not packed.
+func (r *Row) unpackWith(buf []Cell) []Cell {
 	if !r.packed {
-		return
+		return nil
 	}
 	if packHook != nil {
 		packHook.Unpacks++
 	}
 	n := int(r.occ)
-	cells := make([]Cell, n)
+	var cells []Cell
+	if cap(buf) >= n {
+		cells = buf[:n]
+	} else {
+		cells = make([]Cell, n)
+	}
 	r.decodeTo(cells)
+	old := r.inner
 	*r = Row{inner: cells, occ: int32(n)}
+	return old
 }
 
 // packOrCompact stores a history row in the least memory it can: packed when
@@ -446,13 +462,15 @@ func (r *Row) packOrCompact(pool *rowPool, columns int, noPack bool) []Cell {
 
 // settle stores a row a resize leaves in history as packOrCompact would, unless
 // it is packed already or packOrCompact has kept it plain since it last changed.
-func (r *Row) settle(columns int, noPack bool) {
+// It returns the plain array the row gave up, which nothing else references.
+func (r *Row) settle(pool *rowPool, columns int, noPack bool) []Cell {
 	if !r.packed && !r.kept {
 		if packHook != nil {
 			packHook.Settles++
 		}
-		r.packOrCompact(nil, columns, noPack)
+		return r.packOrCompact(pool, columns, noPack)
 	}
+	return nil
 }
 
 // PackStats counts what packing did, for tests that have to show packing
