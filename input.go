@@ -362,7 +362,11 @@ func (w *Window) writeInput(p *pty.PTY) {
 			if tracing.Enabled {
 				span = tracing.Begin(tracing.KindPTYWrite, w.traceID, int64(len(c.data)))
 			}
-			_, err = p.Write(c.data)
+			if c.reply {
+				_, err = p.WriteReply(c.data)
+			} else {
+				_, err = p.Write(c.data)
+			}
 			lastEnd = time.Now()
 			if tracing.Enabled {
 				tracing.End(tracing.KindPTYWrite, w.traceID, span, int64(len(c.data)), 0)

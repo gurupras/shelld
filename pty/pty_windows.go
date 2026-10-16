@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"unicode/utf16"
 	"unsafe"
 
 	"github.com/gurupras/shelld/internal/winexec"
@@ -259,6 +260,34 @@ func (p *PTY) Read(b []byte) (int, error) {
 // Write writes to the console's input. After Close it fails with
 // os.ErrClosed.
 func (p *PTY) Write(b []byte) (int, error) { return p.in.Write(b) }
+
+// WriteReply writes the terminal's reply to a query the program made, such as
+// the answer to an OSC 4 colour query, so that the program reads it as it was
+// sent.
+//
+// It cannot go in as Write sends input. ConPTY parses its input as VT,
+// turning the keys it knows into key events, and drops a string sequence such
+// as an OSC: a reply written as it is never reaches the program. Each character goes in instead as a win32-input-mode key event, the
+// input mode Start asks the console for, which it hands on as that character.
+// On build 26200 an OSC 11 reply written as it is reached the program as
+// nothing, and the same reply written this way reached it byte for byte.
+func (p *PTY) WriteReply(b []byte) (int, error) {
+	if _, err := p.in.Write(win32InputKeys(b)); err != nil {
+		return 0, err
+	}
+	return len(b), nil
+}
+
+// win32InputKeys encodes text as win32-input-mode key events, CSI
+// Vk;Sc;Uc;Kd;Cs;Rc _: a press and a release for each UTF-16 unit, naming no
+// virtual key or scan code, only the character.
+func win32InputKeys(b []byte) []byte {
+	out := make([]byte, 0, len(b)*28)
+	for _, u := range utf16.Encode([]rune(string(b))) {
+		out = fmt.Appendf(out, "\x1b[0;0;%d;1;0;1_\x1b[0;0;%d;0;0;1_", u, u)
+	}
+	return out
+}
 
 // Resize resizes the pseudo console; once the console is closed it does
 // nothing.

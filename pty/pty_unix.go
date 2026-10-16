@@ -143,6 +143,11 @@ func (p *PTY) Read(b []byte) (int, error) {
 // does a benchmark harness kept outside this repo.
 func (p *PTY) Write(b []byte) (int, error) { return p.master.Write(b) }
 
+// WriteReply writes the terminal's reply to a query the program made, such as
+// the answer to an OSC 4 colour query. A terminal's reply reaches the program
+// through the master as anything typed does; on Windows it needs encoding.
+func (p *PTY) WriteReply(b []byte) (int, error) { return p.master.Write(b) }
+
 // Resize sets the terminal size, delivering SIGWINCH to the foreground job.
 func (p *PTY) Resize(size Size) error { return setSize(p.master, size) }
 

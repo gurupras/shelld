@@ -41,6 +41,23 @@ func TestHelperProcess(t *testing.T) {
 		// (node, behind npm's shim) would. os.Args can't be used: Go splits
 		// the command line with the pre-2008 rule, which differs for "".
 		_ = os.WriteFile(os.Getenv("PTY_TEST_OUT"), []byte(windows.UTF16PtrToString(windows.GetCommandLine())), 0o644)
+	case "read-vt":
+		// Read the console as a program asking for VT input does, as a TUI
+		// reading a query's answer would, and record it once it holds an ST.
+		if err := windows.SetConsoleMode(windows.Handle(os.Stdin.Fd()), windows.ENABLE_VIRTUAL_TERMINAL_INPUT); err != nil {
+			os.Exit(2)
+		}
+		os.Stdout.WriteString("ready\r\n")
+		var got []byte
+		b := make([]byte, 256)
+		for !bytes.Contains(got, []byte("\x1b\\")) {
+			n, err := os.Stdin.Read(b)
+			if err != nil {
+				os.Exit(3)
+			}
+			got = append(got, b[:n]...)
+		}
+		_ = os.WriteFile(os.Getenv("PTY_TEST_OUT"), got, 0o644)
 	}
 	os.Exit(0)
 }
@@ -306,5 +323,44 @@ func TestBatchArgumentsReachProgramUnchanged(t *testing.T) {
 		if got[i] != args[i] {
 			t.Errorf("arg %d: got %q, want %q", i, got[i], args[i])
 		}
+	}
+}
+
+// A reply to the program's query must reach it as it was sent. Written as
+// input is, ConPTY's input parser drops it; WriteReply encodes it as key
+// events. The reply is an OSC colour answer, the kind a TUI asks for to pick a
+// light or dark theme.
+func TestWriteReplyReachesAProgramReadingVT(t *testing.T) {
+	outFile := filepath.Join(t.TempDir(), "got")
+	p, err := Start(Command{
+		Path: os.Args[0],
+		Args: []string{os.Args[0], "-test.run=^TestHelperProcess$"},
+		Env:  append(os.Environ(), "PTY_TEST_HELPER=read-vt", "PTY_TEST_OUT="+outFile),
+	}, Size{Cols: 80, Rows: 24})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer p.Close()
+	out := readAll(p)
+	deadline := time.Now().Add(10 * time.Second)
+	for !strings.Contains(out.String(), "ready") {
+		if time.Now().After(deadline) {
+			t.Fatalf("the helper never set its console mode: %q", out.String())
+		}
+		time.Sleep(20 * time.Millisecond)
+	}
+	const reply = "\x1b]11;rgb:1111/2222/3333\x1b\\"
+	if n, err := p.WriteReply([]byte(reply)); err != nil || n != len(reply) {
+		t.Fatalf("WriteReply = %d, %v; want %d, nil", n, err, len(reply))
+	}
+	if st := waitExit(t, p, 10*time.Second); st.Code != 0 {
+		t.Fatalf("the helper exited with %+v before recording its input", st)
+	}
+	got, err := os.ReadFile(outFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(got) != reply {
+		t.Fatalf("the program read %q, want %q", got, reply)
 	}
 }
