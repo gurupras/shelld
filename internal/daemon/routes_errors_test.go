@@ -109,8 +109,8 @@ func TestEveryWindowRouteRefusesANameItDoesNotHave(t *testing.T) {
 		}
 	}
 
-	// The routes that take a session but no window, and killWindow, which takes
-	// both and checks only the session (see TestDeleteForgivesWhatIsAlreadyGone).
+	// The routes that take a session but no window, and killWindow with an
+	// unknown session (TestDeleteOfWhatIsGoneIs404 has its unknown window).
 	for _, r := range []struct{ method, path, body string }{
 		{"GET", "/sessions/nope/windows", ""},
 		{"POST", "/sessions/nope/windows", `{"name":"x","cols":80,"rows":24}`},
@@ -131,29 +131,32 @@ func TestEveryWindowRouteRefusesANameItDoesNotHave(t *testing.T) {
 	}
 }
 
-// TestDeleteForgivesWhatIsAlreadyGone pins the asymmetry in the table above. A
-// client deletes a window it may already have deleted — a retry after a timeout,
-// or a cleanup pass over names it recorded earlier — and an error for a window
-// that is already gone makes a cleanup loop fail on its own success. The session
-// in the path is a different matter: it is the thing being addressed, and a
-// wrong one means the client is deleting in a place it did not mean to.
-func TestDeleteForgivesWhatIsAlreadyGone(t *testing.T) {
+// TestDeleteOfWhatIsGoneIs404 pins that a DELETE names something that exists,
+// as tmux's kill-session and kill-window do ("can't find session" / "can't find
+// window", exit 1). A delete that succeeds is answered once; repeating it, or
+// naming a window or session that never existed, is a 404 with the same body as
+// every other route that misses.
+func TestDeleteOfWhatIsGoneIs404(t *testing.T) {
 	_, h := api(t, map[string][]string{"s": {"w"}})
 	const ok = `{"ok":true}`
-	for _, path := range []string{
-		"/sessions/s/windows/w",    // there
-		"/sessions/s/windows/w",    // deleted a moment ago by this very test
-		"/sessions/s/windows/nope", // never existed
-		"/sessions/s",
-		"/sessions/s",
-		"/sessions/nope",
+	const noSession = `{"error":"session not found"}`
+	const noWindow = `{"error":"window not found"}`
+	for _, c := range []struct{ path, want string }{
+		{"/sessions/s/windows/w", ok},          // there
+		{"/sessions/s/windows/w", noWindow},    // deleted a moment ago by this very test
+		{"/sessions/s/windows/nope", noWindow}, // never existed
+		{"/sessions/nope/windows/w", noSession},
+		{"/sessions/s", ok},
+		{"/sessions/s", noSession},
+		{"/sessions/nope", noSession},
 	} {
-		if st, body := call(t, h, "DELETE", path, ""); st != 200 || body != ok {
-			t.Errorf("DELETE %s: %d %q, want 200 %s", path, st, body, ok)
+		wantSt := 404
+		if c.want == ok {
+			wantSt = 200
 		}
-	}
-	if st, body := call(t, h, "DELETE", "/sessions/nope/windows/w", ""); st != 404 {
-		t.Errorf("DELETE a window in an unknown session: %d %q, want 404", st, body)
+		if st, body := call(t, h, "DELETE", c.path, ""); st != wantSt || body != c.want {
+			t.Errorf("DELETE %s: %d %q, want %d %s", c.path, st, body, wantSt, c.want)
+		}
 	}
 }
 

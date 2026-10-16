@@ -451,9 +451,6 @@ func TestWindowCommandsRefuseAMissingWindow(t *testing.T) {
 			if names[0] == "s" && !slices.Contains(c, "W") {
 				continue // a session-only command has no missing window
 			}
-			if c[0] == "kill-window" && names[0] == "s" {
-				continue // see TestKillWindowOfAMissingWindowSucceeds
-			}
 			errs := refused(t, sock, 404, args...)
 			want := "window not found"
 			if names[0] == "nope" {
@@ -466,13 +463,16 @@ func TestWindowCommandsRefuseAMissingWindow(t *testing.T) {
 	}
 }
 
-// The daemon answers 200 for deleting a window that is not there, in a session
-// that is, and for deleting a session that is not there; the commands report
-// what the daemon said. Pinned so that a change on either side is seen.
-func TestKillWindowOfAMissingWindowSucceeds(t *testing.T) {
+// Killing what is not there fails, as tmux's kill-window and kill-session do:
+// the daemon answers 404 and the command exits 1 with its error.
+func TestKillOfWhatIsNotThereFails(t *testing.T) {
 	sock := bootDaemon(t)
-	mustRun(t, sock, "kill-window", "s", "nope")
-	mustRun(t, sock, "kill-session", "nope")
+	if errs := refused(t, sock, 404, "kill-window", "s", "nope"); !strings.Contains(errs, "window not found") {
+		t.Fatalf("kill-window s nope: stderr %q", errs)
+	}
+	if errs := refused(t, sock, 404, "kill-session", "nope"); !strings.Contains(errs, "session not found") {
+		t.Fatalf("kill-session nope: stderr %q", errs)
+	}
 }
 
 // One fake daemon answers every request with a body every command can read,

@@ -61,10 +61,10 @@ All routes live on the daemon socket. Bodies are JSON.
 |---|---|
 | `GET /health` | Daemon pid, version, uptime, session and window counts |
 | `POST /shutdown` | Shut down gracefully |
-| `GET /sessions`, `POST /sessions` | List sessions; create one (`{"name"}`) |
-| `GET /sessions/:s`, `DELETE /sessions/:s` | Check a session exists; kill it and its windows |
-| `GET /sessions/:s/windows`, `POST /sessions/:s/windows` | List windows; create one (`name`, `shell`, `cwd`, `env`, `unsetEnv`, `cols`, `rows`, `pasteMode`) |
-| `DELETE /sessions/:s/windows/:w` | Kill a window and its process tree |
+| `GET /sessions`, `POST /sessions` | List sessions, sorted by name; create one (`{"name"}`) |
+| `GET /sessions/:s`, `DELETE /sessions/:s` | Check a session exists; kill it and its windows (404 if there is none, as tmux fails `kill-session`) |
+| `GET /sessions/:s/windows`, `POST /sessions/:s/windows` | List windows in index order (a new window takes the lowest free index, as in tmux); create one (`name`, `shell`, `cwd`, `env`, `unsetEnv`, `cols`, `rows`, `pasteMode`) |
+| `DELETE /sessions/:s/windows/:w` | Kill a window and its process tree (404 if there is none) |
 | `POST …/keys` | Type text (`keys`, `enter`, `enter_delay_ms`) |
 | `POST …/raw-key`, `POST …/key-names` | Send one raw key; send tmux key names |
 | `POST …/paste` | Paste text, then press Enter (`text`, optional `mode`) |

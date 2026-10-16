@@ -258,7 +258,7 @@ Usage: shellctl show-session <SESSION>
 `,
 	"kill-session": `Delete a session and its windows (DELETE /sessions/<SESSION>)
 
-The daemon answers success for a session that does not exist.
+It fails for a session that does not exist, as tmux's kill-session does.
 
 Usage: shellctl kill-session <SESSION>
 `,
@@ -283,8 +283,7 @@ Options:
 `,
 	"kill-window": `Delete a window (DELETE /sessions/<SESSION>/windows/<WINDOW>) (alias: killw)
 
-The daemon answers success for a window that does not exist in a session that
-does.
+It fails for a window that does not exist, as tmux's kill-window does.
 
 Usage: shellctl kill-window <SESSION> <WINDOW>
 `,

@@ -3,6 +3,7 @@ package shelld
 import (
 	"errors"
 	"fmt"
+	"sort"
 	"sync"
 )
 
@@ -18,6 +19,10 @@ type Session struct {
 
 	mu      sync.RWMutex
 	windows map[string]*Window
+	// index holds each window's position in the session, keyed like windows.
+	// A window takes the lowest index no other window holds, as a tmux window
+	// does with base-index 0, and the lists are in index order.
+	index map[string]int
 	// killed is set by Kill. A create that spawned before the kill took the
 	// lock must not add its window afterwards: the Manager has already dropped
 	// this session, so nothing could reach or kill that window again.
@@ -31,7 +36,38 @@ var ErrSessionKilled = errors.New("session was killed")
 // NewSession returns an empty session with that name. A Manager makes these
 // itself; construct one directly only to use a session without a Manager.
 func NewSession(name string) *Session {
-	return &Session{Name: name, windows: make(map[string]*Window)}
+	return &Session{Name: name, windows: make(map[string]*Window), index: make(map[string]int)}
+}
+
+// add puts w in the session under name at the lowest free index. The caller
+// holds s.mu and has checked that name is free.
+func (s *Session) add(name string, w *Window) {
+	used := make(map[int]bool, len(s.index))
+	for _, i := range s.index {
+		used[i] = true
+	}
+	i := 0
+	for used[i] {
+		i++
+	}
+	s.windows[name] = w
+	s.index[name] = i
+}
+
+// remove takes name out of the session. The caller holds s.mu.
+func (s *Session) remove(name string) {
+	delete(s.windows, name)
+	delete(s.index, name)
+}
+
+// sortedNames returns the window names in index order. The caller holds s.mu.
+func (s *Session) sortedNames() []string {
+	out := make([]string, 0, len(s.windows))
+	for name := range s.windows {
+		out = append(out, name)
+	}
+	sort.Slice(out, func(a, b int) bool { return s.index[out[a]] < s.index[out[b]] })
+	return out
 }
 
 // CreateWindow starts a window and adds it under opts.Name, which must not
@@ -70,7 +106,7 @@ func (s *Session) CreateWindow(opts WindowOpts) (*Window, error) {
 		go w.Kill()
 		return nil, &NameInUseError{Name: opts.Name}
 	}
-	s.windows[opts.Name] = w
+	s.add(opts.Name, w)
 	return w, nil
 }
 
@@ -90,41 +126,39 @@ func (s *Session) Window(name string) *Window {
 	return s.windows[name]
 }
 
-// KillWindow removes the window and kills it, waiting for the kill to finish. A
-// name that names nothing is not an error.
-func (s *Session) KillWindow(name string) {
+// KillWindow removes the window and kills it, waiting for the kill to finish. It
+// reports whether the session had a window by that name; tmux's kill-window
+// fails for a window it cannot find, and the daemon answers 404 for it.
+func (s *Session) KillWindow(name string) bool {
 	s.mu.Lock()
 	w := s.windows[name]
-	delete(s.windows, name)
+	s.remove(name)
 	s.mu.Unlock()
 	if w != nil {
 		w.Kill()
 	}
+	return w != nil
 }
 
-// ListWindows returns every window in the session, in no particular order: it
-// walks a map, so a caller that shows the list to a user should sort it. The
-// slice is a snapshot; the windows in it are live.
+// ListWindows returns every window in the session in index order, which is the
+// order tmux's list-windows shows. The slice is a snapshot; the windows in it
+// are live.
 func (s *Session) ListWindows() []*Window {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	out := make([]*Window, 0, len(s.windows))
-	for _, w := range s.windows {
-		out = append(out, w)
+	names := s.sortedNames()
+	out := make([]*Window, len(names))
+	for i, name := range names {
+		out[i] = s.windows[name]
 	}
 	return out
 }
 
-// WindowNames returns the names of every window in the session, in no
-// particular order, for the same reason as ListWindows.
+// WindowNames returns the names of every window in the session, in index order.
 func (s *Session) WindowNames() []string {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	out := make([]string, 0, len(s.windows))
-	for name := range s.windows {
-		out = append(out, name)
-	}
-	return out
+	return s.sortedNames()
 }
 
 // Kill empties the session and kills every window in it, in parallel, and
@@ -136,6 +170,7 @@ func (s *Session) Kill() {
 	s.killed = true
 	windows := s.windows
 	s.windows = make(map[string]*Window)
+	s.index = make(map[string]int)
 	s.mu.Unlock()
 	var wg sync.WaitGroup
 	for _, w := range windows {
@@ -157,6 +192,7 @@ func (s *Session) Kill() {
 // not part of the API a program should build on.
 func (s *Session) InsertFakeWindow(name string) {
 	s.mu.Lock()
-	s.windows[name] = NewFakeWindow(name)
+	s.remove(name)
+	s.add(name, NewFakeWindow(name))
 	s.mu.Unlock()
 }

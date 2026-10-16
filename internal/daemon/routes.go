@@ -499,7 +499,10 @@ func (s *State) getSession(w http.ResponseWriter, _ *http.Request, p params) {
 }
 
 func (s *State) killSession(w http.ResponseWriter, _ *http.Request, p params) {
-	s.Mgr.KillSession(p["session"])
+	if !s.Mgr.KillSession(p["session"]) {
+		writeError(w, http.StatusNotFound, "session not found")
+		return
+	}
 	s.release.schedule()
 	writeJSON(w, http.StatusOK, okBody)
 }
@@ -791,7 +794,10 @@ func (s *State) killWindow(w http.ResponseWriter, _ *http.Request, p params) {
 	if sess == nil {
 		return
 	}
-	sess.KillWindow(p["window"])
+	if !sess.KillWindow(p["window"]) {
+		writeError(w, http.StatusNotFound, "window not found")
+		return
+	}
 	s.release.schedule()
 	writeJSON(w, http.StatusOK, okBody)
 }

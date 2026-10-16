@@ -2,6 +2,7 @@ package shelld
 
 import (
 	"fmt"
+	"sort"
 	"sync"
 )
 
@@ -42,9 +43,10 @@ func (m *Manager) Session(name string) *Session {
 // SessionExists reports whether a session has that name.
 func (m *Manager) SessionExists(name string) bool { return m.Session(name) != nil }
 
-// KillSession removes the session and kills every window in it. A name that
-// names nothing is not an error.
-func (m *Manager) KillSession(name string) {
+// KillSession removes the session and kills every window in it. It reports
+// whether there was a session by that name; tmux's kill-session fails for a
+// session it cannot find, and the daemon answers 404 for it.
+func (m *Manager) KillSession(name string) bool {
 	m.mu.Lock()
 	s := m.sessions[name]
 	delete(m.sessions, name)
@@ -52,10 +54,11 @@ func (m *Manager) KillSession(name string) {
 	if s != nil {
 		s.Kill()
 	}
+	return s != nil
 }
 
-// ListSessions returns every session, in no particular order: it walks a map,
-// so a caller that shows the list to a user should sort it.
+// ListSessions returns every session sorted by name, the order tmux's
+// list-sessions shows.
 func (m *Manager) ListSessions() []*Session {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -63,6 +66,7 @@ func (m *Manager) ListSessions() []*Session {
 	for _, s := range m.sessions {
 		out = append(out, s)
 	}
+	sort.Slice(out, func(a, b int) bool { return out[a].Name < out[b].Name })
 	return out
 }
 
@@ -163,9 +167,16 @@ func (m *Manager) MoveWindow(srcSession, srcName, dstSession, dstName string) er
 	if _, exists := dst.windows[finalName]; exists {
 		return fmt.Errorf("window %q already exists in destination session %q", finalName, dstSession)
 	}
-	delete(src.windows, srcName)
+	// A rename within the session keeps the window's index; a move to another
+	// session takes the lowest free index there, as tmux's move-window does
+	// without -t index.
+	idx, keep := src.index[srcName]
+	src.remove(srcName)
 	w.setName(finalName)
-	dst.windows[finalName] = w
+	dst.add(finalName, w)
+	if dst == src && keep {
+		dst.index[finalName] = idx
+	}
 	return nil
 }
 
