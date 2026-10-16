@@ -125,7 +125,7 @@ func (s *statusWriter) WriteHeader(code int) {
 
 // Hijack passes a WebSocket upgrade through, and reports rather than panics when
 // the writer below cannot be hijacked. The wrapper's own existence is what makes
-// the check necessary: ws.Upgrade decides whether it can upgrade by asserting
+// the check necessary: wsserver.Upgrade decides whether it can upgrade by asserting
 // http.Hijacker on whatever it was handed, and this type has the method, so an
 // unchecked assertion here turns "this response cannot be hijacked" — which
 // Upgrade answers with an error and attach answers by writing nothing — into a

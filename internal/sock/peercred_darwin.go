@@ -1,0 +1,24 @@
+package sock
+
+import (
+	"net"
+
+	"golang.org/x/sys/unix"
+)
+
+// PeerUID is the uid of the process at the other end of a Unix socket.
+func PeerUID(c *net.UnixConn) (int, error) {
+	rc, err := c.SyscallConn()
+	if err != nil {
+		return 0, err
+	}
+	var cred *unix.Xucred
+	var credErr error
+	if err := rc.Control(func(fd uintptr) { cred, credErr = unix.GetsockoptXucred(int(fd), unix.SOL_LOCAL, unix.LOCAL_PEERCRED) }); err != nil {
+		return 0, err
+	}
+	if credErr != nil {
+		return 0, credErr
+	}
+	return int(cred.Uid), nil
+}

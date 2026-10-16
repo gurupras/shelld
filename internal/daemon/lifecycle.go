@@ -17,6 +17,8 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"github.com/gurupras/shelld/internal/sock"
 )
 
 // LockInfo is the lockfile (pidfile) content.
@@ -162,8 +164,9 @@ func envOr(key, def string) string {
 }
 
 // DefaultSocket is $SHELLD_SOCKET, else shelld.sock in DefaultDir, or on Windows
-// \\.\pipe\shelld-<user SID>.
-func DefaultSocket() string { return envOr("SHELLD_SOCKET", defaultSocket()) }
+// \\.\pipe\shelld-<user SID>. It is sock.DefaultSocket, so that shellctl, which
+// does not link this package, looks where the daemon listens.
+func DefaultSocket() string { return sock.DefaultSocket() }
 
 // DefaultPidfile is $SHELLD_PIDFILE, else shelld.pid in DefaultDir.
 func DefaultPidfile() string {

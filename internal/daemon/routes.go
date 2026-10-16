@@ -20,7 +20,7 @@ import (
 	"github.com/gurupras/shelld"
 	"github.com/gurupras/shelld/pty"
 	"github.com/gurupras/shelld/vt"
-	"github.com/gurupras/shelld/ws"
+	"github.com/gurupras/shelld/ws/wsserver"
 )
 
 // State is shared by all handlers.
@@ -1221,8 +1221,8 @@ func addPalette(entries map[int]vt.RGB, palette map[string]string) {
 }
 
 func (s *State) attach(w http.ResponseWriter, r *http.Request, p params) {
-	if err := ws.CheckUpgrade(r); err != nil {
-		var ue *ws.UpgradeError
+	if err := wsserver.CheckUpgrade(r); err != nil {
+		var ue *wsserver.UpgradeError
 		errors.As(err, &ue)
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(ue.Status)
@@ -1269,7 +1269,7 @@ func (s *State) attach(w http.ResponseWriter, r *http.Request, p params) {
 	defer s.releaseAttach()
 	stop := s.upgraded.join()
 	defer s.upgraded.leave()
-	conn, err := ws.Upgrade(w, r)
+	conn, err := wsserver.Upgrade(w, r)
 	if err != nil {
 		return
 	}

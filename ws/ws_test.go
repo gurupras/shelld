@@ -1,6 +1,7 @@
 package ws
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/binary"
 	"errors"
@@ -12,15 +13,32 @@ import (
 	"time"
 )
 
+// testUpgrade is a minimal copy of wsserver.Upgrade's handshake, because
+// wsserver imports this package and an in-package test cannot import it back;
+// wsserver's own tests run Client against the real Upgrade.
+func testUpgrade(w http.ResponseWriter, r *http.Request) (*Conn, bool) {
+	key := r.Header.Get("Sec-WebSocket-Key")
+	if !strings.EqualFold(r.Header.Get("Upgrade"), "websocket") || key == "" {
+		http.Error(w, "not a websocket handshake", http.StatusBadRequest)
+		return nil, false
+	}
+	nc, brw, err := w.(http.Hijacker).Hijack()
+	if err != nil {
+		return nil, false
+	}
+	if _, err := nc.Write([]byte("HTTP/1.1 101 Switching Protocols\r\nConnection: upgrade\r\nUpgrade: websocket\r\nSec-WebSocket-Accept: " + acceptKey(key) + "\r\n\r\n")); err != nil {
+		nc.Close()
+		return nil, false
+	}
+	_ = nc.SetDeadline(time.Time{})
+	return NewServerConn(nc, brw.Reader), true
+}
+
 func echoServer(t *testing.T) *httptest.Server {
 	t.Helper()
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := CheckUpgrade(r); err != nil {
-			http.Error(w, err.Error(), err.(*UpgradeError).Status)
-			return
-		}
-		c, err := Upgrade(w, r)
-		if err != nil {
+		c, ok := testUpgrade(w, r)
+		if !ok {
 			return
 		}
 		defer c.Close()
@@ -202,12 +220,8 @@ func TestMaskBitMustMatchTheSenderDirection(t *testing.T) {
 		// so cannot produce the frame under test.
 		send := make(chan []byte, 2)
 		srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if err := CheckUpgrade(r); err != nil {
-				http.Error(w, err.Error(), err.(*UpgradeError).Status)
-				return
-			}
-			c, err := Upgrade(w, r)
-			if err != nil {
+			c, ok := testUpgrade(w, r)
+			if !ok {
 				return
 			}
 			defer c.Close()
@@ -271,16 +285,41 @@ func TestMaskBitMustMatchTheSenderDirection(t *testing.T) {
 	})
 }
 
-func TestRejectsPlainRequest(t *testing.T) {
-	srv := echoServer(t)
-	defer srv.Close()
-	resp, err := http.Get(srv.URL)
+// A refused handshake reaches the caller as an error carrying the status and
+// the body, now that the response is read without net/http.
+func TestClientReportsARefusedHandshake(t *testing.T) {
+	srv2 := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "no such window", http.StatusNotFound)
+	}))
+	defer srv2.Close()
+	nc2, err := net.Dial("tcp", strings.TrimPrefix(srv2.URL, "http://"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp.Body.Close()
-	if resp.StatusCode != http.StatusBadRequest {
-		t.Fatalf("status %d", resp.StatusCode)
+	defer nc2.Close()
+	_, err = Client(nc2, "shelld", "/x")
+	if err == nil || !strings.Contains(err.Error(), "404 Not Found") || !strings.Contains(err.Error(), "no such window") {
+		t.Fatalf("err = %v, want the status and body", err)
+	}
+}
+
+// A 101 whose accept value is wrong is refused.
+func TestClientRefusesABadAcceptKey(t *testing.T) {
+	a, b := net.Pipe()
+	defer a.Close()
+	defer b.Close()
+	go func() {
+		br := bufio.NewReader(b)
+		for {
+			l, err := br.ReadString('\n')
+			if err != nil || l == "\r\n" {
+				break
+			}
+		}
+		_, _ = b.Write([]byte("HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nSec-WebSocket-Accept: nope\r\n\r\n"))
+	}()
+	if _, err := Client(a, "shelld", "/x"); err == nil || !strings.Contains(err.Error(), "Sec-WebSocket-Accept") {
+		t.Fatalf("err = %v", err)
 	}
 }
 

@@ -1,6 +1,8 @@
 // Package ws implements the WebSocket protocol (RFC 6455) over any
-// net.Conn: a server upgrade for net/http handlers and a client handshake
-// for an existing connection, such as a Unix socket or named pipe.
+// net.Conn: a client handshake for an existing connection, such as a Unix
+// socket or named pipe, and the frame layer both ends share. The server
+// upgrade for net/http handlers is in ws/wsserver, so that a client does not
+// link net/http.
 // Extensions and subprotocols are not negotiated.
 package ws
 
@@ -14,7 +16,7 @@ import (
 	"fmt"
 	"io"
 	"net"
-	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -149,80 +151,21 @@ func (c *Conn) SetWriteTimeout(d time.Duration) {
 	}
 }
 
-// UpgradeError is a failed handshake precondition with the HTTP status to
-// answer. Neither CheckUpgrade nor Upgrade writes that answer — the handler
-// does, which is why the status travels with the error.
-type UpgradeError struct {
-	// Status is the HTTP status the request should be answered with: 405 for a
-	// method other than GET, 400 for a missing or wrong header.
-	Status int
-	// Message says which precondition failed, word for word as axum's
-	// extract::ws says it, so that a client sees the same text from either
-	// daemon. It names only the header at fault and so is safe to return to the
-	// client.
-	Message string
-}
-
-// Error is the Message. Match with errors.As to read the Status.
-func (e *UpgradeError) Error() string { return e.Message }
-
-func headerContainsToken(h http.Header, name, token string) bool {
-	for _, v := range h.Values(name) {
-		for t := range strings.SplitSeq(v, ",") {
-			if strings.EqualFold(strings.TrimSpace(t), token) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// CheckUpgrade validates a client's opening handshake without responding.
-func CheckUpgrade(r *http.Request) error {
-	switch {
-	case r.Method != http.MethodGet:
-		return &UpgradeError{http.StatusMethodNotAllowed, "Request method must be `GET`"}
-	case !headerContainsToken(r.Header, "Connection", "upgrade"):
-		return &UpgradeError{http.StatusBadRequest, "Connection header did not include 'upgrade'"}
-	case !strings.EqualFold(r.Header.Get("Upgrade"), "websocket"):
-		return &UpgradeError{http.StatusBadRequest, "`Upgrade` header did not include 'websocket'"}
-	case r.Header.Get("Sec-WebSocket-Version") != "13":
-		return &UpgradeError{http.StatusBadRequest, "`Sec-WebSocket-Version` header did not include '13'"}
-	case r.Header.Get("Sec-WebSocket-Key") == "":
-		return &UpgradeError{http.StatusBadRequest, "`Sec-WebSocket-Key` header missing"}
-	}
-	return nil
-}
+// AcceptKey is the Sec-WebSocket-Accept value for a Sec-WebSocket-Key: the
+// key and the RFC 6455 GUID, SHA-1 hashed and base64 encoded.
+func AcceptKey(key string) string { return acceptKey(key) }
 
 func acceptKey(key string) string {
 	h := sha1.Sum([]byte(key + acceptGUID))
 	return base64.StdEncoding.EncodeToString(h[:])
 }
 
-// Upgrade completes the server handshake. Call CheckUpgrade first to answer
-// bad requests yourself; Upgrade re-validates and fails without writing a
-// response.
-func Upgrade(w http.ResponseWriter, r *http.Request) (*Conn, error) {
-	if err := CheckUpgrade(r); err != nil {
-		return nil, err
-	}
-	hj, ok := w.(http.Hijacker)
-	if !ok {
-		return nil, errors.New("websocket: response does not support hijacking")
-	}
-	nc, brw, err := hj.Hijack()
-	if err != nil {
-		return nil, err
-	}
-	resp := "HTTP/1.1 101 Switching Protocols\r\nConnection: upgrade\r\nUpgrade: websocket\r\nSec-WebSocket-Accept: " +
-		acceptKey(r.Header.Get("Sec-WebSocket-Key")) + "\r\n\r\n"
-	if _, err := nc.Write([]byte(resp)); err != nil {
-		nc.Close()
-		return nil, err
-	}
-	_ = nc.SetDeadline(time.Time{})
-	return newConn(nc, brw.Reader, true), nil
-}
+// NewServerConn wraps a connection whose server handshake is complete. br is
+// the reader the handshake was read through, so bytes the client sent after
+// its request are not lost; nil reads nc directly. It exists for
+// ws/wsserver, which holds the net/http half of the package so that a
+// client does not link net/http.
+func NewServerConn(nc net.Conn, br *bufio.Reader) *Conn { return newConn(nc, br, true) }
 
 // badInRequestLine reports a rune that cannot appear in a request-line target.
 // Space ends the target, CR and LF end the line, and the remaining C0 and C1
@@ -268,18 +211,85 @@ func Client(nc net.Conn, host, path string) (*Conn, error) {
 		return nil, err
 	}
 	br := bufio.NewReaderSize(nc, 32<<10)
-	resp, err := http.ReadResponse(br, &http.Request{Method: http.MethodGet})
+	status, reason, header, err := readHandshakeResponse(br)
 	if err != nil {
 		return nil, err
 	}
-	if resp.StatusCode != http.StatusSwitchingProtocols {
-		body, _ := io.ReadAll(io.LimitReader(resp.Body, 4096))
-		return nil, fmt.Errorf("websocket: handshake failed: %s: %s", resp.Status, strings.TrimSpace(string(body)))
+	if status != 101 {
+		// As net/http read it: Content-Length bounds the body, and with neither
+		// it nor a Transfer-Encoding the connection's end does. A chunked body
+		// is not decoded; the status alone is reported.
+		var body []byte
+		if n, err := strconv.ParseInt(header["content-length"], 10, 64); err == nil && n >= 0 {
+			body, _ = io.ReadAll(io.LimitReader(br, min(n, 4096)))
+		} else if _, cl := header["content-length"]; !cl && header["transfer-encoding"] == "" {
+			body, _ = io.ReadAll(io.LimitReader(br, 4096))
+		}
+		st := strconv.Itoa(status)
+		if reason != "" {
+			st += " " + reason
+		}
+		return nil, fmt.Errorf("websocket: handshake failed: %s: %s", st, strings.TrimSpace(string(body)))
 	}
-	if resp.Header.Get("Sec-WebSocket-Accept") != acceptKey(key) {
+	if header["sec-websocket-accept"] != acceptKey(key) {
 		return nil, errors.New("websocket: bad Sec-WebSocket-Accept")
 	}
 	return newConn(nc, br, false), nil
+}
+
+// maxHandshakeHeader bounds the response head a client reads, as net/http's
+// DefaultMaxHeaderBytes bounds a request's.
+const maxHandshakeHeader = 1 << 20
+
+// readHandshakeResponse reads an HTTP/1.x status line and headers. Header
+// names are lower-cased; a repeated header keeps its first value, as
+// http.Header.Get returns. It is read by hand rather than by net/http so that
+// a client, which needs nothing else from net/http, does not link it: a
+// one-shot command starts once per call and pays every linked package's init.
+func readHandshakeResponse(br *bufio.Reader) (status int, reason string, header map[string]string, err error) {
+	read := 0
+	line := func() (string, error) {
+		l, err := br.ReadString('\n')
+		read += len(l)
+		if err != nil {
+			if err == io.EOF {
+				err = io.ErrUnexpectedEOF
+			}
+			return "", err
+		}
+		if read > maxHandshakeHeader {
+			return "", errors.New("websocket: handshake response header too large")
+		}
+		return strings.TrimRight(l, "\r\n"), nil
+	}
+	l, err := line()
+	if err != nil {
+		return 0, "", nil, err
+	}
+	proto, rest, _ := strings.Cut(l, " ")
+	code, reason, _ := strings.Cut(rest, " ")
+	status, cerr := strconv.Atoi(code)
+	if !strings.HasPrefix(proto, "HTTP/1.") || len(code) != 3 || cerr != nil {
+		return 0, "", nil, fmt.Errorf("websocket: malformed HTTP response %q", l)
+	}
+	header = map[string]string{}
+	for {
+		l, err := line()
+		if err != nil {
+			return 0, "", nil, err
+		}
+		if l == "" {
+			return status, reason, header, nil
+		}
+		k, v, ok := strings.Cut(l, ":")
+		if !ok {
+			return 0, "", nil, fmt.Errorf("websocket: malformed MIME header line: %s", l)
+		}
+		k = strings.ToLower(strings.TrimSpace(k))
+		if _, seen := header[k]; !seen {
+			header[k] = strings.TrimSpace(v)
+		}
+	}
 }
 
 // ReadMessage returns the next text or binary message, reassembling

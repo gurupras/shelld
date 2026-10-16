@@ -7,33 +7,18 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strconv"
 	"syscall"
+
+	"github.com/gurupras/shelld/internal/sock"
 )
 
 // DefaultDir is <tmp>/shelld-<uid>, the per-user directory holding the
-// default socket, pidfile and logfile.
-func DefaultDir() string {
-	return filepath.Join(os.TempDir(), "shelld-"+strconv.Itoa(os.Getuid()))
-}
+// default socket, pidfile and logfile. See sock.DefaultDir.
+func DefaultDir() string { return sock.DefaultDir() }
 
 // CheckPrivateDir refuses dir unless it is a directory owned by this user
-// with no group or other permissions; a missing dir wraps os.ErrNotExist.
-// It uses lstat, so a symlink is refused. Between this check and the use of
-// a path inside the directory, a directory in a sticky /tmp cannot be
-// swapped by another user; under a non-sticky, shared TMPDIR it can (tmux
-// has the same gap).
-func CheckPrivateDir(dir string) error {
-	st, err := os.Lstat(dir)
-	if err != nil {
-		return err
-	}
-	sys, ok := st.Sys().(*syscall.Stat_t)
-	if !ok {
-		return fmt.Errorf("stat %s: no owner", dir)
-	}
-	return checkPrivate(dir, st.Mode(), sys.Uid, uint32(os.Getuid()))
-}
+// with no group or other permissions; see sock.CheckPrivateDir.
+func CheckPrivateDir(dir string) error { return sock.CheckPrivateDir(dir) }
 
 // EnsurePrivateDir creates dir with mode 0700 if it is missing, then checks
 // it as CheckPrivateDir does. An existing directory is never chmodded into

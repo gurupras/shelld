@@ -9,9 +9,10 @@ import (
 	"io/fs"
 	"net"
 	"os"
-	"path/filepath"
 	"syscall"
 	"time"
+
+	"github.com/gurupras/shelld/internal/sock"
 )
 
 // listen binds the socket, owner-only unless opts.SharedAccess. The caller
@@ -411,31 +412,13 @@ func refusalIsStable(path string) (boundness, error) {
 	return notBound, nil
 }
 
-func defaultSocket() string { return filepath.Join(DefaultDir(), "shelld.sock") }
-
 // Dial connects to a daemon socket within timeout and refuses one served by
-// another user: whoever created the path first owns what answers there.
+// another user; see sock.Dial.
 func Dial(ctx context.Context, addr string, timeout time.Duration) (net.Conn, error) {
-	conn, err := dialUnix(ctx, addr, timeout)
-	if err != nil {
-		return nil, err
-	}
-	uid, err := peerUID(conn.(*net.UnixConn))
-	if err == nil && uid != os.Getuid() {
-		err = fmt.Errorf("%s is served by uid %d, not this user; refusing to use it", addr, uid)
-	}
-	if err != nil {
-		conn.Close()
-		return nil, err
-	}
-	return conn, nil
+	return sock.Dial(ctx, addr, timeout)
 }
 
-// dialUnix connects to a unix socket within timeout; dialWithin says why it is
-// not net.DialTimeout.
+// dialUnix connects to a unix socket within timeout, with no owner check.
 func dialUnix(ctx context.Context, addr string, timeout time.Duration) (net.Conn, error) {
-	return dialWithin(ctx, "unix", addr, timeout, func(ctx context.Context) (net.Conn, error) {
-		var d net.Dialer
-		return d.DialContext(ctx, "unix", addr)
-	})
+	return sock.DialUnix(ctx, addr, timeout)
 }
